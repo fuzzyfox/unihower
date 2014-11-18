@@ -11,7 +11,8 @@ module.exports = function( grunt ) {
       files: [
         'Gruntfile.js',
         '*.js',
-        'models/**/*.js'
+        'models/**/*.js',
+        'routes/**/*.js'
       ]
     },
 
@@ -36,7 +37,11 @@ module.exports = function( grunt ) {
     // run tasks on file changes
     watch: {
       express: {
-        files: [ '*.js', 'models/**/*.js' ],
+        files: [
+          '*.js',
+          'models/**/*.js',
+          'routes/**/*.js'
+        ],
         tasks: [ 'jshint', 'express:dev' ],
         options: {
           spawn: false

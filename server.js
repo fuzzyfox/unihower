@@ -16,6 +16,8 @@ else {
   Habitat.load( __dirname + '/.env-test' );
 }
 var env = new Habitat();
+// drop package.json info into env
+env.set( 'pkg', require( './package.json' ) );
 
 /*
   setup server
@@ -46,14 +48,10 @@ var db = require( './models' )( env );
 /*
   routes
  */
+var routes = require( './routes' )( env );
 
 // healthcheck
-app.get( '/healthcheck', function( req, res ) {
-  res.jsonp({
-    version: require( './package' ).version,
-    http: 'okay'
-  });
-});
+app.get( '/healthcheck', routes.healthcheck );
 
 app.get( '/', function( req, res ) {
   res.send( 'It worked!' );
