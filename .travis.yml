@@ -7,4 +7,4 @@ before_install:
   - npm install -g grunt-cli
   - npm install -g bower
 before_script:
-  - mysql - "CREATE DATABASE test_eisenhower;"
+  - mysql -e "CREATE DATABASE test_eisenhower;"
