@@ -12,7 +12,8 @@ module.exports = function( grunt ) {
         'Gruntfile.js',
         '*.js',
         'models/**/*.js',
-        'routes/**/*.js'
+        'routes/**/*.js',
+        'test/**/*.js'
       ]
     },
 
@@ -31,6 +32,16 @@ module.exports = function( grunt ) {
           node_env: 'testing', // jshint ignore:line
           port: 4321
         }
+      }
+    },
+
+    // run mocha tests
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+        },
+        src: [ 'test/**/*.js' ]
       }
     },
 
@@ -66,8 +77,9 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
+  grunt.loadNpmTasks( 'grunt-mocha-test' );
   grunt.loadNpmTasks('grunt-bump');
 
   grunt.registerTask( 'default', [ 'jshint', 'express:dev', 'watch' ] );
-  grunt.registerTask( 'test', [ 'jshint', 'express:test' ] );
+  grunt.registerTask( 'test', [ 'jshint', 'express:test', 'mochaTest:test' ] );
 };
