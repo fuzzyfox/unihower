@@ -1,20 +1,17 @@
 /* global describe, it */
 
+// force testing env
+process.env.NODE_ENV = 'testing';
+
 /*
   require packages
  */
-var Habitat = require( 'habitat' );
 var supertest = require( 'supertest' );
 require( 'chai' ).should();
 
-// load environment
-Habitat.load( process.cwd() + '/.env-test' );
-var env = new Habitat();
-// laod package into env
-env.set( 'pkg', require( process.cwd() + '/package' ) );
-
 // configure super test
-supertest = supertest( 'http://localhost:' + env.get( 'port' ) );
+var app = require( process.cwd() + '/server' );
+var agent = supertest.agent( app );
 
 /*
   describe a valid user object
@@ -51,7 +48,7 @@ function validUserObject( res ) {
  */
 describe( '/api/users (for standard user)', function() {
   it( 'should exist', function( done ) {
-    supertest
+    agent
       .get( '/api/users' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
@@ -65,7 +62,7 @@ describe( '/api/users (for standard user)', function() {
       email: 'j.doe@restmail.net'
     };
 
-    supertest
+    agent
       .post( '/api/users' )
       .send( newUser )
       .set( 'Accept', 'application/json' )
@@ -80,7 +77,7 @@ describe( '/api/users (for standard user)', function() {
    */
   describe( '/api/users/{id}', function() {
     it( 'should exist', function( done ) {
-      supertest
+      agent
         .get( '/api/users/$id' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
@@ -89,7 +86,7 @@ describe( '/api/users (for standard user)', function() {
     });
 
     it( 'should return a valid user object', function( done ) {
-      supertest
+      agent
         .get( '/api/users/$id' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
@@ -103,7 +100,7 @@ describe( '/api/users (for standard user)', function() {
         name: 'Jane Doe'
       };
 
-      supertest
+      agent
         .put( '/api/users/$id' )
         .send( newUser )
         .set( 'Acept', 'application/json' )

@@ -1,5 +1,8 @@
 /* global describe, it */
 
+// force testing env
+process.env.NODE_ENV = 'testing';
+
 /*
   require packages
  */
@@ -14,11 +17,12 @@ var env = new Habitat();
 env.set( 'pkg', require( process.cwd() + '/package' ) );
 
 // configure super test
-supertest = supertest( 'http://localhost:' + env.get( 'port' ) );
+var app = require( process.cwd() + '/server' );
+var agent = supertest.agent( app );
 
 describe( '/healthcheck', function() {
   it( 'should exist and return json', function( done ) {
-    supertest
+    agent
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
@@ -27,7 +31,7 @@ describe( '/healthcheck', function() {
   });
 
   it( 'should have the current package version number', function( done ) {
-    supertest
+    agent
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
@@ -40,7 +44,7 @@ describe( '/healthcheck', function() {
   });
 
   it( 'should have http property as "okay"', function( done ) {
-    supertest
+    agent
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )

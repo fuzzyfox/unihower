@@ -25,13 +25,6 @@ module.exports = function( grunt ) {
           node_env: 'development', // jshint ignore:line
           port: 4321
         }
-      },
-      test: {
-        options: {
-          script: './server.js',
-          node_env: 'testing', // jshint ignore:line
-          port: 4321
-        }
       }
     },
 
@@ -39,9 +32,15 @@ module.exports = function( grunt ) {
     mochaTest: {
       test: {
         options: {
-          reporter: 'spec',
+          reporter: 'spec'
         },
         src: [ 'test/**/*.js' ]
+      },
+      cookies: {
+        options: {
+          reporter: 'spec'
+        },
+        src: [ 'test/cookiePersistance.js' ]
       }
     },
 
@@ -81,9 +80,5 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-bump');
 
   grunt.registerTask( 'default', [ 'jshint', 'express:dev', 'watch' ] );
-
-  /**
-   * @todo load test data into database after server load, before mocha tests
-   */
-  grunt.registerTask( 'test', [ 'jshint', 'express:test', 'mochaTest:test' ] );
+  grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
 };
