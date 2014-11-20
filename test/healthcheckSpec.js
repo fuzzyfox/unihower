@@ -17,7 +17,7 @@ env.set( 'pkg', require( process.cwd() + '/package' ) );
 supertest = supertest( 'http://localhost:' + env.get( 'port' ) );
 
 describe( '/healthcheck', function() {
-  it( 'should exist', function( done ) {
+  it( 'should exist and return json', function( done ) {
     supertest
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )

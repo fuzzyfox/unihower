@@ -81,5 +81,9 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-bump');
 
   grunt.registerTask( 'default', [ 'jshint', 'express:dev', 'watch' ] );
+
+  /**
+   * @todo load test data into database after server load, before mocha tests
+   */
   grunt.registerTask( 'test', [ 'jshint', 'express:test', 'mochaTest:test' ] );
 };
