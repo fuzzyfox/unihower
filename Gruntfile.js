@@ -35,12 +35,6 @@ module.exports = function( grunt ) {
           reporter: 'spec'
         },
         src: [ 'test/**/*.js' ]
-      },
-      cookies: {
-        options: {
-          reporter: 'spec'
-        },
-        src: [ 'test/cookiePersistance.js' ]
       }
     },
 
