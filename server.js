@@ -63,16 +63,17 @@ app.get( '/', function( req, res ) {
 /*
   setup db + launch server
  */
-db.sequelize.sync( { force: env.get( 'db_force_sync' ) } ).complete( function( error ) {
-  if( error ) {
-    return console.log( error );
-  }
+if( process.env.NODE_ENV !== 'testing' ) {
+  db.sequelize.sync( { force: env.get( 'db_force_sync' ) } ).complete( function( error ) {
+    if( error ) {
+      return console.log( error );
+    }
 
-  var server = app.listen( env.get( 'port' ) || 3000, function() {
-    console.log( 'Now listening on port %d', server.address().port );
+    var server = app.listen( env.get( 'port' ) || 3000, function() {
+      console.log( 'Now listening on port %d', server.address().port );
+    });
   });
-});
-
-if( process.env.NODE_ENV === 'testing' ) {
-  module.exports = app;
+}
+else {
+  module.exports = app.listen( env.get( 'port' ) );
 }

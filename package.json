@@ -39,6 +39,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.19",
     "grunt-mocha-test": "^0.12.3",
+    "request": "^2.48.0",
     "supertest": "^0.15.0"
   },
   "dependencies": {

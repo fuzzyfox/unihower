@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, before, after */
 
 // force testing env
 process.env.NODE_ENV = 'testing';
@@ -6,11 +6,22 @@ process.env.NODE_ENV = 'testing';
 /*
   require packages
  */
+var Habitat = require( 'habitat' );
+var request = require( 'request' );
 var supertest = require( 'supertest' );
 require( 'chai' ).should();
 
-// configure super test
+// load environment
+Habitat.load( process.cwd() + '/.env-test' );
+var env = new Habitat();
+// laod package into env
+env.set( 'pkg', require( process.cwd() + '/package' ) );
+
+// get instance of server app + models
 var app = require( process.cwd() + '/server' );
+var db = require( process.cwd() + '/models' )( env );
+
+// configure supertest
 var agent = supertest.agent( app );
 
 /*
@@ -39,14 +50,35 @@ function validUserObject( res ) {
   }
 }
 
+/**
+ * Setup the database with clean slate, and test data
+ *
+ * @param  {Function} done Async callback for mocha
+ */
+function setupDatabase( done ) {
+  db.sequelize.sync( { force: true } ).complete( function( err ) {
+    if( err ) {
+      return done( err );
+    }
+
+    db.User.bulkCreate( require( '../data/user' ) ).done( function() {
+      done();
+    }).catch( function( err ) {
+      done( err );
+    });
+  });
+}
+
 /*
   describe user api
  */
 
-/**
- * @todo authenticate as a standard user
- */
 describe( '/api/users (for standard user)', function() {
+  // any pre-test setup
+  before( function( done ) {
+    setupDatabase( done );
+  });
+
   it( 'should exist', function( done ) {
     agent
       .get( '/api/users' )
@@ -72,13 +104,70 @@ describe( '/api/users (for standard user)', function() {
       .end( done );
   });
 
-  /**
-   * @todo replace `$id` in URI's with valid UserId's
-   */
-  describe( '/api/users/{id}', function() {
+  describe( '/api/users/2', function() {
+
+    // any pre-test setup for this describe
+    before( function( done ) {
+      // this can take a while
+      this.timeout( 10000 );
+
+      // get persona test user for auth w/ local api
+
+      // make request for test user from remote api
+      request
+        .get({
+          url: 'http://personatestuser.org/email_with_assertion/' + encodeURIComponent( 'http://localhost:' + env.get( 'port' ) ),
+          json: true
+        }, function( err, res, body ) {
+          if( err ) {
+            return done( err );
+          }
+
+          // change the email address of user 2 to match that from persona
+          db.User.find( 2 ).done( function( err, user ) {
+            if( err ) {
+              return done( err );
+            }
+
+            user.email = body.email;
+            user.save().done( function( err ) {
+              if( err ) {
+                console.log( err );
+                return done( err );
+              }
+              console.log( 'saved success');
+              agent
+                .post( '/persona/verify' )
+                .send( JSON.stringify( { assertion: body.assertion } ) )
+                .expect( 200 )
+                .expect( function( res ) {
+                  if( res.body.status === 'okay' ) {
+                    return;
+                  }
+
+                  throw new Error( 'persona verification failed' );
+                })
+                .end( done );
+            }).catch( function( err ) {
+              done( err );
+            });
+          }).catch( function( err ) {
+            done( err );
+          });
+        });
+    });
+
+    after( function( done ) {
+      agent
+        .post( '/persona/logout' )
+        .expect( 200 )
+        .expect( { status: 'okay' } )
+        .end( done );
+    });
+
     it( 'should exist', function( done ) {
       agent
-        .get( '/api/users/$id' )
+        .get( '/api/users/2' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
@@ -87,7 +176,7 @@ describe( '/api/users (for standard user)', function() {
 
     it( 'should return a valid user object', function( done ) {
       agent
-        .get( '/api/users/$id' )
+        .get( '/api/users/2' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
@@ -101,7 +190,7 @@ describe( '/api/users (for standard user)', function() {
       };
 
       agent
-        .put( '/api/users/$id' )
+        .put( '/api/users/2' )
         .send( newUser )
         .set( 'Acept', 'application/json' )
         .expect( 200 )
