@@ -76,7 +76,77 @@ function setupDatabase( done ) {
 describe( '/api/users (for standard user)', function() {
   // any pre-test setup
   before( function( done ) {
-    setupDatabase( done );
+    // this bit can take a while
+    this.timeout( 10000 );
+
+    // setup database with test data
+    setupDatabase( function( err ) {
+      if( err ) {
+        return done( err );
+      }
+
+      /*
+        get persona test user for auth w/ local api
+       */
+
+      // make request for test user from remote api (personatestuser.org)
+      // documentation of remote api at <https://github.com/mozilla/personatestuser.org>
+      request
+        .get({
+          url: 'http://personatestuser.org/email_with_assertion/' + encodeURIComponent( 'http://localhost:' + env.get( 'port' ) ),
+          json: true
+        }, function( err, res, body ) {
+          if( err ) {
+            return done( err );
+          }
+
+          // change the email address of user 2 to match that from persona so we can
+          // log the user into the api (downside of persona auth)
+          db.User.find( 2 ).done( function( err, user ) {
+            if( err ) {
+              return done( err );
+            }
+
+            user.email = body.email;
+            user.save().done( function( err ) {
+              if( err ) {
+                console.log( err );
+                return done( err );
+              }
+
+              // send the assertion we got from the remote api to our
+              // persona verification route
+              agent
+                .post( '/persona/verify' )
+                .send( JSON.stringify( { assertion: body.assertion } ) )
+                .set( 'Accept', 'application/json' )
+                .expect( 'Content-Type', /json/ )
+                .expect( 200 )
+                .expect( function( res ) {
+                  if( res.body.status === 'okay' ) {
+                    return; // return void if successful
+                  }
+
+                  throw new Error( 'persona verification failed' );
+                })
+                .end( done );
+            }).catch( function( err ) {
+              done( err );
+            });
+          }).catch( function( err ) {
+            done( err );
+          });
+        });
+    });
+  });
+
+  after( function( done ) {
+    agent
+      .post( '/persona/logout' )
+      .set( 'Accept', 'application/json' )
+      .expect( 'Content-Type', /json/ )
+      .expect( 200 )
+      .end( done );
   });
 
   it( 'should exist', function( done ) {
@@ -84,7 +154,7 @@ describe( '/api/users (for standard user)', function() {
       .get( '/api/users' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
-      .expect( 401 )
+      .expect( 403 )
       .end( done );
   });
 
@@ -105,65 +175,6 @@ describe( '/api/users (for standard user)', function() {
   });
 
   describe( '/api/users/2', function() {
-
-    // any pre-test setup for this describe
-    before( function( done ) {
-      // this can take a while
-      this.timeout( 10000 );
-
-      // get persona test user for auth w/ local api
-
-      // make request for test user from remote api
-      request
-        .get({
-          url: 'http://personatestuser.org/email_with_assertion/' + encodeURIComponent( 'http://localhost:' + env.get( 'port' ) ),
-          json: true
-        }, function( err, res, body ) {
-          if( err ) {
-            return done( err );
-          }
-
-          // change the email address of user 2 to match that from persona
-          db.User.find( 2 ).done( function( err, user ) {
-            if( err ) {
-              return done( err );
-            }
-
-            user.email = body.email;
-            user.save().done( function( err ) {
-              if( err ) {
-                console.log( err );
-                return done( err );
-              }
-              console.log( 'saved success');
-              agent
-                .post( '/persona/verify' )
-                .send( JSON.stringify( { assertion: body.assertion } ) )
-                .expect( 200 )
-                .expect( function( res ) {
-                  if( res.body.status === 'okay' ) {
-                    return;
-                  }
-
-                  throw new Error( 'persona verification failed' );
-                })
-                .end( done );
-            }).catch( function( err ) {
-              done( err );
-            });
-          }).catch( function( err ) {
-            done( err );
-          });
-        });
-    });
-
-    after( function( done ) {
-      agent
-        .post( '/persona/logout' )
-        .expect( 200 )
-        .expect( { status: 'okay' } )
-        .end( done );
-    });
 
     it( 'should exist', function( done ) {
       agent
