@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Alvin Wilson",
+    "email": "alvin.wilson80@restmail.net",
+    "isAdmin": true,
+    "sendNotifications": false
+  },
+  {
+    "name": "Samuel Lawson",
+    "email": "samuel.lawson90@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": false
+  },
+  {
+    "name": "Caroline Rice",
+    "email": "caroline.rice15@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": false
+  },
+  {
+    "name": "Julio Barnett",
+    "email": "julio.barnett21@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": false
+  },
+  {
+    "name": "Julian Cox",
+    "email": "julian.cox36@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": false
+  }
+]

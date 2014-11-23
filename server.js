@@ -5,6 +5,7 @@ var express = require( 'express' );
 var morgan = require( 'morgan' );
 var helmet = require( 'helmet' );
 var Habitat = require( 'habitat' );
+var cookieParser = require( 'cookie-parser' );
 
 /*
   setup environment
@@ -25,6 +26,8 @@ env.set( 'pkg', require( './package.json' ) );
 var app = express();
 // static, public dir
 app.use( express.static( __dirname + '/public' ) );
+// work nicely with cookies
+app.use( cookieParser() );
 
 // server security
 app.use( helmet.xframe( 'sameorigin' ) );
@@ -60,12 +63,17 @@ app.get( '/', function( req, res ) {
 /*
   setup db + launch server
  */
-db.sequelize.sync( { force: env.get( 'db_force_sync' ) } ).complete( function( error ) {
-  if( error ) {
-    return console.log( error );
-  }
+if( process.env.NODE_ENV !== 'testing' ) {
+  db.sequelize.sync( { force: env.get( 'db_force_sync' ) } ).complete( function( error ) {
+    if( error ) {
+      return console.log( error );
+    }
 
-  var server = app.listen( env.get( 'port' ) || 3000, function() {
-    console.log( 'Now listening on port %d', server.address().port );
+    var server = app.listen( env.get( 'port' ) || 3000, function() {
+      console.log( 'Now listening on port %d', server.address().port );
+    });
   });
-});
+}
+else {
+  module.exports = app.listen( env.get( 'port' ) );
+}

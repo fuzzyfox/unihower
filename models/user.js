@@ -8,10 +8,7 @@ module.exports = function( sequelize, DataTypes ) {
     name: {
       type: DataTypes.STRING( 70 ),
       allowNull: true,
-      defaultValue: '',
-      validate: {
-        isAlpha: true
-      }
+      defaultValue: ''
     },
     email: {
       type: DataTypes.STRING,
@@ -22,7 +19,8 @@ module.exports = function( sequelize, DataTypes ) {
       unique: true
     },
     lastLogin: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
+      allowNull: true
     },
     isAdmin: {
       type: DataTypes.BOOLEAN,
