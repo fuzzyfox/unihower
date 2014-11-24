@@ -21,7 +21,7 @@ var app = require( process.cwd() + '/server' );
 var agent = supertest.agent( app );
 
 describe( '/healthcheck', function() {
-  it( 'should exist and return json', function( done ) {
+  it( 'GET should exist and return json', function( done ) {
     agent
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )
@@ -30,7 +30,7 @@ describe( '/healthcheck', function() {
       .end( done );
   });
 
-  it( 'should have the current package version number', function( done ) {
+  it( 'GET should have the current package version number', function( done ) {
     agent
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )
@@ -43,7 +43,7 @@ describe( '/healthcheck', function() {
       .end( done );
   });
 
-  it( 'should have http property as "okay"', function( done ) {
+  it( 'GET should have http property as "okay"', function( done ) {
     agent
       .get( '/healthcheck' )
       .set( 'Accept', 'application/json' )

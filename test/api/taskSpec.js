@@ -25,29 +25,25 @@ var db = require( process.cwd() + '/models' )( env );
 var agent = supertest.agent( app );
 
 /*
-  describe a valid user object
+  describe a valid topic object
  */
-function validUserObject( res ) {
-  // valid (required) properties and their types for a user object
+function validTaskObject( res ) {
+  // valid (required) properties and their types for a topic object
   var keyTypes = {
     id: 'number',
-    name: 'string',
-    email: 'string',
-    isAdmin: 'boolean',
-    sendNotifications: 'boolean',
+    description: 'string',
+    state: 'string',
+    coordX: 'number',
+    coordY: 'number',
     createdAt: 'string',
-    updatedAt: 'string'
+    updatedAt: 'string',
+    UserId: 'number'
   };
 
   // check that the property exists and is of correct type
   Object.keys( keyTypes ).forEach( function( key ) {
     res.body.should.have.property( key ).and.be.a( keyTypes[ key ] );
   });
-
-  // check if last login datetime exists, and if so that its type string
-  if( res.body.lastLogin ) {
-    res.body.lastLogin.should.be.a( 'string' );
-  }
 }
 
 /**
@@ -62,7 +58,15 @@ function setupDatabase( done ) {
     }
 
     db.User.bulkCreate( require( '../data/user' ) ).done( function() {
-      done();
+      db.Topic.bulkCreate( require( '../data/topic' ) ).done( function() {
+        db.Task.bulkCreate( require( '../data/task' ) ).done( function() {
+          done();
+        }).catch( function( err ) {
+          done( err );
+        });
+      }).catch( function( err ) {
+        done( err );
+      });
     }).catch( function( err ) {
       done( err );
     });
@@ -70,12 +74,11 @@ function setupDatabase( done ) {
 }
 
 /*
-  describe user api
+  describe task api
  */
-
 var personatestuser = {};
 
-describe( '/api/users (for standard user)', function() {
+describe( '/api/tasks', function() {
   // any pre-test setup
   before( function( done ) {
     // this bit can take a while
@@ -163,68 +166,122 @@ describe( '/api/users (for standard user)', function() {
 
   it( 'GET should exist', function( done ) {
     agent
-      .get( '/api/users' )
+      .get( '/api/tasks' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 403 )
       .end( done );
   });
 
-  it( 'POST should create a valid user object', function( done ) {
-    var newUser = {
-      name: 'John Doe',
-      email: 'j.doe@restmail.net'
+  it( 'POST should create a valid task object', function( done ) {
+    var newTask = {
+      description: 'Triage inbox.',
+      state: 'incomplete',
+      coordX: Math.floor( Math.random() * 70 ),
+      coordY: Math.floor( Math.random() * 70 )
     };
 
     agent
-      .post( '/api/users' )
-      .send( newUser )
+      .post( '/api/tasks' )
+      .send( newTask )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
-      .expect( validUserObject )
+      .expect( validTaskObject )
       .end( done );
   });
 
-  describe( '/api/users/2', function() {
+  describe( '/api/tasks/1', function() {
 
     it( 'GET should exist', function( done ) {
       agent
-        .get( '/api/users/2' )
+        .get( '/api/tasks/1' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
         .end( done );
     });
 
-    it( 'GET should return a valid user object', function( done ) {
+    it( 'GET should return a valid task object', function( done ) {
       agent
-        .get( '/api/users/2' )
+        .get( '/api/tasks/1' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
-        .expect( validUserObject )
+        .expect( validTaskObject )
         .end( done );
     });
 
-    it( 'PUT should update a user', function( done ) {
-      var newUser = {
-        name: 'Jane Doe'
+    it( 'PUT should update a task', function( done ) {
+      var newTask = {
+        state: 'complete'
       };
 
       agent
-        .put( '/api/users/2' )
-        .send( newUser )
+        .put( '/api/tasks/1' )
+        .send( newTask )
         .set( 'Acept', 'application/json' )
         .expect( 200 )
-        .expect( validUserObject )
+        .expect( validTaskObject )
         .end( done );
     });
 
-    it( 'DETLETE should remove a user', function( done ) {
+    it( 'DELETE should remove a task', function( done ) {
       agent
-        .delete( '/api/users/2' )
+        .delete( '/api/tasks/1' )
         .expect( 204 )
+        .end( done );
+    });
+  });
+
+  describe( '/api/users/2/tasks', function() {
+    it( 'GET should exist', function( done ) {
+      agent
+        .get( '/api/users/2/tasks' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .end( done );
+    });
+
+    it( 'GET should return an array of valid tasks objects beloning to UserId 2', function( done ) {
+      agent
+        .get( '/api/users/2/tasks' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .expect( function( res ) {
+          res.body.forEach( function( obj ) {
+            obj.should.have.property( 'UserId' ).and.equal( 2 );
+            validTaskObject( { body: obj } );
+          });
+        })
+        .end( done );
+    });
+  });
+
+  describe( '/api/topics/2/tasks', function() {
+    it( 'GET should exist', function( done ) {
+      agent
+        .get( '/api/topics/2/tasks' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .end( done );
+    });
+
+    it( 'GET should return an array of valid tasks objects beloning to TopicId 2', function( done ) {
+      agent
+        .get( '/api/topics/2/tasks' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .expect( function( res ) {
+          res.body.forEach( function( obj ) {
+            obj.should.have.property( 'TopicId' ).and.equal( 2 );
+            validTaskObject( { body: obj } );
+          });
+        })
         .end( done );
     });
   });

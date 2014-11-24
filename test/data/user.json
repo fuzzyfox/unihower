@@ -1,32 +1,260 @@
 [
   {
-    "name": "Alvin Wilson",
-    "email": "alvin.wilson80@restmail.net",
+    "name": "Amaya Goyette Jr.",
+    "email": "amaya.moen@restmail.net",
     "isAdmin": true,
-    "sendNotifications": false
+    "sendNotifications": 1
   },
   {
-    "name": "Samuel Lawson",
-    "email": "samuel.lawson90@restmail.net",
+    "name": "Kassandra Bergnaum",
+    "email": "kassandra62@restmail.net",
     "isAdmin": false,
-    "sendNotifications": false
+    "sendNotifications": 1
   },
   {
-    "name": "Caroline Rice",
-    "email": "caroline.rice15@restmail.net",
+    "name": "Ms. Guy Mertz",
+    "email": "ms.schmeler@restmail.net",
     "isAdmin": false,
-    "sendNotifications": false
+    "sendNotifications": 1
   },
   {
-    "name": "Julio Barnett",
-    "email": "julio.barnett21@restmail.net",
+    "name": "Abe Christiansen",
+    "email": "abe30@restmail.net",
     "isAdmin": false,
-    "sendNotifications": false
+    "sendNotifications": 1
   },
   {
-    "name": "Julian Cox",
-    "email": "julian.cox36@restmail.net",
+    "name": "Carson Hoppe V",
+    "email": "carson34@restmail.net",
     "isAdmin": false,
-    "sendNotifications": false
+    "sendNotifications": 0
+  },
+  {
+    "name": "Vena Johns",
+    "email": "vena.schmeler94@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Pedro Wyman",
+    "email": "pedro.cormier57@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Brando Mosciski",
+    "email": "brando_jenkins65@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Kamron Bergnaum",
+    "email": "kamron85@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Mrs. Merl Hyatt",
+    "email": "mrs._oreilly@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Mekhi Farrell Jr.",
+    "email": "mekhi.harber@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Lauretta Hartmann",
+    "email": "lauretta.goodwin31@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Mozelle Mueller",
+    "email": "mozelle65@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Flossie Littel IV",
+    "email": "flossie.hermann29@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Mercedes Schumm",
+    "email": "mercedes.paucek49@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Lesley Adams",
+    "email": "lesley.rodriguez39@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Lori Fisher",
+    "email": "lori6@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Missouri Larkin",
+    "email": "missouri_kihn12@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Ms. Chase Kuhic",
+    "email": "ms.30@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Mr. Dewitt Goyette",
+    "email": "mr.johnston@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Craig Hane",
+    "email": "craig_bednar73@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Randall Bailey",
+    "email": "randall9@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Miss Leon McLaughlin",
+    "email": "miss_boehm@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Adalberto Goodwin III",
+    "email": "adalberto.runte91@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Raymundo Abbott",
+    "email": "raymundo_roberts@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Jolie O'Reilly",
+    "email": "jolie.pacocha@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Benton Koch",
+    "email": "benton.larson@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Juana Lubowitz",
+    "email": "juana6@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Lily Kirlin",
+    "email": "lily_swaniawski@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Barton Klocko",
+    "email": "barton76@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Mr. Lizeth Rosenbaum",
+    "email": "mr.80@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Ms. Fernando Ritchie",
+    "email": "ms.rempel35@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Adrain Schimmel",
+    "email": "adrain.lindgren@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Davon Gleichner",
+    "email": "davon_tremblay63@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Geoffrey Gislason",
+    "email": "geoffrey.pfeffer@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Maurice Hamill",
+    "email": "maurice_padberg42@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Sierra Carroll",
+    "email": "sierra_schmitt37@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Kurtis Ryan DDS",
+    "email": "kurtis.donnelly@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Rodger Cassin",
+    "email": "rodger51@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Dorthy Emard",
+    "email": "dorthy.daniel83@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 1
+  },
+  {
+    "name": "Margarett Leffler",
+    "email": "margarett63@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Jordyn Johnston",
+    "email": "jordyn_steuber@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
+  },
+  {
+    "name": "Travis Stamm",
+    "email": "travis_murazik2@restmail.net",
+    "isAdmin": false,
+    "sendNotifications": 0
   }
 ]

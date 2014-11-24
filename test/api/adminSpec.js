@@ -72,14 +72,13 @@ function setupDatabase( done ) {
 /*
   describe user api
  */
-
 var personatestuser = {};
 
-describe( '/api/users (for standard user)', function() {
+describe( '/api/users (for administrator)', function() {
   // any pre-test setup
   before( function( done ) {
     // this bit can take a while
-    this.timeout( 30000 );
+    this.timeout( 10000 );
 
     // setup database with test data
     setupDatabase( function( err ) {
@@ -101,17 +100,17 @@ describe( '/api/users (for standard user)', function() {
           if( err ) {
             return done( err );
           }
-
           personatestuser = body;
 
-          // change the email address of user 2 to match that from persona so we can
+          // change the email address of user 1 to match that from persona so we can
           // log the user into the api (downside of persona auth)
-          db.User.find( 2 ).done( function( err, user ) {
+          db.User.find( 1 ).done( function( err, user ) {
             if( err ) {
               return done( err );
             }
 
             user.email = body.email;
+            user.isAdmin = true; // user 1 should already be admin but lets be safe.
             user.save().done( function( err ) {
               if( err ) {
                 console.log( err );
@@ -166,23 +165,21 @@ describe( '/api/users (for standard user)', function() {
       .get( '/api/users' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
-      .expect( 403 )
+      .expect( 200 )
       .end( done );
   });
 
-  it( 'POST should create a valid user object', function( done ) {
-    var newUser = {
-      name: 'John Doe',
-      email: 'j.doe@restmail.net'
-    };
-
+  it( 'GET should get an array of valid user objects', function( done ) {
     agent
-      .post( '/api/users' )
-      .send( newUser )
+      .get( '/api/users' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
-      .expect( validUserObject )
+      .expect( function( res ) {
+        res.body.forEach( function( obj ) {
+          validUserObject( { body: obj } );
+        });
+      })
       .end( done );
   });
 
@@ -209,7 +206,7 @@ describe( '/api/users (for standard user)', function() {
 
     it( 'PUT should update a user', function( done ) {
       var newUser = {
-        name: 'Jane Doe'
+        email: 'jane.doe@restmail.net'
       };
 
       agent
