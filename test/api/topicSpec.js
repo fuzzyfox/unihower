@@ -25,29 +25,23 @@ var db = require( process.cwd() + '/models' )( env );
 var agent = supertest.agent( app );
 
 /*
-  describe a valid user object
+  describe a valid topic object
  */
-function validUserObject( res ) {
-  // valid (required) properties and their types for a user object
+function validTopicObject( res ) {
+  // valid (required) properties and their types for a topic object
   var keyTypes = {
     id: 'number',
     name: 'string',
-    email: 'string',
-    isAdmin: 'boolean',
-    sendNotifications: 'boolean',
+    description: 'string',
     createdAt: 'string',
-    updatedAt: 'string'
+    updatedAt: 'string',
+    UserId: 'number'
   };
 
   // check that the property exists and is of correct type
   Object.keys( keyTypes ).forEach( function( key ) {
     res.body.should.have.property( key ).and.be.a( keyTypes[ key ] );
   });
-
-  // check if last login datetime exists, and if so that its type string
-  if( res.body.lastLogin ) {
-    res.body.lastLogin.should.be.a( 'string' );
-  }
 }
 
 /**
@@ -62,7 +56,11 @@ function setupDatabase( done ) {
     }
 
     db.User.bulkCreate( require( '../data/user' ) ).done( function() {
-      done();
+      db.Topic.bulkCreate( require( '../data/topic' ) ).done( function() {
+        done();
+      }).catch( function( err ) {
+        done( err );
+      });
     }).catch( function( err ) {
       done( err );
     });
@@ -70,10 +68,10 @@ function setupDatabase( done ) {
 }
 
 /*
-  describe user api
+  describe topic api
  */
 
-describe( '/api/users (for standard user)', function() {
+describe( '/api/topics', function() {
   // any pre-test setup
   before( function( done ) {
     // this bit can take a while
@@ -151,68 +149,93 @@ describe( '/api/users (for standard user)', function() {
 
   it( 'GET should exist', function( done ) {
     agent
-      .get( '/api/users' )
+      .get( '/api/topics' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 403 )
       .end( done );
   });
 
-  it( 'POST should create a valid user object', function( done ) {
-    var newUser = {
-      name: 'John Doe',
-      email: 'j.doe@restmail.net'
+  it( 'POST should create a valid topic object', function( done ) {
+    var newTopic = {
+      name: 'Operation Waning Orca',
+      description: 'A topic created simply to test topic creation.'
     };
 
     agent
-      .post( '/api/users' )
-      .send( newUser )
+      .post( '/api/topics' )
+      .send( newTopic )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
-      .expect( validUserObject )
+      .expect( validTopicObject )
       .end( done );
   });
 
-  describe( '/api/users/2', function() {
+  describe( '/api/topics/1', function() {
 
     it( 'GET should exist', function( done ) {
       agent
-        .get( '/api/users/2' )
+        .get( '/api/topics/1' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
         .end( done );
     });
 
-    it( 'GET should return a valid user object', function( done ) {
+    it( 'GET should return a valid topic object', function( done ) {
       agent
-        .get( '/api/users/2' )
+        .get( '/api/topics/1' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
-        .expect( validUserObject )
+        .expect( validTopicObject )
         .end( done );
     });
 
-    it( 'PUT should update a user', function( done ) {
-      var newUser = {
-        name: 'Jane Doe'
+    it( 'PUT should update a topic', function( done ) {
+      var newTopic = {
+        name: 'Meta Topic Is Meta'
       };
 
       agent
-        .put( '/api/users/2' )
-        .send( newUser )
+        .put( '/api/topics/1' )
+        .send( newTopic )
         .set( 'Acept', 'application/json' )
         .expect( 200 )
-        .expect( validUserObject )
+        .expect( validTopicObject )
         .end( done );
     });
 
-    it( 'DETLETE should remove a user', function( done ) {
+    it( 'DELETE should remove a topic', function( done ) {
       agent
-        .delete( '/api/users/2' )
+        .delete( '/api/topics/1' )
         .expect( 204 )
+        .end( done );
+    });
+  });
+
+  describe( '/api/users/2/topics', function() {
+    it( 'GET should exist', function( done ) {
+      agent
+        .get( '/api/users/2/topics' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .end( done );
+    });
+
+    it( 'GET should return an array of valid topic objects beloning to UserId 2', function( done ) {
+      agent
+        .get( '/api/users/2/topics' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .expect( function( res ) {
+          res.body.forEach( function( obj ) {
+            validTopicObject( { body: obj } );
+          });
+        })
         .end( done );
     });
   });

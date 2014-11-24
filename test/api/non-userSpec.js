@@ -51,7 +51,7 @@ function validUserObject( res ) {
  */
 
 describe( '/api/users (guest user)', function() {
-  it( 'should exist', function( done ) {
+  it( 'GET should exist', function( done ) {
     agent
       .get( '/api/users' )
       .set( 'Accept', 'application/json' )
@@ -60,7 +60,7 @@ describe( '/api/users (guest user)', function() {
       .end( done );
   });
 
-  it( 'should create a valid user object', function( done ) {
+  it( 'POST should create a valid user object', function( done ) {
     var newUser = {
       name: 'John Doe',
       email: 'j.doe@restmail.net'
