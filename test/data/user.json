@@ -2,13 +2,13 @@
   {
     "name": "Vida Kemmer",
     "email": "Vida_Rohan62@restmail.net",
-    "isAdmin": false,
+    "isAdmin": true,
     "sendNotifications": 1
   },
   {
     "name": "Romaine Thompson",
     "email": "Romaine58@restmail.net",
-    "isAdmin": true,
+    "isAdmin": false,
     "sendNotifications": 1
   },
   {

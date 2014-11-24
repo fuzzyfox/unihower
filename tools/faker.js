@@ -48,7 +48,7 @@ var models = {
       });
     }
 
-    results[ 1 ].isAdmin = true;
+    results[ 0 ].isAdmin = true;
 
     return results;
   },
