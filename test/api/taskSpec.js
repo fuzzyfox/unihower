@@ -82,7 +82,7 @@ describe( '/api/tasks', function() {
   // any pre-test setup
   before( function( done ) {
     // this bit can take a while
-    this.timeout( 10000 );
+    this.timeout( 30000 );
 
     // setup database with test data
     setupDatabase( function( err ) {
@@ -105,7 +105,7 @@ describe( '/api/tasks', function() {
             return done( err );
           }
 
-          personatestuser = res.body;
+          personatestuser = body;
 
           // change the email address of user 2 to match that from persona so we can
           // log the user into the api (downside of persona auth)
@@ -252,14 +252,37 @@ describe( '/api/tasks', function() {
         .expect( 200 )
         .expect( function( res ) {
           res.body.forEach( function( obj ) {
+            obj.should.have.property( 'UserId' ).and.equal( 2 );
             validTaskObject( { body: obj } );
           });
         })
         .end( done );
     });
+  });
 
-    it( 'GET should return an array of valid tasks beloning to TopicId 2', function( done ) {
+  describe( '/api/topics/2/tasks', function() {
+    it( 'GET should exist', function( done ) {
+      agent
+        .get( '/api/topics/2/tasks' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .end( done );
+    });
 
+    it( 'GET should return an array of valid tasks objects beloning to TopicId 2', function( done ) {
+      agent
+        .get( '/api/topics/2/tasks' )
+        .set( 'Acept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .expect( function( res ) {
+          res.body.forEach( function( obj ) {
+            obj.should.have.property( 'TopicId' ).and.equal( 2 );
+            validTaskObject( { body: obj } );
+          });
+        })
+        .end( done );
     });
   });
 });

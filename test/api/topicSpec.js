@@ -31,8 +31,6 @@ function validTopicObject( res ) {
   // valid (required) properties and their types for a topic object
   var keyTypes = {
     id: 'number',
-    name: 'string',
-    description: 'string',
     createdAt: 'string',
     updatedAt: 'string',
     UserId: 'number'
@@ -42,6 +40,14 @@ function validTopicObject( res ) {
   Object.keys( keyTypes ).forEach( function( key ) {
     res.body.should.have.property( key ).and.be.a( keyTypes[ key ] );
   });
+
+  // check name + description are either null OR string
+  if( res.body.name ) {
+    res.body.name.should.be.a( 'string' );
+  }
+  if( res.body.description ) {
+    res.body.description.should.be.a( 'string' );
+  }
 }
 
 /**
@@ -77,7 +83,7 @@ describe( '/api/topics', function() {
   // any pre-test setup
   before( function( done ) {
     // this bit can take a while
-    this.timeout( 10000 );
+    this.timeout( 30000 );
 
     // setup database with test data
     setupDatabase( function( err ) {
@@ -100,7 +106,7 @@ describe( '/api/topics', function() {
             return done( err );
           }
 
-          personatestuser = res.body;
+          personatestuser = body;
 
           // change the email address of user 2 to match that from persona so we can
           // log the user into the api (downside of persona auth)
@@ -245,6 +251,7 @@ describe( '/api/topics', function() {
         .expect( 200 )
         .expect( function( res ) {
           res.body.forEach( function( obj ) {
+            obj.UserId.should.equal( 2 );
             validTopicObject( { body: obj } );
           });
         })

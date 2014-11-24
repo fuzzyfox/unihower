@@ -79,7 +79,7 @@ describe( '/api/users (for standard user)', function() {
   // any pre-test setup
   before( function( done ) {
     // this bit can take a while
-    this.timeout( 10000 );
+    this.timeout( 30000 );
 
     // setup database with test data
     setupDatabase( function( err ) {
@@ -102,7 +102,7 @@ describe( '/api/users (for standard user)', function() {
             return done( err );
           }
 
-          personatestuser = res.body;
+          personatestuser = body;
 
           // change the email address of user 2 to match that from persona so we can
           // log the user into the api (downside of persona auth)

@@ -158,6 +158,52 @@ module.exports = function( env ) {
       }
 
       return errorResponse.forbidden( req, res );
+    },
+    /**
+     * List all topics belonging to a specific user.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse} res
+     */
+    topics: function( req, res ) {
+      if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
+        return db.Topic.findAll({
+          where: {
+            UserId: req.params.id
+          }
+        }).done( function( err, topics ) {
+          if( err ) {
+            return errorResponse.internal( req, res, err );
+          }
+
+          res.status( 200 ).json( topics );
+        });
+      }
+
+      return errorResponse.forbidden( req, res );
+    },
+    /**
+     * Lists all the tasks that belong to a specific user.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse} res
+     */
+    tasks: function( req, res ) {
+      if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
+        return db.Task.findAll({
+          where: {
+            UserId: req.params.id
+          }
+        }).done( function( err, tasks ) {
+          if( err ) {
+            return errorResponse.internal( req, res, err );
+          }
+
+          res.status( 200 ).json( tasks );
+        });
+      }
+
+      return errorResponse.forbidden( req, res );
     }
   };
 };

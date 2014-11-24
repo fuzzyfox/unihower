@@ -89,6 +89,28 @@ app.get( '/api/users/:id', routes.api.users.get );
 app.put( '/api/users/:id', routes.api.users.update );
 app.delete( '/api/users/:id', routes.api.users.delete );
 
+// api for specific users topics
+app.get( '/api/users/:id/topics', routes.api.users.topics );
+
+// api for specific topic
+app.get( '/api/topics', routes.api.topics.list );
+app.post( '/api/topics', routes.api.topics.create );
+app.get( '/api/topics/:id', routes.api.topics.get );
+app.put( '/api/topics/:id', routes.api.topics.update );
+app.delete( '/api/topics/:id', routes.api.topics.delete );
+
+// api for specific users tasks
+app.get( '/api/users/:id/tasks', routes.api.users.tasks );
+// api for specific topics tasks
+app.get( '/api/topics/:id/tasks', routes.api.topics.tasks );
+
+// api for specific task
+app.get( '/api/tasks', routes.api.tasks.list );
+app.post( '/api/tasks', routes.api.tasks.create );
+app.get( '/api/tasks/:id', routes.api.tasks.get );
+app.put( '/api/tasks/:id', routes.api.tasks.update );
+app.delete( '/api/tasks/:id', routes.api.tasks.delete );
+
 /*
   authenticated routes (administrators)
  */
