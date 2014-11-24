@@ -122,7 +122,7 @@ describe( '/api/tasks', function() {
               // persona verification route
               agent
                 .post( '/persona/verify' )
-                .send( JSON.stringify( { assertion: body.assertion } ) )
+                .send( { assertion: body.assertion } )
                 .set( 'Accept', 'application/json' )
                 .expect( 'Content-Type', /json/ )
                 .expect( 200 )
