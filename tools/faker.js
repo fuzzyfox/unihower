@@ -9,6 +9,7 @@
  *  $ node tools/faker --model=task --num-items=234 --max-user-id=20 --max-topic-id=27
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ *
  * @requires minimist
  * @requires faker
  */
@@ -42,7 +43,7 @@ var models = {
 
       results.push({
         name: fakeName,
-        email: faker.internet.email( fakeName.split( ' ' )[ 0 ], fakeName.split[ 1 ], 'restmail.net' ),
+        email: faker.internet.email( fakeName.split( ' ' )[ 0 ], fakeName.split[ 1 ], 'restmail.net' ).toLowerCase(),
         isAdmin: false,
         sendNotifications: Math.floor( Math.random() * 2 )
       });

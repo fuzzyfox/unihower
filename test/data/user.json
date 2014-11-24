@@ -13,7 +13,7 @@
   },
   {
     "name": "Ms. Guy Mertz",
-    "email": "ms..schmeler@restmail.net",
+    "email": "ms.schmeler@restmail.net",
     "isAdmin": false,
     "sendNotifications": 1
   },
@@ -115,7 +115,7 @@
   },
   {
     "name": "Mr. Dewitt Goyette",
-    "email": "mr..johnston@restmail.net",
+    "email": "mr.johnston@restmail.net",
     "isAdmin": false,
     "sendNotifications": 1
   },
@@ -187,7 +187,7 @@
   },
   {
     "name": "Ms. Fernando Ritchie",
-    "email": "ms..rempel35@restmail.net",
+    "email": "ms.rempel35@restmail.net",
     "isAdmin": false,
     "sendNotifications": 0
   },
