@@ -74,7 +74,7 @@ app.get( '/', function( req, res ) {
   res.send( 'It worked!' );
 });
 
-// create new user
+// create a new user
 app.post( '/api/users', routes.api.users.create );
 
 /*

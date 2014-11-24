@@ -72,6 +72,7 @@ function setupDatabase( done ) {
 /*
   describe user api
  */
+var personatestuser = {};
 
 describe( '/api/users (for administrator)', function() {
   // any pre-test setup
@@ -99,6 +100,7 @@ describe( '/api/users (for administrator)', function() {
           if( err ) {
             return done( err );
           }
+          personatestuser = body;
 
           // change the email address of user 1 to match that from persona so we can
           // log the user into the api (downside of persona auth)
@@ -142,12 +144,20 @@ describe( '/api/users (for administrator)', function() {
   });
 
   after( function( done ) {
-    agent
-      .post( '/persona/logout' )
-      .set( 'Accept', 'application/json' )
-      .expect( 'Content-Type', /json/ )
-      .expect( 200 )
-      .end( done );
+    // remove persona test user to tidy up remote api session
+    request
+      .get({
+        url: 'http://personatestuser.org/cancel/' + personatestuser.email + '/' + personatestuser.password,
+        json: true
+      }, function( err, res, body ) {
+        // logout to remove our local api session
+        agent
+          .post( '/persona/logout' )
+          .set( 'Accept', 'application/json' )
+          .expect( 'Content-Type', /json/ )
+          .expect( 200 )
+          .end( done );
+      });
   });
 
   it( 'GET should exist', function( done ) {
