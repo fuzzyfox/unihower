@@ -1,16 +1,27 @@
 /**
  * @file Provides handlers for user api routes.
- *
- * @example
- *   var userApiRoutes = require( './routes/api/users' )( env );
- *   app.get( '/users/:id', userApiRoutes.get );
+ * @module routes/api/users
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  *
- * @requires ../../models
- * @requires ../errors
+ * @requires models
+ * @requires routes/errors
  */
 
+/**
+ * User API exports
+ *
+ * @example
+ *
+ *  // assuming you've loaded an environment into `env`
+ *  var userApiRoutes = require( './routes/api/users' )( env );
+ *
+ *  // uses the `update` method to handle the request.
+ *  app.put( '/api/users/:id', userApiRoutes.update );
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Object}      An object containing all user api route handlers.
+ */
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
@@ -21,10 +32,12 @@ module.exports = function( env ) {
      *
      * There is no restriction on what kinds of users can create new users.
      *
-     * Note: `req.body` must be an object containing the data for the new user.
+     * **Note:** `req.body` must be an object containing the data for the new user.
+     *
+     * *Method intended for HTTP POST requests*
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
       return db.User.create( req.body ).done( function( err, user ) {
@@ -45,10 +58,12 @@ module.exports = function( env ) {
      * Only the user who's details are being requested, or an administrator, can
      * retrieve the user details.
      *
-     * Note: `req.params.id` must be the id for the user to fetch.
+     * **Note:** `req.params.id` must be the id for the user to fetch.
+     *
+     * *Method intended for HTTP GET requests.*
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     get: function( req, res ) {
       if( ( req.session.user.id === parseInt( req.params.id, 10 ) ) || ( req.session.user.isAdmin ) ) {
@@ -66,8 +81,12 @@ module.exports = function( env ) {
     /**
      * Gets an array of all users.
      *
+     * **Note:** only Administrators may view a list of system users.
+     *
+     * *Method intended for HTTP GET requests.*
+     *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     list: function( req, res ) {
       if( req.session.user.isAdmin ) {
@@ -85,14 +104,16 @@ module.exports = function( env ) {
     /**
      * Update a specific users details.
      *
-     * Only the user who's details are being updated can modify all details. Administrators
-     * may only edit a users email address and admin status.
+     * Only the user who's details are being updated can modify all details.
+     * Administrators may only edit a users email address and admin status.
      *
-     * Note: `req.body` must be an object containing the data for the new user, and
-     * `req.params.id` must be the id for the user to update.
+     * **Note:** `req.body` must be an object containing the data for the new
+     * user, and `req.params.id` must be the id for the user to update.
+     *
+     * *Method intended for HTTP PUT/POST requests.*
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
@@ -135,10 +156,12 @@ module.exports = function( env ) {
      * Only the user who's details will be removed, or an adminstrator, may remove
      * the user specified.
      *
-     * Note: `req.params.id` must be the id for the user to delete.
+     * **Note:** `req.params.id` must be the id for the user to delete.
+     *
+     * *Method intended for HTTP DELETE requests.*
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     delete: function( req, res ) {
       if( ( req.session.user.id === parseInt( req.params.id, 10 ) ) || ( req.session.user.isAdmin ) ) {
@@ -162,8 +185,12 @@ module.exports = function( env ) {
     /**
      * List all topics belonging to a specific user.
      *
+     * **Note:* a user may only view their own topics.
+     *
+     * *Method intended for HTTP GET requests.*
+     *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     topics: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
@@ -185,8 +212,12 @@ module.exports = function( env ) {
     /**
      * Lists all the tasks that belong to a specific user.
      *
+     * **Note:** a user may only view their own tasks.
+     *
+     * *Method intended for HTTP GET requests.*
+     *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     tasks: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {

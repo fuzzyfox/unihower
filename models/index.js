@@ -1,3 +1,10 @@
+/**
+ * @file Loads models into a single usable ORM object.
+ * @module models
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
 /*
   require packages
  */
@@ -7,6 +14,18 @@ var lodash = require( 'lodash' );
 var Sequelize = require( 'sequelize' );
 var debug = require( 'debug' )( 'sequelize' );
 
+/**
+ * Models/ORM Exports
+ *
+ * @example
+ *
+ *  // assuming you've loaded an environment into `env`
+ *  var db = require( './models' )( env );
+ *  db.SomeModel.find().done( function( err, result ) { ... } );
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Function}    When provided with an environment this returned function returns a usable ORM.
+ */
 module.exports = function( env ) {
   // create an object to return w/ the ORM
   var db = {};

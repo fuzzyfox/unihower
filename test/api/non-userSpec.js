@@ -1,5 +1,12 @@
 /* global describe, it */
 
+/**
+ * @file BDD tests for the user API, when the user is not authenticated
+ * @module test/api/non-userSpec
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
 // force testing env
 process.env.NODE_ENV = 'testing';
 
@@ -20,8 +27,11 @@ env.set( 'pkg', require( process.cwd() + '/package' ) );
 var app = require( process.cwd() + '/server' );
 var agent = supertest.agent( app );
 
-/*
-  describe a valid user object
+/**
+ * Determines if `res.body` is a valid user object, and throws an error if one
+ * is encountered by the tests.
+ *
+ * @param  {http.IncomingMessge} res
  */
 function validUserObject( res ) {
   // valid (required) properties and their types for a user object

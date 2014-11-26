@@ -1,10 +1,13 @@
 /**
  * @file Generates random data for use in tests.
+ * @module tools/faker
  *
  * @example Generate users
  *  $ node tools/faker --model=user --num-items=20
+ *
  * @example Generate topics
  *  $ node tools/faker --model=topic --num-items=27 --max-user-id=20
+ *
  * @example Generate tasks
  *  $ node tools/faker --model=task --num-items=234 --max-user-id=20 --max-topic-id=27
  *
@@ -17,67 +20,134 @@
 /*
   require packages
  */
-var argv = require( 'minimist' )( process.argv.slice( 2 ) );
 var faker = require( 'faker' );
 
-/*
-  configurables
- */
-var opts = {
-  model: argv.m || argv.model || 'user',
-  numItems: argv.n || argv[ 'num-items' ] || 5,
-  maxUserId: argv.u || argv[ 'max-user-id' ] || 5,
-  maxTopicId: argv.t || argv[ 'max-topic-id' ] || 5
-};
+// we need to know valid states from the db...
+// this means we need to load the environment too :/
+var Habitat = require( 'Habitat');
+Habitat.load( __dirname + '/../.env-test' );
+var env = new Habitat();
+var taskModel = require( '../models' )( env ).Task; // used to get valid states for tasks
 
-/*
-  possible fake model data
+/**
+ * Shortcut to random integer from range (inclusive).
+ *
+ * @param  {Number} min Minimum value.
+ * @param  {Number} max Maximum value.
+ * @return {Number}     Random interger within range.
  */
-var models = {
-  user: function() {
+function randomIntegerBetween( min, max ) {
+  return Math.floor( faker.random.number( { min: min, max: max } ) );
+}
+
+/**
+ * Module Exports
+ *
+ * @type {Object}
+ */
+module.exports = {
+  /**
+   * Generates random user objects.
+   *
+   * @param  {Number}  [numItems]    Number of objects to generate. Default = 1
+   * @param  {String}  [emailDomain] Domain for the email addresses to belong to. Defaults to random
+   * @param  {Boolean} [setAdmin]    Sets the first user object as an administrator. Default = false
+   * @return {Array}                 Array of generated objects.
+   */
+  user: function( numItems, emailDomain, setAdmin ) {
+    numItems = numItems || 1;
+
+    // store generated users in array for returning back
     var results = [];
-    var fakeName;
 
-    for( var i = 0; i < opts.numItems; i++ ) {
-      fakeName = faker.name.findName();
+    // declare a tmp store for name data
+    var name = {};
+    // generate data
+    for( var i = 0; i < numItems; i++ ) {
+      // generate a name
+      name.first = faker.name.firstName();
+      name.last = faker.name.lastName();
 
+      // add random user to results
       results.push({
-        name: fakeName,
-        email: faker.internet.email( fakeName.split( ' ' )[ 0 ], fakeName.split[ 1 ], 'restmail.net' ).toLowerCase(),
-        isAdmin: false,
+        name: name.first + ' ' + name.last,
+        email: faker.internet.email( name.first, name.last, emailDomain ).toLowerCase(),
         sendNotifications: Math.floor( Math.random() * 2 )
       });
     }
 
-    results[ 0 ].isAdmin = true;
+    // make the first user of the results an admin
+    if( setAdmin ) {
+      results[ 0 ].isAdmin = true;
+    }
 
     return results;
   },
-  topic: function() {
+  /**
+   * Generates random topic objects.
+   *
+   * @param  {Number} [numItems]  Number of objects to generate. Default = 1
+   * @param  {Number} [maxUserId] Maximum UserId to generate a topic for. Default = 1
+   * @return {Array}              Array of generated objects.
+   */
+  topic: function( numItems, maxUserId ) {
+    numItems = numItems || 1;
+    maxUserId = maxUserId || 1;
+
+    // store generated results for returning back
     var results = [];
 
-    for( var i = 0; i < opts.numItems; i++ ) {
+    // declare some tmp stores for generation needs
+    var genName = false;
+    var genDescription = false;
+
+    // generate data
+    for( var i = 0; i < numItems; i++ ) {
+      // randomly decide if we generate a topic name
+      genName = Math.floor( Math.random() * 2 );
+      // if we have no name we MUST generate a description, else randomly do/dont.
+      genDescription = genName ? Math.floor( Math.random() * 2 ) : true;
+
       results.push({
-        name: Math.floor( Math.random() * 2 ) ? null : faker.company.companyName(),
-        description: faker.lorem.sentences(),
-        UserId: Math.floor( faker.random.number( { min: 1, max: opts.maxUserId } ) )
+        name: genName ? faker.company.companyName() : null,
+        description: genDescription ? faker.lorem.sentences() : null,
+        UserId: randomIntegerBetween( 1, maxUserId )
       });
     }
 
     return results;
   },
-  task: function() {
-    var results = [];
-    var states = [ 'incomplete', 'complete' ];
+  /**
+   * Generate random task objects.
+   *
+   * WARNING: This method does not attempt to match the UserId of a Topic.
+   *
+   * @param  {Number} [numItems]   Number of objects to generate. Default = 1
+   * @param  {Number} [maxUserId]  Maximum UserId to generate objects for. Default = 1
+   * @param  {Number} [maxTopicId] Maximum TopicId to generate objects for. Dafault = 0
+   * @return {Array}               Array of generated objects.
+   */
+  task: function( numItems, maxUserId, maxTopicId ) {
 
-    for( var i = 0; i < opts.numItems; i++ ) {
+    numItems = numItems || 1;
+    maxUserId = maxUserId || 1;
+    maxTopicId = maxTopicId || 0;
+
+    // get valid states
+    var states = taskModel.rawAttributes.state.values;
+
+    // store generated results for returning back
+    var results = [];
+
+    // generate data
+    for( var i = 0; i < numItems; i++ ) {
       results.push({
         description: faker.hacker.phrase(),
         state: states[ Math.floor( Math.random() * states.length ) ],
-        coordX: Math.floor( faker.random.number( { min: -100, max: 100 } ) ),
-        coordY: Math.floor( faker.random.number( { min: -100, max: 100 } ) ),
-        TopicId: Math.floor( faker.random.number( { min: 1, max: opts.maxTopicId } ) ),
-        UserId: Math.floor( faker.random.number( { min: 1, max: opts.maxUserId } ) )
+        coordX: randomIntegerBetween( -100, 100 ),
+        coordY: randomIntegerBetween( -100, 100 ),
+        TopicId: maxTopicId ? null : randomIntegerBetween( 1, maxTopicId ),
+        UserId: randomIntegerBetween( 1, maxUserId )
       });
     }
 
@@ -86,7 +156,33 @@ var models = {
 };
 
 /*
-  output results
+  deal with CLI usage
  */
-var result = models[ opts.model ]();
-console.log( JSON.stringify( result, null, 2 ) );
+
+if( require.main === module ) {
+  var argv = require( 'minimist' )( process.argv.slice( 2 ) );
+
+  // set defaults for cli options
+  var args = {
+    model: argv.m || argv.model || 'user',
+    numItems: argv.n || argv[ 'num-items' ] || 5,
+    noAdmin: argv[ 'no-admin' ] || false,
+    emailDomain: argv.e || argv[ 'email-domain' ],
+    maxUserId: argv.u || argv[ 'max-user-id' ] || 5,
+    maxTopicId: argv.t || argv[ 'max-topic-id' ] || 5
+  };
+
+  var cliMap = {
+    user: function() {
+      return module.exports.user( args.numItems, args.emailDomain, !args.noAdmin );
+    },
+    topic: function() {
+      return module.exports.topic( args.numItems, args.maxUserId );
+    },
+    task: function() {
+      return module.exports.task( args.numItems, args.maxUserId, args.maxTopicId );
+    }
+  };
+
+  console.log( JSON.stringify( cliMap[ args.model ](), null, 2 ) );
+}

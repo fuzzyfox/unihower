@@ -31,7 +31,7 @@ var agent = supertest.agent( app );
 
 describe( 'supertest.agent(app)', function() {
 
-  it( 'should save cookies', function( done ) {
+  it( 'GET /test/cookie should save a cookie to agent', function( done ) {
     agent
       .get( '/test/cookie' )
       .expect( 200 )
@@ -39,7 +39,7 @@ describe( 'supertest.agent(app)', function() {
       .end( done );
   });
 
-  it( 'should persist cookies', function( done ) {
+  it( 'GET /test/returnCookie should persist cookie back to server', function( done ) {
     agent
       .get( '/test/returnCookie' )
       .expect( 200 )

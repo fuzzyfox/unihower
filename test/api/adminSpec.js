@@ -1,5 +1,12 @@
 /* global describe, it, before, after */
 
+/**
+ * @file BDD tests for the user API, when the user is authenticated and an admin.
+ * @module test/api/adminSpec
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
 // force testing env
 process.env.NODE_ENV = 'testing';
 
@@ -24,8 +31,11 @@ var db = require( process.cwd() + '/models' )( env );
 // configure supertest
 var agent = supertest.agent( app );
 
-/*
-  describe a valid user object
+/**
+ * Determines if `res.body` is a valid user object, and throws an error if one
+ * is encountered by the tests.
+ *
+ * @param  {http.IncomingMessge} res
  */
 function validUserObject( res ) {
   // valid (required) properties and their types for a user object
@@ -51,7 +61,7 @@ function validUserObject( res ) {
 }
 
 /**
- * Setup the database with clean slate, and test data
+ * Setup the database with clean slate, and test data.
  *
  * @param  {Function} done Async callback for mocha
  */

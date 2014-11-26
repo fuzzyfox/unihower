@@ -1,3 +1,17 @@
+/**
+ * @file Defines the User model
+ * @module model/user
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
+/**
+ * User Model Export
+ *
+ * @param  {Sequelize}           sequelize  An instantiated Sequelize class.
+ * @param  {Sequelize.DataTypes} DataTypes  An instance of the Sequelize DataTypes class.
+ * @return {Sequelize.Model}                The User model.
+ */
 module.exports = function( sequelize, DataTypes ) {
   var User = sequelize.define( 'User', {
     id: {
