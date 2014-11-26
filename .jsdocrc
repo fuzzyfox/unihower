@@ -8,6 +8,7 @@
   },
   "plugins": [ "plugins/markdown" ],
   "opts": {
-    "destination": "./docs"
+    "destination": "./docs",
+    "recurse": true
   }
 }
