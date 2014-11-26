@@ -24,7 +24,7 @@ module.exports = function( env ) {
      * Note: `req.body` must be an object containing the data for the new user.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
       return db.User.create( req.body ).done( function( err, user ) {
@@ -48,7 +48,7 @@ module.exports = function( env ) {
      * Note: `req.params.id` must be the id for the user to fetch.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     get: function( req, res ) {
       if( ( req.session.user.id === parseInt( req.params.id, 10 ) ) || ( req.session.user.isAdmin ) ) {
@@ -67,7 +67,7 @@ module.exports = function( env ) {
      * Gets an array of all users.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     list: function( req, res ) {
       if( req.session.user.isAdmin ) {
@@ -92,7 +92,7 @@ module.exports = function( env ) {
      * `req.params.id` must be the id for the user to update.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
@@ -138,7 +138,7 @@ module.exports = function( env ) {
      * Note: `req.params.id` must be the id for the user to delete.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     delete: function( req, res ) {
       if( ( req.session.user.id === parseInt( req.params.id, 10 ) ) || ( req.session.user.isAdmin ) ) {
@@ -163,7 +163,7 @@ module.exports = function( env ) {
      * List all topics belonging to a specific user.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     topics: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
@@ -186,7 +186,7 @@ module.exports = function( env ) {
      * Lists all the tasks that belong to a specific user.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     tasks: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {

@@ -25,7 +25,7 @@ module.exports = function( env ) {
      * Note: `req.body` must be an object containing the data for the new topic.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
       return db.Topic.create( req.body ).done( function( err, topic ) {
@@ -50,7 +50,7 @@ module.exports = function( env ) {
      * Note: `req.params.id` must be the id for the topic to fetch.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     get: function( req, res ) {
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
@@ -72,7 +72,7 @@ module.exports = function( env ) {
      * user should be able to access anothers topic details.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     list: function( req, res ) {
       return errorResponse.forbidden( req, res );
@@ -86,7 +86,7 @@ module.exports = function( env ) {
      * `req.params.id` must be the id for the topic to update.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
@@ -115,7 +115,7 @@ module.exports = function( env ) {
      * Note: `req.params.id` must be the id for the topic to delete.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     delete: function( req, res ) {
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
@@ -140,7 +140,7 @@ module.exports = function( env ) {
      * Lists all the tasks that belong to a specific topic.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     tasks: function( req, res ) {
       return db.Topic.find({

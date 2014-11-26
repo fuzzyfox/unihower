@@ -17,8 +17,8 @@ module.exports = function( env ) {
      * the request payload (malformed JSON, for instance).
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "Failed to parse requested payload.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "Failed to parse requested payload.".
      */
     badRequest: function( req, res, msg ) {
       res.format({
@@ -42,8 +42,8 @@ module.exports = function( env ) {
      * This should be used when a request is not authenticiated.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "You must be logged in to use this resource.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "You must be logged in to use this resource.".
      */
     unauthorized: function( req, res, msg ) {
       res.format({
@@ -70,8 +70,8 @@ module.exports = function( env ) {
      * @see {@link unauthorized}
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "You are not permitted to use this resource.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "You are not permitted to use this resource.".
      */
     forbidden: function( req, res, msg ) {
       res.format({
@@ -95,8 +95,8 @@ module.exports = function( env ) {
      * This should be used when the requested resource cannot be found.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "Not Found".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "Not Found".
      */
     notFound: function( req, res, msg ) {
       res.format({
@@ -121,8 +121,8 @@ module.exports = function( env ) {
      * such as an edit conflict, or duplicate entry.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "Unable to process request due to a confilct.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "Unable to process request due to a confilct.".
      */
     confilct: function( req, res, msg ) {
       res.format({
@@ -147,8 +147,8 @@ module.exports = function( env ) {
      * never be available again.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "This resource is no longer available.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "This resource is no longer available.".
      */
     gone: function( req, res, msg ) {
       res.format({
@@ -174,8 +174,8 @@ module.exports = function( env ) {
      * @see {@link https://tools.ietf.org/html/rfc2324}
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "The resulting entity may be short and stout.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "The resulting entity may be short and stout.".
      */
     teapot: function( req, res, msg ) {
       res.format({
@@ -200,8 +200,8 @@ module.exports = function( env ) {
      * from fulfilling the request.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
-     * @param  {[String]} msg A custom error message to return. Defaults to "An unexpected error has occured. Try again later.".
+     * @param  {http.ServerResponse}  res
+     * @param  {String}               [msg] A custom error message to return. Defaults to "An unexpected error has occured. Try again later.".
      */
     internal: function( req, res, msg ) {
       res.format({

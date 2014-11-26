@@ -28,7 +28,7 @@ module.exports = function( env ) {
      * within `req.body`.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
       return db.Task.create( req.body ).done( function( err, task ) {
@@ -53,7 +53,7 @@ module.exports = function( env ) {
      * Note: `req.params.id` must be the id for the task to fetch.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     get: function( req, res ) {
       return db.Task.find( req.params.id ).done( function( err, task ) {
@@ -75,7 +75,7 @@ module.exports = function( env ) {
      * user should be able to access anothers task details.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     list: function( req, res ) {
       return errorResponse.forbidden( req, res );
@@ -89,7 +89,7 @@ module.exports = function( env ) {
      * `req.params.id` must be the id for the task to update.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
       return db.Task.find( req.params.id ).done( function( err, task ) {
@@ -118,7 +118,7 @@ module.exports = function( env ) {
      * Note: `req.params.id` must be the id for the task to delete.
      *
      * @param  {http.IncomingMessage} req
-     * @param  {http.ServerResponse} res
+     * @param  {http.ServerResponse}  res
      */
     delete: function( req, res ) {
       return db.Task.find( req.params.id ).done( function( err, task ) {
