@@ -1,16 +1,27 @@
 /**
  * @file Provides handlers for topic api routes.
- *
- * @example
- *   var topicApiRoutes = require( './routes/api/topics' )( env );
- *   app.get( '/topics/:id', topicApiRoutes.get );
+ * @module routes/api/topics
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  *
- * @requires ../../models
- * @requires ../errors
+ * @requires models
+ * @requires routes/errors
  */
 
+/**
+ * Topic API exports
+ *
+ * @example
+ *
+ *  // assuming you've loaded an environment into `env`
+ *  var topicApiRoutes = require( './routes/api/topics' )( env );
+ *
+ *  // uses the `create` method to handle the request.
+ *  app.post( '/api/topics', topicApiRoutes.create );
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Object}      An object containing all user api route handlers.
+ */
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
@@ -22,7 +33,9 @@ module.exports = function( env ) {
      * Once a topic is created it is automatically associated to the user that
      * created it.
      *
-     * Note: `req.body` must be an object containing the data for the new topic.
+     * **Note:** `req.body` must be an object containing the data for the new topic.
+     *
+     * *Method intended for HTTP POST requests.*
      *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
@@ -47,7 +60,9 @@ module.exports = function( env ) {
      *
      * Only the user who's details are being requested, can retrieve the topic details.
      *
-     * Note: `req.params.id` must be the id for the topic to fetch.
+     * **Note:** `req.params.id` must be the id for the topic to fetch.
+     *
+     * *Method intended for HTTP GET requests.*
      *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
@@ -82,8 +97,10 @@ module.exports = function( env ) {
      *
      * Only the user who's details are being updated can modify details.
      *
-     * Note: `req.body` must be an object containing the data for the new topic, and
+     * **Note:** `req.body` must be an object containing the data for the new topic, and
      * `req.params.id` must be the id for the topic to update.
+     *
+     * *Method intended for HTTP PUT/POST requests.*
      *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
@@ -112,7 +129,9 @@ module.exports = function( env ) {
      *
      * Only the user who's topic details will be removed, may remove the specified topic.
      *
-     * Note: `req.params.id` must be the id for the topic to delete.
+     * **Note:** `req.params.id` must be the id for the topic to delete.
+     *
+     * *Method intended for HTTP DELETE requests.*
      *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
@@ -138,6 +157,10 @@ module.exports = function( env ) {
     },
     /**
      * Lists all the tasks that belong to a specific topic.
+     *
+     * **Note:** a user may only view their own tasks
+     *
+     * *Method intended for HTTP GET requests.*
      *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res

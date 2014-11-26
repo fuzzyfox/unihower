@@ -1,13 +1,32 @@
 /**
  * @file Provides a set of standard error handlers for use with http requests.
- *
- * @example
- *   var errorResponse = require( './routes/errors' )( env );
- *   errorResponse.teapot( request, response, customMessage );
+ * @module routes/errors
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 
+/**
+ * HTTP error handlers.
+ *
+ * @example
+ *
+ *  // assuming the client has authenticated as a standard user
+ *  // and that you've loaded an environment into `env`
+ *  var errorResponse = require( './routes/errors' )( env );
+ *
+ *  app.get( '/some/admin/route', function( req, res ) {
+ *    if( req.session.user.isAdmin ) {
+ *      // user is not an admin, send HTTP 403 Forbidden response
+ *      return errorResponse.forbidden( req, res );
+ *    }
+ *
+ *    // user is admin do admin type stuff
+ *    ...
+ *  });
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator .
+ * @return {Object}      An object containing all the HTTP error handlers.
+ */
 module.exports = function( env ) {
   return {
     /**

@@ -1,10 +1,11 @@
 /**
  * @file Contains authentication handlers beyond Persona's user verification.
+ * @module routes/auth
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  *
- * @requires ../models
- * @requires ./errors
+ * @requires models
+ * @requires routes/errors
  */
 
 module.exports = function( env ) {

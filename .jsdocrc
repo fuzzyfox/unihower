@@ -1,0 +1,13 @@
+{
+  "source": {
+    "include": [ "server.js", "models", "routes", "tools", "test", "README.md" ],
+    "exludePattern": "^\\.(.*)"
+  },
+  "templates": {
+    "cleverLinks": true
+  },
+  "plugins": [ "plugins/markdown" ],
+  "opts": {
+    "destination": "./docs"
+  }
+}

@@ -1,10 +1,13 @@
 /**
  * @file Generates random data for use in tests.
+ * @module tools/faker
  *
  * @example Generate users
  *  $ node tools/faker --model=user --num-items=20
+ *
  * @example Generate topics
  *  $ node tools/faker --model=topic --num-items=27 --max-user-id=20
+ *
  * @example Generate tasks
  *  $ node tools/faker --model=task --num-items=234 --max-user-id=20 --max-topic-id=27
  *
@@ -37,8 +40,10 @@ function randomIntegerBetween( min, max ) {
   return Math.floor( faker.random.number( { min: min, max: max } ) );
 }
 
-/*
-  define a module to export
+/**
+ * Module Exports
+ *
+ * @type {Object}
  */
 module.exports = {
   /**

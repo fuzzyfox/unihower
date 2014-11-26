@@ -1,18 +1,41 @@
+/**
+ * @file Loads all routes into a single object.
+ * @module routes/index
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
 /*
   require packages
  */
 var fs = require( 'fs' );
 var debug = require( 'debug' )( 'route-loader' );
 
-
+/**
+ * Route module exports.
+ *
+ * @example
+ *
+ *  // assuming you've loaded an environment into `env`
+ *  var routes = require( './routes' )( env );
+ *
+ *  // uses the `list` method found in `./routes/api/users.js`
+ *  // to handle the request
+ *  app.get( '/api/users', routes.api.users.list );
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator. This will
+ *                       be passed automatically to any handlers found by this module.
+ * @return {Object}      An object containing all route handlers found.
+ */
 module.exports = function( env ) {
 
   /**
    * Recursively searches for, and loads route definitions.
    *
-   * Returns routes as an object in the form
-   *
    * @example
+   * var routes = findRoutes( __dirname );
+   *
+   * // Returns routes as an object in the form:
    * {
    *   root_dir: {
    *     sub_dir: {

@@ -5,10 +5,12 @@
 
 A tool for the prioritisation of tasks based on Eisenhower Desicion Matricies.
 
-Created as a part of the [CO600 Module](https://www.kent.ac.uk/courses/modulecatalogue/modules/CO600) submission by [William Duyck](http://wduyck.me) and Eliot Brown, at the [University of Kent](https://www.kent.ac.uk/).
+Created as a part of the [CO600 Module](https://www.kent.ac.uk/courses/modulecatalogue/modules/CO600)
+submission by [William Duyck](http://wduyck.me) and Eliot Brown, at the [University of Kent](https://www.kent.ac.uk/).
 
 ## Abstract
-Eisenhower decision matrices split tasks by urgency and importance. This is a modified version of the original boxes and uses directed graphs.
+Eisenhower decision matrices split tasks by urgency and importance. This is a
+modified version of the original boxes and uses directed graphs.
 
 ## Development
 
@@ -21,7 +23,22 @@ Once installed clone this repository and run:
 
 	npm install && grunt
 
-This will install all the required dependencies, and start the development server which should now be running on port `4321`.
+This will install all the required dependencies, and start the development server
+which should now be running on port `4321`.
+
+### Documentation
+Looking for some documentation? There are pleanty of code comments throughout the
+source, however you can also generate something a little easier to digest if you
+have [jsdoc](http://usejsdoc.org) installed by running:
+
+	jsdoc -c .jsdocrc
+
+This will generate the regular API documentation (in `/docs`) that explains the
+methods and modules of the project.
+
+#### REST API Documentation
+
+	// coming soon
 
 ### Play nice
 Where possible use an [EditorConfig](http://editorconfig.org/) compatible editor/plugin.
@@ -37,4 +54,5 @@ Where possible use an [EditorConfig](http://editorconfig.org/) compatible editor
 
 ## License
 **Unless otherwise stated:**
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.

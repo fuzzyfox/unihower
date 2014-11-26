@@ -1,3 +1,17 @@
+/**
+ * @file Defines the Topic model
+ * @module model/topic
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
+/**
+ * Topic Model Export
+ *
+ * @param  {Sequelize}           sequelize  An instantiated Sequelize class.
+ * @param  {Sequelize.DataTypes} DataTypes  An instance of the Sequelize DataTypes class.
+ * @return {Sequelize.Model}                The Topic model.
+ */
 module.exports = function( sequelize, DataTypes ) {
   var Topic = sequelize.define( 'Topic', {
     id: {
