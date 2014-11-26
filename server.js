@@ -38,6 +38,11 @@ app.use( session({
   saveUninitialized: env.get( 'session_save_uninitialized' ) || false
 }) );
 
+// pretty print JSON ouput in development environments
+if( env.get( 'node_env' ) !== 'production' ) {
+  app.set( 'json spaces', 2 );
+}
+
 // server security
 app.use( helmet.xframe( 'sameorigin' ) );
 app.use( helmet.hsts() );
@@ -118,6 +123,11 @@ app.all( '/api*', routes.auth.enforceAdmin );
 
 // api get list of all users
 app.get( '/api/users', routes.api.users.list );
+
+/*
+  handle 404 errors
+ */
+app.use( routes.errors.notFound );
 
 /*
   setup db + launch server

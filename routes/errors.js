@@ -5,6 +5,8 @@
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 
+var fs = require( 'fs' );
+
 /**
  * HTTP error handlers.
  *
@@ -67,7 +69,8 @@ module.exports = function( env ) {
     unauthorized: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 401 ).send( msg || 'Unauthorized' );
+          // res.status( 401 ).send( msg || 'Unauthorized' );
+          res.status( 401 ).send( fs.readFileSync( __dirname + '/../views/errors/unauthorized.html', 'utf8' ) );
         },
         json: function() {
           res.status( 401 ).json({
@@ -95,7 +98,7 @@ module.exports = function( env ) {
     forbidden: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 403 ).send( msg || 'Forbidden' );
+          res.status( 403 ).send( fs.readFileSync( __dirname + '/../views/errors/forbidden.html', 'utf8' ) );
         },
         json: function() {
           res.status( 403 ).json({
@@ -120,7 +123,7 @@ module.exports = function( env ) {
     notFound: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 404 ).send( msg || ( req.originalUrl + ' Not Found' ) );
+          res.status( 404 ).send( fs.readFileSync( __dirname + '/../views/errors/notfound.html', 'utf8' ) );
         },
         json: function() {
           res.status( 404 ).json({
@@ -225,7 +228,7 @@ module.exports = function( env ) {
     internal: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 500 ).send( msg || 'Internal Server Error' );
+          res.status( 500 ).send( fs.readFileSync( __dirname + '/../views/errors/internal.html', 'utf8' ) );
         },
         json: function() {
           res.status( 500 ).json({

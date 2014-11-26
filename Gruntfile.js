@@ -17,6 +17,26 @@ module.exports = function( grunt ) {
       ]
     },
 
+    // less precompilation
+    less: {
+      // configure for development environment
+      dev: {
+        files: {
+          'public/assets/css/eisenhower.css': 'public/assets/less/eisenhower.less'
+        }
+      },
+      // configure for production environment
+      prod: {
+        options: {
+          cleancss: true,
+          sourceMap: true
+        },
+        files: {
+          'public/assets/css/eisenhower.css': 'public/assets/less/eisenhower.less'
+        }
+      }
+    },
+
     // run the server in development environment
     express: {
       dev: {
@@ -50,6 +70,10 @@ module.exports = function( grunt ) {
         options: {
           spawn: false
         }
+      },
+      styles: {
+        files: [ 'public/assets/less/**/*.less' ],
+        tasks: [ 'less:dev' ]
       }
     },
 
@@ -68,11 +92,12 @@ module.exports = function( grunt ) {
   });
 
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
+  grunt.loadNpmTasks( 'grunt-contrib-less' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-mocha-test' );
   grunt.loadNpmTasks('grunt-bump');
 
-  grunt.registerTask( 'default', [ 'jshint', 'express:dev', 'watch' ] );
+  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
 };
