@@ -1,5 +1,12 @@
 /* global describe, it, before, after */
 
+/**
+ * @file BDD tests for the topic API
+ * @module test/api/topicSpec
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
 // force testing env
 process.env.NODE_ENV = 'testing';
 
@@ -24,8 +31,11 @@ var db = require( process.cwd() + '/models' )( env );
 // configure supertest
 var agent = supertest.agent( app );
 
-/*
-  describe a valid topic object
+/**
+ * Determines if `res.body` is a valid topic object, and throws an error if one
+ * is encountered by the tests.
+ *
+ * @param  {http.IncomingMessge} res
  */
 function validTopicObject( res ) {
   // valid (required) properties and their types for a topic object
