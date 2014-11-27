@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="/assets/css/eisenhower.css">
+
+  {% block custom_styles %}
+  {% endblock %}
+
+  <title>{{ title }}</title>
+</head>
+<body>
+  {% block header %}
+  <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a href="/" class="navbar-brand">Eisenhower</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user.email %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user.name if user.name else user.email }} <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Settings</a></li>
+            <li class="divider"></li>
+            <li><a href="#" class="persona-logout"><span class="fa fa-lock"></span> logout</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li>
+          <a href="#" class="persona-login"><span class="fa fa-lock"></span> Login with Persona</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  {% endblock %}
+
+  {% block main %}
+  <!-- main content here -->
+  {% endblock %}
+
+  {% block footer %}
+  <footer class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+        <p>
+          Made by <a href="http://wduyck.me">William Duyck</a> and Eliot Brown, at the <a href="https://www.kent.ac.uk/">University of Kent</a>.<br>
+          Code avaialbe on <a href="https://github.com/not-so-creative/eisenhower">GitHub</a> under the <a href="https://mozilla.org/MPL/2.0/">MPL-2.0 License</a>.<br>
+          Theme based on <a href="http://bootswatch.com/paper" rel="nofollow">Bootstwatch Paper</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+  {% endblock %}
+
+  <!-- core javascript libs -->
+  <script src="/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- persona login handling -->
+  <script src="https://login.persona.org/include.js"></script>
+  <script src="/assets/js/persona.js" data-persona="{{ persona }}" data-user="{{ user.email }}"></script>
+
+  <!-- custom scripts for this page -->
+  {% block custom_scripts %}
+  {% endblock %}
+</body>
+</html>

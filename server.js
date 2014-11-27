@@ -58,23 +58,18 @@ require( 'express-persona' )( app, {
 });
 
 if( process.env.NODE_ENV !== 'testing' ) {
-  // enable csrf protection on all non-GET/HEAD/OPTIONS routes
-  // with the excaption of persona verification/logout routes.
+  // enable csrf protection on all non-GET/HEAD/OPTIONS routes with the
+  // excaption of persona verification/logout routes which have already
+  // been set up.
   app.use( csrf() );
 }
 
-// add csrf token to `res.locals`
-app.use( function( req, res, next ) {
-  // disable csrf protection in test environment
-  if( process.env.NODE_ENV !== 'testing' ) {
-    res.locals.csrfToken = req.csrfToken();
-  }
-
-  res.locals.user = req.session.user;
-  res.locals.persona = req.session.email;
-
-  next();
-});
+/*
+  setup http debug output
+ */
+if( env.get( 'debug' ).match( /http/i ) ) {
+  app.use( morgan( 'dev' ) );
+}
 
 /*
   setup nunjucks
@@ -89,13 +84,6 @@ var nunjucksEnv = nunjucks.configure( 'views', {
 nunjucksEnv.express( app );
 
 /*
-  setup debug output
- */
-if( env.get( 'debug' ).match( /http/i ) ) {
-  app.use( morgan( 'dev' ) );
-}
-
-/*
   get models
  */
 var db = require( './models' )( env );
@@ -103,13 +91,31 @@ var db = require( './models' )( env );
 /*
   routes
  */
+// load routes + handlers
 var routes = require( './routes' )( env );
+
+// keep sessions up to date no matter what.
+app.use( routes.auth.updateSession );
+
+// add useful variables + objects `res.locals`, such as the csrf token,
+// session email (set by persona), and any user details.
+app.use( function( req, res, next ) {
+  // disable csrf protection in test environment
+  if( process.env.NODE_ENV !== 'testing' ) {
+    res.locals.csrfToken = req.csrfToken();
+  }
+
+  res.locals.user = req.session.user;
+  res.locals.persona = req.session.email;
+
+  next();
+});
 
 // healthcheck
 app.get( '/healthcheck', routes.healthcheck );
 
 app.get( '/', function( req, res ) {
-  res.send( 'It worked!' );
+  res.render( 'index.html' );
 });
 
 // create a new user
