@@ -57,14 +57,21 @@ require( 'express-persona' )( app, {
   audience: env.get( 'persona_audience' )
 });
 
-// enable csrf protection on all non-GET/HEAD/OPTIONS routes
-// with the excaption of persona verification/logout routes.
-app.use( csrf() );
+if( process.env.NODE_ENV !== 'testing' ) {
+  // enable csrf protection on all non-GET/HEAD/OPTIONS routes
+  // with the excaption of persona verification/logout routes.
+  app.use( csrf() );
+}
 
 // add csrf token to `res.locals`
 app.use( function( req, res, next ) {
-  res.locals.csrfToken = req.csrfToken();
+  // disable csrf protection in test environment
+  if( process.env.NODE_ENV !== 'testing' ) {
+    res.locals.csrfToken = req.csrfToken();
+  }
+
   res.locals.user = req.session.user;
+  res.locals.persona = req.session.email;
 
   next();
 });
@@ -74,7 +81,8 @@ app.use( function( req, res, next ) {
  */
 // configure nunjucks
 var nunjucksEnv = nunjucks.configure( 'views', {
-  autoescape: true
+  autoescape: true,
+  watch: true
 });
 
 // make nunjucks the default view renderer
@@ -152,7 +160,9 @@ app.get( '/api/users', routes.api.users.list );
 /*
   handle 404 errors
  */
-app.use( routes.errors.notFound );
+app.use( function( req, res ) {
+  routes.errors.notFound( req, res );
+});
 
 /*
   setup db + launch server

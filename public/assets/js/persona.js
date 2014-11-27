@@ -1,61 +1,57 @@
-/* jshint browser:true */
-(function( window, document, undefined ) {
+(function( window, document, $, undefined ) {
+  var $thisScript = $( 'script[data-persona]' );
+
   /*
-    Handle Persona Login
+    Handle Persona Login/out
    */
   window.navigator.id.watch({
+    loggedInUser: $thisScript.data( 'persona' ) || null,
     onlogin: function( assertion ) {
-      var xhr = new XMLHttpRequest();
-      xhr.open( 'POST', '/persona/verify', true );
-      xhr.setRequestHeader( 'Content-Type', 'application/json' );
-      xhr.addEventListener( 'loadend', function() {
-        var data = JSON.parse( this.responseText );
-        if( data && data.status === 'okay' ) {
-          console.log( 'You have been logged in as: ' + data.email );
+      $.ajax({
+        type: 'POST',
+        url: '/persona/verify',
+        data: { assertion: assertion }
+      }).done( function( data ) {
+        if( data.status === 'okay' ) {
+          window.location.reload();
         }
-      }, false);
-
-      xhr.send( JSON.stringify({
-        assertion: assertion
-      }) );
+      }).fail( function() {
+        window.navigator.id.logout();
+      });
     },
     onlogout: function() {
-      var xhr = new XMLHttpRequest();
-      xhr.open( 'POST', '/persona/logout', true );
-      xhr.addEventListener( 'loadend', function() {
-        console.log( 'You have been logged out' );
+      $.ajax({
+        type: 'POST',
+        url: '/persona/logout'
+      }).done( function() {
+        window.location.reload();
+      }).fail( function( xhr, status, error ) {
+        window.alert( 'Logout failure: ' + error );
       });
-      xhr.send();
     }
   });
 
   /*
     Handle Persona Login/out Buttons.
    */
-  /**
-   * Simplify DOM selection.
-   * @param  {String} selector CSS Selector for elements to return.
-   * @return {Array}           An array of DOM Nodes that match the given selector.
-   */
-  var $ = function( selector ) {
-    return Array.prototype.slice.call( document.querySelectorAll( selector ) );
-  };
+  // Turn login buttons to logout buttons.
+  if( ( $thisScript.data( 'persona' ) ) && ( $thisScript.data( 'persona' ) === $thisScript.data( 'user' ) ) ) {
+    $( '.persona-login' ).removeClass( 'persona-login' )
+                         .addClass( 'persona-logout' )
+                         .html( '<i class="fa fa-spinner fa-spin"></i> Logging In' );
+  }
 
   // Login with Persona
-  $( '.persona-login' ).forEach( function( element ) {
-    element.addEventListener( 'click', function( event ) {
-      event.preventDefault();
+  $( '.persona-login' ).on( 'click', function( event ) {
+    window.navigator.id.request();
 
-      window.navigator.id.request();
-    });
+    return false;
   });
 
   // Logout with Persona
-  $( '.persona-logout' ).forEach( function( element ) {
-    element.addEventListener( 'click', function( event ) {
-      event.preventDefault();
+  $( '.persona-logout' ).on( 'click', function( event ) {
+    window.navigator.id.logout();
 
-      window.navigator.id.logout();
-    });
+    return false;
   });
-})( window, document );
+})( window, document, window.jQuery );
