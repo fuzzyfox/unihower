@@ -9,6 +9,7 @@ var bodyParser = require( 'body-parser' );
 var cookieParser = require( 'cookie-parser' );
 var session = require( 'express-session' );
 var csrf = require( 'csurf' );
+var nunjucks = require( 'nunjucks' );
 
 /*
   setup environment
@@ -59,6 +60,25 @@ require( 'express-persona' )( app, {
 // enable csrf protection on all non-GET/HEAD/OPTIONS routes
 // with the excaption of persona verification/logout routes.
 app.use( csrf() );
+
+// add csrf token to `res.locals`
+app.use( function( req, res, next ) {
+  res.locals.csrfToken = req.csrfToken();
+  res.locals.user = req.session.user;
+
+  next();
+});
+
+/*
+  setup nunjucks
+ */
+// configure nunjucks
+var nunjucksEnv = nunjucks.configure( 'views', {
+  autoescape: true
+});
+
+// make nunjucks the default view renderer
+nunjucksEnv.express( app );
 
 /*
   setup debug output

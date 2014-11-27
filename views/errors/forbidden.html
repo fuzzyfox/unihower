@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
+{% extends 'errors/_errorTemplate.html' %}
 
-  <link rel="stylesheet" href="/assets/css/eisenhower.css">
+{% block title %}403 Forbidden{% endblock %}
 
-  <title>403 Forbidden</title>
-</head>
-<body class="container">
-  <main class="row">
-    <div class="col-md-12">
-      <header>
-        <h1>Oops!</h1>
-        <h2>403 Forbidden</h2>
-        <p class="lead">You do not have permission to view this resource.</p>
-        <a href="/" class="btn btn-primary">Take me home</a>
-      </header>
-    </div>
-  </main>
-</body>
-</html>
+{% block main %}
+<h2>403 Forbidden</h2>
+<p class="lead">{{ message }}</p>
+<a href="/" class="btn btn-primary">Take me home</a>
+{% endblock %}
