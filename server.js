@@ -8,6 +8,7 @@ var Habitat = require( 'habitat' );
 var bodyParser = require( 'body-parser' );
 var cookieParser = require( 'cookie-parser' );
 var session = require( 'express-session' );
+var csrf = require( 'csurf' );
 
 /*
   setup environment
@@ -54,6 +55,10 @@ app.disable( 'x-powered-by' );
 require( 'express-persona' )( app, {
   audience: env.get( 'persona_audience' )
 });
+
+// enable csrf protection on all non-GET/HEAD/OPTIONS routes
+// with the excaption of persona verification/logout routes.
+app.use( csrf() );
 
 /*
   setup debug output
