@@ -40,8 +40,9 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
-        // if no user returned just continue on.
+        // if no user returned just continue on, with empty user data in session
         if( !user ) {
+          req.session.user = {};
           return next();
         }
 
