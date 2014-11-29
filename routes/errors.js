@@ -150,7 +150,7 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      * @param  {String}               [msg] A custom error message to return. Defaults to "Unable to process request due to a confilct.".
      */
-    confilct: function( req, res, msg ) {
+    conflict: function( req, res, msg ) {
       res.format({
         html: function() {
           res.status( 409 ).send( msg || 'Confilct' );

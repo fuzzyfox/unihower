@@ -25,6 +25,7 @@ module.exports = function( env ) {
     updateSession: function( req, res, next ) {
       // not verified with persona... just move on.
       if( !req.session.email ) {
+        req.session.user = {};
         return next();
       }
 

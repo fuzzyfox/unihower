@@ -40,6 +40,12 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
+      // prevent creation of administrator accounts by anyone but administrators
+      if( req.body.hasOwnProperty( 'isAdmin' ) && ( req.session.user && ! req.session.user.isAdmin ) ) {
+        return errorResponse.unauthorized( req, res, 'You must be an administrator to perform that action.' );
+      }
+
+      // create user
       return db.User.create( req.body ).done( function( err, user ) {
         if( err && err.name === 'SequelizeUniqueConstraintError' ) {
           return errorResponse.conflict( req, res, 'User account already exists.' );
@@ -117,6 +123,12 @@ module.exports = function( env ) {
      */
     update: function( req, res ) {
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
+        // prevent non-administrators making others (or themselves administrators)
+        if( req.body.hasOwnProperty( 'isAdmin' ) && ( req.session.user && ! req.session.user.isAdmin ) ) {
+          return errorResponse.unauthorized( req, res, 'You must be an administrator to perform that action.' );
+        }
+
+        // update user
         return db.User.find( req.params.id ).done( function( err, user ) {
           if( err ) {
             return errorResponse.internal( req, res, err );

@@ -196,6 +196,22 @@ describe( '/api/users (for standard user)', function() {
       .end( done );
   });
 
+  it( 'POST should NOT create an admin user', function( done ) {
+    var newUser = {
+      name: 'Jane Doe',
+      email: 'jane.doe@restmail.net',
+      isAdmin: true
+    };
+
+    agent
+      .post( '/api/users' )
+      .send( newUser )
+      .set( 'Accept', 'application/json' )
+      .expect( 'Content-Type', /json/ )
+      .expect( 401 )
+      .end( done );
+  });
+
   describe( '/api/users/2', function() {
 
     it( 'GET should exist', function( done ) {
@@ -228,6 +244,20 @@ describe( '/api/users (for standard user)', function() {
         .set( 'Acept', 'application/json' )
         .expect( 200 )
         .expect( validUserObject )
+        .end( done );
+    });
+
+    it( 'PUT should NOT update a user to become an admin', function( done ) {
+      var newUser = {
+        name: 'Jane Doe',
+        isAdmin: true
+      };
+
+      agent
+        .put( '/api/users/2' )
+        .send( newUser )
+        .set( 'Acept', 'application/json' )
+        .expect( 401 )
         .end( done );
     });
 

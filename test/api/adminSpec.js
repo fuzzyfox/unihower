@@ -179,6 +179,23 @@ describe( '/api/users (for administrator)', function() {
       .end( done );
   });
 
+  it( 'POST should create an admin user', function( done ) {
+    var newUser = {
+      name: 'John Doe',
+      email: 'j.doe@restmail.net',
+      isAdmin: true
+    };
+
+    agent
+      .post( '/api/users' )
+      .send( newUser )
+      .set( 'Accept', 'application/json' )
+      .expect( 'Content-Type', /json/ )
+      .expect( 200 )
+      .expect( validUserObject )
+      .end( done );
+  });
+
   it( 'GET should get an array of valid user objects', function( done ) {
     agent
       .get( '/api/users' )

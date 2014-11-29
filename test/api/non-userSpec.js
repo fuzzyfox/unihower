@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, before */
 
 /**
  * @file BDD tests for the user API, when the user is not authenticated
@@ -23,8 +23,11 @@ var env = new Habitat();
 // laod package into env
 env.set( 'pkg', require( process.cwd() + '/package' ) );
 
-// configure super test
+// get instance of server app + models
 var app = require( process.cwd() + '/server' );
+var db = require( process.cwd() + '/models' )( env );
+
+// configure supertest
 var agent = supertest.agent( app );
 
 /**
@@ -56,11 +59,32 @@ function validUserObject( res ) {
   }
 }
 
+/**
+ * Setup the database with clean slate, and test data
+ *
+ * @param  {Function} done Async callback for mocha
+ */
+function setupDatabase( done ) {
+  db.sequelize.sync( { force: true } ).complete( function( err ) {
+    if( err ) {
+      return done( err );
+    }
+
+    db.User.bulkCreate( require( '../data/user' ) ).done( function() {
+      done();
+    }).catch( function( err ) {
+      done( err );
+    });
+  });
+}
+
 /*
   descripbe user api
  */
 
 describe( '/api/users (guest user)', function() {
+  before( setupDatabase );
+
   it( 'GET should exist', function( done ) {
     agent
       .get( '/api/users' )
@@ -83,6 +107,22 @@ describe( '/api/users (guest user)', function() {
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
       .expect( validUserObject )
+      .end( done );
+  });
+
+  it( 'POST should NOT create an admin user', function( done ) {
+    var newUser = {
+      name: 'Jane Doe',
+      email: 'jane.doe@restmail.net',
+      isAdmin: true
+    };
+
+    agent
+      .post( '/api/users' )
+      .send( newUser )
+      .set( 'Accept', 'application/json' )
+      .expect( 'Content-Type', /json/ )
+      .expect( 401 )
       .end( done );
   });
 });
