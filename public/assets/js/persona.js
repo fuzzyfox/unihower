@@ -11,10 +11,8 @@
         type: 'POST',
         url: '/persona/verify',
         data: { assertion: assertion }
-      }).done( function( data ) {
-        if( data.status === 'okay' ) {
-          window.location.reload();
-        }
+      }).done( function() {
+        window.location.reload();
       }).fail( function() {
         window.navigator.id.logout();
       });
@@ -51,6 +49,29 @@
   // Logout with Persona
   $( '.persona-logout' ).on( 'click', function( event ) {
     window.navigator.id.logout();
+
+    return false;
+  });
+
+  /*
+    Handle new user registration
+   */
+  if( $thisScript.data( 'persona' ) !== $thisScript.data( 'user' ) ) {
+    $( '#newUserModal' ).modal( 'show' );
+  }
+
+  $( '#newUserModal form' ).on( 'submit', function( event ) {
+    event.preventDefault();
+
+    $.ajax({
+      type: 'POST',
+      url: $( this ).attr( 'action' ),
+      data: $( this ).serialize()
+    }).done( function( data ) {
+      window.location.reload();
+    }).fail( function() {
+      console.log( arguments );
+    });
 
     return false;
   });

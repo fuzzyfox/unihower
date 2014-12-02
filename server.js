@@ -114,9 +114,9 @@ app.use( function( req, res, next ) {
 // healthcheck
 app.get( '/healthcheck', routes.healthcheck );
 
-app.get( '/', function( req, res ) {
-  res.render( 'index.html' );
-});
+// public web routes (ex. API)
+app.get( '/', routes.public.index );
+app.get( '/legal', routes.public.legal );
 
 // create a new user
 app.post( '/api/users', routes.api.users.create );
