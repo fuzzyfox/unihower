@@ -8,6 +8,12 @@
  * @requires routes/errors
  */
 
+/**
+ * Authentication exports
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Object}      An object containing all the authentication middleware for routes.
+ */
 module.exports = function( env ) {
   var db = require( '../models' )( env );
   var errorResponse = require( './errors' )( env );
