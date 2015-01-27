@@ -10,6 +10,7 @@ var cookieParser = require( 'cookie-parser' );
 var session = require( 'express-session' );
 var csrf = require( 'csurf' );
 var nunjucks = require( 'nunjucks' );
+var debug = require( 'debug' );
 
 /*
   setup environment
@@ -23,6 +24,15 @@ else {
 var env = new Habitat();
 // drop package.json info into env
 env.set( 'pkg', require( './package.json' ) );
+
+// force init debug now we have the env loaded
+debug.enable( env.get( 'debug' ) );
+debug.useColors();
+
+var debugEnv = debug( 'env' );
+var debugPersona = debug( 'persona' );
+debugEnv( 'debug enabled' );
+debugEnv( 'pkg.version: %s, env: %s', env.get( 'pkg' ).version, env.get( 'node_env' ) );
 
 /*
   setup server
@@ -57,6 +67,8 @@ require( 'express-persona' )( app, {
   audience: env.get( 'persona_audience' )
 });
 
+debugPersona( env.get( 'persona_audience' ) );
+
 if( process.env.NODE_ENV !== 'testing' ) {
   // enable csrf protection on all non-GET/HEAD/OPTIONS routes with the
   // excaption of persona verification/logout routes which have already
@@ -67,8 +79,9 @@ if( process.env.NODE_ENV !== 'testing' ) {
 /*
   setup http debug output
  */
-if( env.get( 'debug' ).match( /http/i ) ) {
-  app.use( morgan( 'dev' ) );
+if( debug( 'http' ).enabled ) {
+  debugEnv( 'using morgan for \033[0;37mhttp\033[0m debug notices' );
+  app.use( morgan( '  \033[0;37mhttp\033[0m :method :url :status +:response-time ms - :res[content-length] bytes' ) );
 }
 
 /*
@@ -191,7 +204,7 @@ app.use( function( req, res ) {
 if( process.env.NODE_ENV !== 'testing' ) {
   db.sequelize.sync( { force: env.get( 'db_force_sync' ) } ).complete( function( error ) {
     if( error ) {
-      return console.log( error );
+      return console.error( error );
     }
 
     var server = app.listen( env.get( 'port' ) || 3000, function() {

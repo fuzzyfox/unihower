@@ -32,8 +32,8 @@ module.exports = function( env ) {
 
   // get an instance of Sequelize
   var sequelize = new Sequelize( env.get( 'db_connection_uri' ), {
-    logging: env.get( 'debug' ).match( /sequelize/i ) ? debug : false
-  } );
+    logging: debug
+  });
 
   // load all model definitions
   fs.readdirSync( __dirname ).filter( function( file ) {

@@ -25,6 +25,7 @@
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
+  var debug = require( 'debug' )( 'api' );
 
   return {
     /**
@@ -44,26 +45,30 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
+      debug( '>> incoming data', req.body );
       // handle topic id association
       var TopicId = req.body.TopicId;
-      if( req.body.TopicId ) {
+      if( req.body.TopicId !== undefined ) {
         delete req.body.TopicId;
       }
 
       // create task
       return db.Task.create( req.body ).done( function( err, task ) {
         if( err ) {
+          debug( err, req.body, req.session );
           return errorResponse.internal( req, res, err );
         }
 
         task.setUser( req.session.user.id ).done( function( err, user ) {
           if( err ) {
+            debug( err, req.body, req.session );
             return errorResponse.internal( req, res, err );
           }
 
           if( TopicId ) {
             return task.setTopic( TopicId ).done( function( err, topic ) {
               if( err ) {
+                debug( err, req.body, TopicId, req.session );
                 return errorResponse.internal( req, res, err );
               }
 
@@ -127,8 +132,11 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
+      debug( '>> incoming data', req.body );
+
       return db.Task.find( req.params.id ).done( function( err, task ) {
         if( err ) {
+          debug( err, req.body, req.session );
           return errorResponse.internal( req, res, err );
         }
 
@@ -138,6 +146,7 @@ module.exports = function( env ) {
 
         task.updateAttributes( req.body ).done( function( err, task ) {
           if( err ) {
+            debug( err, req.body, req.session );
             return errorResponse.internal( req, res, err );
           }
 
@@ -161,6 +170,7 @@ module.exports = function( env ) {
     delete: function( req, res ) {
       return db.Task.find( req.params.id ).done( function( err, task ) {
         if( err ) {
+          debug( err, req.body, req.session );
           return errorResponse.internal( req, res, err );
         }
 
