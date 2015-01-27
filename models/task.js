@@ -20,7 +20,8 @@ module.exports = function( sequelize, DataTypes ) {
       autoIncrement: true
     },
     description: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: false
     },
     state: {
       type: DataTypes.ENUM,

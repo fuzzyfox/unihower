@@ -4525,7 +4525,8 @@ a.label:focus {
 .label-primary[href]:focus {
   background-color: #0c7cd5;
 }
-.label-success {
+.label-success,
+.label-state-complete {
   background-color: #4caf50;
 }
 .label-success[href]:hover,
@@ -4539,7 +4540,8 @@ a.label:focus {
 .label-info[href]:focus {
   background-color: #771e86;
 }
-.label-warning {
+.label-warning,
+.label-state-incomplete {
   background-color: #ff9800;
 }
 .label-warning[href]:hover,

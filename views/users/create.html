@@ -1,0 +1,32 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <h2>New User Login</h2>
+  <form id="newUserForm" action="/api/users" method="POST">
+    <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Dwight Eisenhower">
+      <p class="help-block">This is completely optional, however we do use this in any messages/notifications we send to you.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ persona }}" readonly required>
+      <p class="help-block">This is set using Persona and cannot be changed.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="terms">
+        <input type="checkbox" id="terms" required>
+        I have read and agree to the <a href="/legal#termsOfService">Terms Of Service</a>.
+      </label>
+    </div>
+
+    <button type="button" class="btn btn-default persona-logout">Nevermind</button>
+    <button type="submit" class="btn btn-success">Register</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends '_default.html' %}
+
+{% block custom_styles %}
+<style>
+  .media:nth-child( even ) {
+    background-color: #eee;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<main class="container">
+  <h2>Topics</h2>
+  {% for topic in topics %}
+  <div class="media">
+    <a href="/topics/{{ topic.id }}" class="media-left eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-size="128" data-graph-readonly="true">
+      <!-- <img src="//placehold.it/128" alt="topic graph" class="img-responsive"> -->
+
+    </a>
+    <div class="media-body">
+      <h4 class="media-heading"><a href="/topics/{{ topic.id }}">{{ topic.name }}</a></h4>
+      <ul class="list-inline">
+        <li><strong>Last Updated:</strong> {{ topic.updatedAt }}</li>
+        <li><strong># Tasks:</strong> {{ topic.Tasks | length }}</li>
+      </ul>
+      <p>{{ topic.description }}</p>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% if not topics %}
+  <div class="alert alert-info" role="alert">No topics found.</div>
+  {% endif %}
+
+  <a href="/topics/create" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Create Topic</a>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% endblock %}

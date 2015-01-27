@@ -1,0 +1,30 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 col-sm-hidden col-xs-hidden">
+      <div class="eisenhower-graph" data-tasks-url="{{ '/api/topics/' + Topic.id + '/tasks' if Topic else '/api/users/' + user.id + '/tasks' }}" data-highlight-task="{{ id }}"></div>
+      {% if Topic %}
+      <p class="text-muted text-center">Showing relative to tasks in topic:<br>{{ Topic.name }}</p>
+      {% else %}
+      <p class="text-muted text-center">Showing relative to all tasks.</p>
+      {% endif %}
+    </div>
+    <div class="col-md-9">
+      <ul class="list-inline">
+        <li><strong>State:</strong> <span class="label label-state-{{ state }}">{{ state }}</span></li>
+        <li><strong>Last Updated:</strong> {{ updatedAt }}</li>
+        {% if Topic %}
+        <li><strong>Topic:</strong> <a href="/topics/{{ Topic.id }}">{{ Topic.name }}</a></li>
+        {% endif %}
+      </ul>
+      <p class="lead">{{ description }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% endblock %}

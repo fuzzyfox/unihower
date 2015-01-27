@@ -1,0 +1,46 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <h3>All Tasks</h3>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="eisenhower-graph" data-graph-size="500" data-tasks-url="/api/users/{{ user.id }}/tasks"></div>
+    </div>
+    <div class="col-md-9">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>state</th>
+            <th>description</th>
+            <th>last updated</th>
+            <th>topic</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+          <tr>
+            <td>{{ task.state }}</td>
+            <td><a href="/tasks/{{ task.id }}">{{ task.description | truncate(140) if task.description }}</a></td>
+            <td>{{ task.updatedAt }}</td>
+            <td>
+              {% if task.Topic %}
+              <a href="/topics/{{ task.TopicId }}">{{ task.Topic.name }}</a>
+              {% else %}
+              –
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a href="/tasks/create" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Create Task</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% endblock %}

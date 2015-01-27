@@ -1,0 +1,33 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <img src="//secure.gravatar.com/avatar/{{ emailHash }}?s=500" alt="avatar" class="img-responsive">
+    </div>
+    <div class="col-md-3">
+      <h3>{{ name }}</h3>
+      <dl>
+        {% if isAdmin %}
+        <dt>Administrator</dt>
+        <dd>True</dd>
+        {% endif %}
+        <dt>Email</dt>
+        <dd>{{ email }}</dd>
+        <dt>Registered</dt>
+        <dd>{{ createdAt }}</dd>
+      </dl>
+    </div>
+    <div class="col-md-3">
+      {% if id == user.id %}
+      <a href="/topics" class="eisenhower-graph" data-tasks-url="/api/users/{{ id }}/tasks" data-graph-readonly="true" data-graph-size="500"></a>
+      {% endif %}
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% endblock %}

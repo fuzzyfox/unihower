@@ -57,10 +57,12 @@
     Handle new user registration
    */
   if( $thisScript.data( 'persona' ) !== $thisScript.data( 'user' ) ) {
-    $( '#newUserModal' ).modal( 'show' );
+    if( window.location.pathname !== '/users/create' && window.location.pathname !== '/legal') {
+      window.location.href = '/users/create';
+    }
   }
 
-  $( '#newUserModal form' ).on( 'submit', function( event ) {
+  $( 'form#newUserForm' ).on( 'submit', function( event ) {
     event.preventDefault();
 
     $.ajax({

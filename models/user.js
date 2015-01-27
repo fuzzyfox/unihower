@@ -4,6 +4,7 @@
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
+var crypto = require( 'crypto' );
 
 /**
  * User Model Export
@@ -51,6 +52,13 @@ module.exports = function( sequelize, DataTypes ) {
       associate: function( models ) {
         User.hasMany( models.Task );
         User.hasMany( models.Topic );
+      }
+    },
+    getterMethods: {
+      emailHash: function() {
+        return crypto.createHash( 'md5' )
+                     .update( this.getDataValue( 'email') )
+                     .digest( 'hex' );
       }
     }
   });

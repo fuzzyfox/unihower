@@ -44,6 +44,13 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
+      // handle topic id association
+      var TopicId = req.body.TopicId;
+      if( req.body.TopicId ) {
+        delete req.body.TopicId;
+      }
+
+      // create task
       return db.Task.create( req.body ).done( function( err, task ) {
         if( err ) {
           return errorResponse.internal( req, res, err );
@@ -52,6 +59,16 @@ module.exports = function( env ) {
         task.setUser( req.session.user.id ).done( function( err, user ) {
           if( err ) {
             return errorResponse.internal( req, res, err );
+          }
+
+          if( TopicId ) {
+            return task.setTopic( TopicId ).done( function( err, topic ) {
+              if( err ) {
+                return errorResponse.internal( req, res, err );
+              }
+
+              res.status( 200 ).json( task );
+            });
           }
 
           res.status( 200 ).json( task );

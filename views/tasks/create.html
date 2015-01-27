@@ -1,0 +1,68 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <h2>New Task</h2>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="eisenhower-graph" data-x="{{ query.x | round(2) if query.x else 0 }}" data-y="{{ query.y | round(2) if query.y else 0 }}" data-graph-new-task="true"></div>
+    </div>
+    <div class="col-md-9">
+      <form id="newTaskForm" action="/api/tasks" method="POST">
+        <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" id="coordX" name="coordX" value="{{ query.x | round(2)}}">
+        <input type="hidden" id="coordY" name="coordY" value="{{ query.y | round(2) }}">
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" class="form-control" id="description" name="description" placeholder="Something I need to do." required>
+          <p class="help-block">A short description of your task e.g. "Write co600 report"</p>
+        </div>
+
+        <div class="form-group">
+          <label for="TopicId">Topic</label>
+          <select class="form-control" name="TopicId" id="TopicId">
+            <option>---</option>
+            {% for topic in topics %}
+            <option value="{{ topic.id }}"{{ ' selected' if topic.id == query.topic }}>{{ topic.name if topic.name else topic.description | truncate(70) }}</option>
+            {% endfor %}
+          </select>
+          <p class="help-block">Optionally assign this task to a topic.</p>
+        </div>
+
+        <button type="submit" class="btn btn-success">Create</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+<script>
+  $( 'form#newTaskForm #coordX' ).val( $( '.eisenhower-graph:first' ).attr( 'data-x' ) );
+  $( 'form#newTaskForm #coordY' ).val( $( '.eisenhower-graph:first' ).attr( 'data-y' ) );
+
+  $( '.eisenhower-graph:first' ).on( 'click', function() {
+    $( 'form#newTaskForm #coordX' ).val( $( this ).attr( 'data-x' ) );
+    $( 'form#newTaskForm #coordY' ).val( $( this ).attr( 'data-y' ) );
+  });
+
+  $( 'form#newTaskForm' ).on( 'submit', function( event ) {
+    event.preventDefault();
+
+    $.ajax({
+      type: 'POST',
+      url: $( this ).attr( 'action' ),
+      data: $( this ).serialize(),
+      dataType: 'json'
+    }).done( function( data ) {
+      window.location.href = '/tasks/' + data.id;
+    }).fail( function() {
+      console.log( arguments );
+    });
+
+    return false;
+  });
+</script>
+{% endblock %}

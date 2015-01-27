@@ -118,7 +118,22 @@ app.get( '/healthcheck', routes.healthcheck );
 app.get( '/', routes.public.index );
 app.get( '/legal', routes.public.legal );
 
-// create a new user
+// user management
+app.get( '/users', routes.auth.enforceAdmin, routes.users.users );
+app.get( '/users/create', routes.users.create );
+app.get( '/users/:id', routes.auth.enforce, routes.users.user );
+
+// topic management
+app.get( '/topics', routes.auth.enforce, routes.topics.topics );
+app.get( '/topics/create', routes.auth.enforce, routes.topics.create );
+app.get( '/topics/:id', routes.auth.enforce, routes.topics.topic );
+
+// task management
+app.get( '/tasks', routes.auth.enforce, routes.tasks.tasks );
+app.get( '/tasks/create', routes.auth.enforce, routes.tasks.create );
+app.get( '/tasks/:id', routes.auth.enforce, routes.tasks.task );
+
+// create a new user (api)
 app.post( '/api/users', routes.api.users.create );
 
 /*

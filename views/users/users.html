@@ -1,0 +1,49 @@
+{% extends '_default.html' %}
+
+{% block custom_styles %}
+<style>
+  .media:nth-child( even ) {
+    background-color: #eee;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<main class="container">
+  <div class="row">
+    <div class="col-md-6">
+      {% if users %}
+      {% for user in users %}
+      <div class="media">
+        <a href="/users/{{ user.id }}" class="media-left">
+          <img src="//secure.gravatar.com/avatar/{{ user.emailHash }}?s=64" alt="avatar" class="img-responsive">
+        </a>
+        <div class="media-body">
+          <h4 class="media-heading">{{ user.name }}</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <dl>
+                <dt>Email</dt>
+                <dd>{{ user.email }}</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl>
+                <dt>Last Login</dt>
+                <dd>{{ user.lastLogin }}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="alert alert-info" role="alert">No users found.</div>
+      {% endif %}
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">user stats / metrics here</div>
+    </div>
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+  <h2>{{ name }}</h2>
+  <p class="lead">{{ description }}</p>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="eisenhower-graph" data-topic-id="{{ id }}" data-graph-size="500"></div>
+    </div>
+    <div class="col-md-9">
+      <h3>Topic Tasks</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>state</th>
+            <th>description</th>
+            <th>last updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in Tasks %}
+          <tr>
+            <td>{{ task.state }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.updatedAt }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a href="/tasks/create?topic={{ id }}" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Create Task</a>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% endblock %}

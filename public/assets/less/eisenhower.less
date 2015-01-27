@@ -3,3 +3,8 @@
 @import '../../vendor/bootswatch/paper/bootswatch';
 @import '../../vendor/font-awesome/less/font-awesome';
 @fa-font-path: '../../vendor/font-awesome/fonts';
+
+.label-state {
+  &-incomplete:extend(.label-warning) {}
+  &-complete:extend(.label-success) {}
+}
