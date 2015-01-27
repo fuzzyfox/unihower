@@ -22,7 +22,7 @@
         <div class="form-group">
           <label for="TopicId">Topic</label>
           <select class="form-control" name="TopicId" id="TopicId">
-            <option>---</option>
+            <option value="">---</option>
             {% for topic in topics %}
             <option value="{{ topic.id }}"{{ ' selected' if topic.id == query.topic }}>{{ topic.name if topic.name else topic.description | truncate(70) }}</option>
             {% endfor %}
