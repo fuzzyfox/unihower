@@ -9,7 +9,7 @@
   require packages
  */
 var fs = require( 'fs' );
-var debug = require( 'debug' )( 'route-loader' );
+var debug = require( 'debug' )( 'routes' );
 
 /**
  * Route module exports.
@@ -49,7 +49,7 @@ module.exports = function( env ) {
    * @return {Object}        All the loaded routes in the format above.
    */
   var findRoutes = function( dir, routes ) {
-    debug( 'Searching %s', dir );
+    debug( 'Loading routes from %s', dir );
 
     // find all files + dirs in current dir
     fs.readdirSync( dir ).filter( function( file ) {
@@ -58,14 +58,11 @@ module.exports = function( env ) {
     }).forEach( function( file ) {
       // check if dir + recurse if so
       if( fs.statSync( dir + '/' + file ).isDirectory() ) {
-        debug( 'Sub-directory found, recursing' );
-
         // before recursion create new object
         routes[ file ] = {};
         return findRoutes( dir + '/' + file, routes[ file ] );
       }
 
-      debug( 'Requiring file %s/%s', dir, file );
       // for a file remove the extension and require it into
       // routes obj
       file = file.split( '.' )[ 0 ];

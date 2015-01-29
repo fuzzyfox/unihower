@@ -25,6 +25,7 @@
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
+  var debug = require( 'debug' )( 'api:topics' );
 
   return {
     /**
@@ -41,13 +42,20 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
+      debug( 'Create topic: %s', req.body.name );
       return db.Topic.create( req.body ).done( function( err, topic ) {
         if( err ) {
+          debug( 'ERROR: Failed to create topic. (err, body)' );
+          debug( err, req.body );
+
           return errorResponse.internal( req, res, err );
         }
 
         topic.setUser( req.session.user.id ).done( function( err, user ) {
           if( err ) {
+            debug( 'ERROR: Failed to associate toic to user. (err, body, session)' );
+            debug( err, req.body, req.session );
+
             return errorResponse.internal( req, res, err );
           }
 
@@ -68,8 +76,13 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     get: function( req, res ) {
+      debug( 'Get topic: %d', req.params.id );
+
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
         if( err ) {
+          debug( 'ERROR: Failed to find topic. (err, topicId)' );
+          debug( err, req.params.id );
+
           return errorResponse.internal( req, res, err );
         }
 
@@ -102,12 +115,19 @@ module.exports = function( env ) {
      *
      * *Method intended for HTTP PUT/POST requests.*
      *
+     * @todo prevent users changing topic ownership
+     *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
+      debug( 'Update topic: %d', req.params.id );
+
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
         if( err ) {
+          debug( 'ERROR: Failed to find topic. (err, params, session)' );
+          debug( err, req.params, req.session );
+
           return errorResponse.internal( req, res, err );
         }
 
@@ -117,6 +137,9 @@ module.exports = function( env ) {
 
         topic.updateAttributes( req.body ).done( function( err, topic ) {
           if( err ) {
+            debug( 'ERROR: Failed to update topic. (err, body)' );
+            debug( err, req.body );
+
             return errorResponse.internal( req, res, err );
           }
 
@@ -137,8 +160,13 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     delete: function( req, res ) {
+      debug( 'Destroy topic: %d', req.params.id );
+
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
         if( err ) {
+          debug( 'ERROR: Failed to find topic. (err, topicId)' );
+          debug( err, req.params.id );
+
           return errorResponse.internal( req, res, err );
         }
 
@@ -148,6 +176,9 @@ module.exports = function( env ) {
 
         topic.destroy().done( function( err ) {
           if( err ) {
+            debug( 'ERROR: Failed to destroy topic. (err, topicId)' );
+            debug( err, req.params.id );
+
             return errorResponse.internal( req, res, err );
           }
 
@@ -159,6 +190,7 @@ module.exports = function( env ) {
      * Lists all the tasks that belong to a specific topic.
      *
      * **Note:** a user may only view their own tasks
+     * **Note:** `req.params.id` must be the id for the topic to get tasks for.
      *
      * *Method intended for HTTP GET requests.*
      *
@@ -166,6 +198,8 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     tasks: function( req, res ) {
+      debug( 'Get topic %d\'s associated tasks.', req.params.id );
+
       return db.Topic.find({
         where: {
           id: req.params.id
@@ -173,7 +207,9 @@ module.exports = function( env ) {
         include: [ db.Task ]
       }).done( function( err, topic ) {
         if( err ) {
-          console.log( err );
+          debug( 'ERROR: Failed to find topic\'s tasks. (err, topicId)' );
+          debug( err, req.params.id );
+
           return errorResponse.internal( req, res, err );
         }
 
