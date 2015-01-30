@@ -64,7 +64,8 @@ module.exports = function( grunt ) {
         files: [
           '*.js',
           'models/**/*.js',
-          'routes/**/*.js'
+          'routes/**/*.js',
+          'libs/**/*.js'
         ],
         tasks: [ 'jshint', 'express:dev' ],
         options: {
