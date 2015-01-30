@@ -101,20 +101,20 @@ module.exports = function( env ) {
           return errorResponse.unauthorized( req, res );
         }
 
-        // update last login
-        user.lastLogin = ( new Date() ).toISOString();
+        // // update last login
+        // user.lastLogin = ( new Date() ).toISOString();
 
-        // save last login and continue on
-        return user.save().done( function( err ) {
-          // if error saving http 500
-          if( err ) {
-            return errorResponse.internal( req, res, err );
-          }
+        // // save last login and continue on
+        // return user.save().done( function( err ) {
+        //   // if error saving http 500
+        //   if( err ) {
+        //     return errorResponse.internal( req, res, err );
+        //   }
 
           // continue on if valid user
           req.session.user = user.dataValues;
           next();
-        });
+        // });
       });
     },
     /**

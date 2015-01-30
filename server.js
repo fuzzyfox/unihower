@@ -124,6 +124,9 @@ app.use( function( req, res, next ) {
   next();
 });
 
+// setup any research
+require( './libs/research' )( env );
+
 // healthcheck
 app.get( '/healthcheck', routes.healthcheck );
 
