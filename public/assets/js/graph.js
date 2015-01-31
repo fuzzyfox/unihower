@@ -51,6 +51,22 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
   }
 
   /**
+   * Returns a hex colour code dependant on provided state
+   *
+   * @todo choose colour based on value in css.
+   *
+   * @param  {String} state
+   * @return {String}       hex colour code.
+   */
+  function stateColor( state ) {
+    var map = {
+      complete: '#4CAF50',
+      incomplete: '#FF9800'
+    };
+    return map[ state ];
+  }
+
+  /**
    * Plot a task on a graph
    *
    * @param  {Object} task      Task object from the API
@@ -60,7 +76,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
    * @return {Object}           SVGJS object for the plotted task
    */
   function plotTask( task, graph, color, opacity ) {
-    color = color || randColor();
+    color = color || stateColor( task.state ) || '#2196F3';
     opacity = opacity || 1;
 
     var plot = graph.group().attr( 'class', 'task' );
@@ -89,9 +105,21 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
     // handle events for this plot
     plot.on( 'mouseenter', function() {
       graph.preventPlot = true;
+
+      plot.animate( 400 ).scale( 1.7, 1.7 ).center( coordX, coordY );
     });
     plot.on( 'mouseleave', function() {
       graph.preventPlot = false;
+
+      if( task.id === graph.highlightTask ) {
+        plot.animate( 400 ).scale( 1.5, 1.5 ).center( coordX, coordY );
+      }
+      else {
+        plot.animate( 400 ).scale( 1, 1 ).center( coordX, coordY );
+      }
+    });
+    plot.on( 'click', function() {
+      window.location.href = '/tasks/' + task.id;
     });
 
     // highlight task if needed
@@ -161,7 +189,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
       var xyPlot = graph.group();
 
       // add base circle
-      xyPlot.add( graph.circle( 30 ).fill( randColor() ) );
+      xyPlot.add( graph.circle( 30 ).fill( $self.data( 'color' ) || '#2196F3' ) );
 
       // add icon to center of plot
       xyPlot.add( graph.text( 'x' ).fill( '#ffffff' ) );
@@ -174,13 +202,16 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
     if( $self.data( 'graphNewTask' ) ) {
       // prevent default graph behaviour
       $self.data( 'graphReadonly', true );
+      graph.readonly = true;
+
+      xyPlot.scale( 1.5, 1.5 );
 
       // on click move xyPlot
       graph.on( 'click', function( event ) {
         var loc = cursorLocation( event, graph );
 
         // move plot
-        xyPlot.center( loc.x, loc.y );
+        xyPlot.animate( 400 ).center( loc.x, loc.y );
 
         // update data attributes to reflect change
         $self.attr( 'data-x', round2dp( ( loc.x - 250 ) / 2.5 ) );
@@ -190,6 +221,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
 
     // handle graph events
     if( ! $self.data( 'graphReadonly' ) ) {
+      graph.readonly = true;
       // on click plot new point and confirm new task
       graph.on( 'click', function( event ) {
         if( ! graph.preventPlot ) {
@@ -199,7 +231,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
           var plot = graph.group();
 
           // add base circle
-          plot.add( graph.circle( 30 ).fill( randColor() ) );
+          plot.add( graph.circle( 30 ).fill( '#2196F3' ) );
 
           // add icon to center of plot
           plot.add( graph.text( 'x' ).fill( '#ffffff' ) );
@@ -217,7 +249,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
                                    '&y=' + ( -( loc.y - 250 ) / 2.5 );
           }
           else {
-            plot.animate().attr( 'opacity', 0 ).after( function() {
+            plot.animate( 400 ).attr( 'opacity', 0 ).after( function() {
               this.remove();
             });
           }
