@@ -8424,3 +8424,6 @@ select.form-control:focus {
 .fa-meanpath:before {
   content: "\f20c";
 }
+.eisenhower-graph .task {
+  cursor: pointer;
+}

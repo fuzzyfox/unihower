@@ -11,28 +11,38 @@
 {% block main %}
 <main class="container">
   <h2>Topics</h2>
-  {% for topic in topics %}
-  <div class="media">
-    <a href="/topics/{{ topic.id }}" class="media-left eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-size="128" data-graph-readonly="true">
-      <!-- <img src="//placehold.it/128" alt="topic graph" class="img-responsive"> -->
 
-    </a>
-    <div class="media-body">
-      <h4 class="media-heading"><a href="/topics/{{ topic.id }}">{{ topic.name }}</a></h4>
-      <ul class="list-inline">
-        <li><strong>Last Updated:</strong> {{ topic.updatedAt | calendar }}</li>
-        <li><strong># Tasks:</strong> {{ topic.Tasks | length }}</li>
-      </ul>
-      <p>{{ topic.description }}</p>
+  {% for topic in topics %}
+  {% if loop.first %}
+  <div class="row">
+  {% endif %}
+    <div class="col-xs-10 col-sm-4 col-md-3">
+      <div class="thumbnail">
+        <a href="/topics/{{ topic.id }}" class="eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-readonly="true"></a>
+
+        <div class="caption clearfix">
+          <h4>{{ topic.name }}</h4>
+          {% if topic.description %}{{ topic.description | truncate( 140 ) | markdown }}{% endif %}
+
+          <a href="/topics/{{ topic.id }}" class="pull-right btn btn-sm btn-primary"><i class="fa fa-eye"></i> View Topic</a>
+        </div>
+      </div>
     </div>
+  {% if not loop.last and not loop.first and loop.index % 4 == 0 %}
   </div>
+  <div class="row">
+  {% endif %}
+
+  {% if loop.last %}
+  </div>
+  {% endif %}
   {% endfor %}
 
   {% if not topics %}
   <div class="alert alert-info" role="alert">No topics found.</div>
   {% endif %}
 
-  <a href="/topics/create" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Create Topic</a>
+  <a href="/topics/create" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Create Topic</a>
 </main>
 {% endblock %}
 
