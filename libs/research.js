@@ -1,6 +1,27 @@
+/**
+ * @file Enables the collection of data for use in research
+ * @module libs/research
+ *
+ * This works by using hooks into the database ORM (sequelize) and recording a
+ * copy of all data being created/retrieved/destroyed by users of the system.
+ * Data is then recorded into a seperate table with the type of action occuring
+ * to it, and can be processed later.
+ *
+ * Note: A "study" must be configured in the environment for this all to happen.
+ *
+ * @todo turn on/off functionality based on a study timeframe.
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
 
 var debug = require( 'debug' )( 'research' );
 
+/**
+ * Research Lib Export
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Function}    Function to enable manually adding data.
+ */
 module.exports = function( env ) {
   if( !env.get( 'study_name' ) ) {
     debug( 'No study to collect for.' );
@@ -73,7 +94,6 @@ module.exports = function( env ) {
               debug( 'ERROR: Failed to save research data. (err)' );
               return debug( err );
             }
-            debug( 'Record %d saved.', record.id );
           });
         });
       });

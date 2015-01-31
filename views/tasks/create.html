@@ -4,10 +4,10 @@
 <div class="container">
   <h2>New Task</h2>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="eisenhower-graph" data-x="{{ query.x | round(2) if query.x else 0 }}" data-y="{{ query.y | round(2) if query.y else 0 }}" data-graph-new-task="true"></div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-6">
       <form id="newTaskForm" action="/api/tasks" method="POST">
         <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" id="coordX" name="coordX" value="{{ query.x | round(2)}}">
@@ -40,14 +40,21 @@
 {% block custom_scripts %}
 <script src="/assets/js/graph.js"></script>
 <script>
+  /*
+    Set coordinates for plotting
+   */
   $( 'form#newTaskForm #coordX' ).val( $( '.eisenhower-graph:first' ).attr( 'data-x' ) );
   $( 'form#newTaskForm #coordY' ).val( $( '.eisenhower-graph:first' ).attr( 'data-y' ) );
 
+  // update plot location on click
   $( '.eisenhower-graph:first' ).on( 'click', function() {
     $( 'form#newTaskForm #coordX' ).val( $( this ).attr( 'data-x' ) );
     $( 'form#newTaskForm #coordY' ).val( $( this ).attr( 'data-y' ) );
   });
 
+  /*
+    Ajax submit form
+   */
   $( 'form#newTaskForm' ).on( 'submit', function( event ) {
     event.preventDefault();
 
@@ -64,5 +71,27 @@
 
     return false;
   });
+
+  /*
+    Plot tasks from topics in gray + readonly
+   */
+  var topicPlots = [];
+
+  function plotTopicTasks( tasks ) {
+    tasks.forEach( function( task ) {
+      var plot = eisenhowerGraph.plotTask( task, eisenhowerGraph.graphs[ 0 ], null, 0.4 );
+      topicPlots.push( plot );
+    });
+  }
+
+  $( '#TopicId' ).on( 'change', function() {
+    topicPlots.forEach( function( plot ) {
+      plot.remove();
+    });
+
+    $.getJSON( '/api/topics/' + $( this ).val() + '/tasks', plotTopicTasks );
+  });
+
+  $.getJSON( '/api/topics/' + $( '#TopicId' ).val() + '/tasks', plotTopicTasks );
 </script>
 {% endblock %}

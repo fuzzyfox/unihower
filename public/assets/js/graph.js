@@ -1,4 +1,5 @@
 /* global SVG, jQuery */
+/* exported eisenhowerGraph */
 
 /**
  * @todo improve onclick task creation url generation
@@ -6,7 +7,7 @@
  * @todo add hover events for tasks?
  */
 
-(function( window, document, SVG, $, undefined ) {
+var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
   /**
    * Generate a random pastel colour
    * @return {String} CSS style hex colour value
@@ -33,21 +34,45 @@
   }
 
   /**
+   * Get cursor location within the given SVG context
+   *
+   * @param  {MouseEvent} event MouseEvent object.
+   * @param  {Object}     graph Graph (SVGJS) object as context.
+   * @return {Object}           Information about the location of the cursor.
+   */
+  function cursorLocation( event, graph ) {
+    var point = graph.node.createSVGPoint();
+
+    point.x = event.clientX;
+    point.y = event.clientY;
+    point = point.matrixTransform( graph.node.getScreenCTM().inverse() );
+
+    return point;
+  }
+
+  /**
    * Plot a task on a graph
    *
-   * @param  {Object} task  Task object from the API
-   * @param  {Object} graph Graph (SVGJS) object
-   * @return {Object}       SVGJS object for the plotted task
+   * @param  {Object} task      Task object from the API
+   * @param  {Object} graph     Graph (SVGJS) object
+   * @param  {String} [color]   Optional predefined colour for the task.
+   * @param  {Number} [opacity] Optional predefined opacity for the task.
+   * @return {Object}           SVGJS object for the plotted task
    */
-  function plotTask( task, graph ) {
+  function plotTask( task, graph, color, opacity ) {
+    color = color || randColor();
+    opacity = opacity || 1;
+
     var plot = graph.group().attr( 'class', 'task' );
 
     // add base circle
-    plot.add( graph.circle( 30 ).fill( randColor() ) );
+    plot.add( graph.circle( 30 ).fill( color ) );
 
     // add icon to center of plot
     plot.add( graph.text( 'x' ).fill( '#ffffff' ) );
     plot.last().center( plot.first().attr( 'cx' ), plot.first( 'cy' ) );
+
+    plot.opacity( opacity );
 
     // adjust task coordinates to work on SVG coordinate system
     // Math: plot_coord = ( graph_width / 2 ) + ( ( ( graph_width / 2 ) / 100 ) * task_coord )
@@ -75,12 +100,14 @@
         plot.scale( 1.5, 1.5 );
       }
       else {
-        plot.opacity( 0.4 );
+        plot.opacity( opacity * 0.4 );
       }
     }
 
     return plot;
   }
+
+  var graphs = [];
 
   // get all graph wrappers
   $( '.eisenhower-graph' ).each( function() {
@@ -98,6 +125,7 @@
       height: $self.data( 'graphSize' ),
       class: 'img-responsive'
     });
+    graphs.push( graph );
 
     graph.highlightTask = $self.data( 'highlightTask' );
 
@@ -149,17 +177,14 @@
 
       // on click move xyPlot
       graph.on( 'click', function( event ) {
-        // work out where on graph click was relative to viewbox origin
-        var viewboxRatio = ( graph.viewbox().width / graph.parent.offsetWidth );
-        var coordX = ( event.layerX - graph.parent.offsetLeft ) * viewboxRatio;
-        var coordY = ( event.layerY - graph.parent.offsetTop ) * viewboxRatio;
+        var loc = cursorLocation( event, graph );
 
         // move plot
-        xyPlot.center( coordX, coordY );
+        xyPlot.center( loc.x, loc.y );
 
         // update data attributes to reflect change
-        $self.attr( 'data-x', round2dp( ( coordX - 250 ) / 2.5 ) );
-        $self.attr( 'data-y', round2dp( -( coordY - 250 ) / 2.5 ) );
+        $self.attr( 'data-x', round2dp( ( loc.x - 250 ) / 2.5 ) );
+        $self.attr( 'data-y', round2dp( -( loc.y - 250 ) / 2.5 ) );
       });
     }
 
@@ -168,10 +193,7 @@
       // on click plot new point and confirm new task
       graph.on( 'click', function( event ) {
         if( ! graph.preventPlot ) {
-          // work out where on graph click was relative to viewbox origin
-          var viewboxRatio = ( graph.viewbox().width / graph.parent.offsetWidth );
-          var coordX = ( event.layerX - graph.parent.offsetLeft ) * viewboxRatio;
-          var coordY = ( event.layerY - graph.parent.offsetTop ) * viewboxRatio;
+          var loc = cursorLocation( event, graph );
 
           // plot point
           var plot = graph.group();
@@ -184,15 +206,15 @@
           plot.last().center( plot.first().attr( 'cx' ), plot.first( 'cy' ) );
 
           // center plot on task coordinates
-          plot.center( coordX, coordY );
+          plot.center( loc.x, loc.y );
 
           // confirm new task
           if( window.confirm( 'Add new task here?' ) ) {
             // redirect to task creation
             window.location.href = '/tasks/create?' +
                                    ( $self.data( 'topicId' ) ? 'topic=' + $self.data( 'topicId' ) : '' ) +
-                                   '&x=' + ( ( coordX - 250 ) / 2.5 ) +
-                                   '&y=' + ( -( coordY - 250 ) / 2.5 );
+                                   '&x=' + ( ( loc.x - 250 ) / 2.5 ) +
+                                   '&y=' + ( -( loc.y - 250 ) / 2.5 );
           }
           else {
             plot.animate().attr( 'opacity', 0 ).after( function() {
@@ -203,4 +225,10 @@
       });
     }
   });
+
+  return {
+    graphs: graphs,
+    plotTask: plotTask,
+    cursorLocation: cursorLocation
+  };
 })( window, document, SVG, jQuery );

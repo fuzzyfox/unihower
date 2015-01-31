@@ -2,13 +2,17 @@
 
 {% block main %}
 <main class="container">
-  <h2>{{ name }}</h2>
-  <p class="lead">{{ description }}</p>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="eisenhower-graph" data-topic-id="{{ id }}" data-graph-size="500"></div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-6">
+      <h2>{{ name }}</h2>
+      {% if description %}
+      <h3>Description</h3>
+      {{ description | markdown }}
+      {% endif %}
+
       <h3>Topic Tasks</h3>
       <table class="table table-striped">
         <thead>
@@ -21,9 +25,9 @@
         <tbody>
           {% for task in Tasks %}
           <tr>
-            <td>{{ task.state }}</td>
+            <td><span class="label label-state-{{ task.state }}">{{ task.state }}</span></td>
             <td>{{ task.description }}</td>
-            <td>{{ task.updatedAt }}</td>
+            <td>{{ task.updatedAt | calendar }}</td>
           </tr>
           {% endfor %}
         </tbody>

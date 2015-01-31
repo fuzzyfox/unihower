@@ -14,7 +14,7 @@
     <div class="col-md-9">
       <ul class="list-inline">
         <li><strong>State:</strong> <span class="label label-state-{{ state }}">{{ state }}</span></li>
-        <li><strong>Last Updated:</strong> {{ updatedAt }}</li>
+        <li><strong>Last Updated:</strong> {{ updatedAt | calendar }}</li>
         {% if Topic %}
         <li><strong>Topic:</strong> <a href="/topics/{{ Topic.id }}">{{ Topic.name }}</a></li>
         {% endif %}

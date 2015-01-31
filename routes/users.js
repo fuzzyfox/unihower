@@ -1,9 +1,38 @@
+/**
+ * @file Provides logic for loading User http routes.
+ * @module routes/users
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
+/**
+ * Users route handlers.
+ *
+ * @example
+ *
+ *  // assuming you've loaded an environment into `env`
+ *  var userRoutes = require( './routes/users' )( env );
+ *
+ *  app.get( '/users/create', userRoutes.create );
+ *  app.get( '/users/:id', userRoutes.user );
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Object}      An object contaning all the HTTP route handlers for users.
+ */
 module.exports = function( env ) {
   var db = require( '../models' )( env );
   var errorResponse = require( './errors' )( env );
   var debug = require( 'debug' )( 'routes:users' );
 
   return {
+    /**
+     * Handle requests for a listing of ALL users.
+     *
+     * **Note:** Will only load listing administrators.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
     users: function( req, res ) {
       debug( 'Getting ALL users.' );
 
@@ -22,6 +51,12 @@ module.exports = function( env ) {
 
       return errorResponse.forbidden( req, res );
     },
+    /**
+     * Handle requests for a specific user.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
     user: function( req, res ) {
       debug( 'Get user: %d', req.params.id );
 
@@ -48,6 +83,15 @@ module.exports = function( env ) {
 
       return errorResponse.forbidden( req, res );
     },
+    /**
+     * Handle requests for user creation form.
+     *
+     * **Note:** Will only load for new users, and administrators. Else will
+     * redirect to the current users own details page.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
     create: function( req, res ) {
       debug( 'Get user creation form.' );
 

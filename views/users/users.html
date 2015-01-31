@@ -11,38 +11,46 @@
 {% block main %}
 <main class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
+      <h2>Users</h2>
       {% if users %}
-      {% for user in users %}
-      <div class="media">
-        <a href="/users/{{ user.id }}" class="media-left">
-          <img src="//secure.gravatar.com/avatar/{{ user.emailHash }}?s=64" alt="avatar" class="img-responsive">
-        </a>
-        <div class="media-body">
-          <h4 class="media-heading">{{ user.name }}</h4>
-          <div class="row">
-            <div class="col-md-6">
-              <dl>
-                <dt>Email</dt>
-                <dd>{{ user.email }}</dd>
-              </dl>
-            </div>
-            <div class="col-md-6">
-              <dl>
-                <dt>Last Login</dt>
-                <dd>{{ user.lastLogin }}</dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Registered</th>
+            <th>Last Login</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}{% if not user.name %}<span class="text-muted">No name given</span>{% endif %}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.createdAt | relativeMoment }}</td>
+            <td>{{ user.lastLogin | relativeMoment }}</td>
+            <td>
+              <div class="btn-group" role="group">
+                <a href="/users/{{ user.id }}" class="btn btn-sm btn-default" title="View"><i class="fa fa-eye"></i><span class="sr-only"> view</span></a>
+                <a href="/users/edit?id={{ user.id }}" class="btn btn-sm btn-info"><i class="fa fa-edit" title="Edit"></i><span class="sr-only"> edit</span></a>
+                <a href="/users/destroy?id={{ user.id }}" class="btn btn-sm btn-danger"><i class="fa fa-trash" title="Delete"></i><span class="sr-only"> delete</span></a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
       {% else %}
       <div class="alert alert-info" role="alert">No users found.</div>
       {% endif %}
     </div>
-    <div class="col-md-6">
-      <div class="panel panel-default">user stats / metrics here</div>
+    <div class="col-md-5">
+      <h3>User Metircs</h3>
+      <img src="//placehold.it/500x300" alt="chart placeholder" class="img-responsive">
     </div>
   </div>
 </main>

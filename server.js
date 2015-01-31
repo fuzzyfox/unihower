@@ -9,6 +9,8 @@ var bodyParser = require( 'body-parser' );
 var cookieParser = require( 'cookie-parser' );
 var session = require( 'express-session' );
 var csrf = require( 'csurf' );
+var marked = require( 'marked' );
+var moment = require( 'moment' );
 var nunjucks = require( 'nunjucks' );
 var debug = require( 'debug' );
 
@@ -91,6 +93,23 @@ if( debug( 'http' ).enabled ) {
 var nunjucksEnv = nunjucks.configure( 'views', {
   autoescape: true,
   watch: true
+});
+
+// add markdown support to nunjucks
+nunjucksEnv.addFilter( 'markdown', function( str ) {
+  return nunjucksEnv.getFilter( 'safe' )( marked( str ) );
+});
+
+// add basic moment support to nunjucks
+nunjucksEnv.addFilter( 'moment', function( str, format ) {
+  format = format || 'MMMM Do YYYY';
+  return moment( str ).format( format );
+});
+nunjucksEnv.addFilter( 'calendar', function( str ) {
+  return moment( str ).calendar();
+});
+nunjucksEnv.addFilter( 'relativeMoment', function( str ) {
+  return moment( str ).fromNow();
 });
 
 // make nunjucks the default view renderer

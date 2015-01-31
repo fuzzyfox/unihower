@@ -16,12 +16,13 @@
         <dt>Email</dt>
         <dd>{{ email }}</dd>
         <dt>Registered</dt>
-        <dd>{{ createdAt }}</dd>
+        <dd>{{ createdAt | calendar }}</dd>
       </dl>
     </div>
     <div class="col-md-3">
       {% if id == user.id %}
       <a href="/topics" class="eisenhower-graph" data-tasks-url="/api/users/{{ id }}/tasks" data-graph-readonly="true" data-graph-size="500"></a>
+      <p class="text-muted text-center">All Tasks</p>
       {% endif %}
     </div>
   </div>

@@ -56,6 +56,8 @@
     "habitat": "^3.1.0",
     "helmet": "^0.5.1",
     "lodash": "^2.4.1",
+    "marked": "^0.3.3",
+    "moment": "^2.9.0",
     "morgan": "^1.5.0",
     "mysql": "^2.5.3",
     "nodemailer": "^1.3.0",

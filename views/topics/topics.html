@@ -20,7 +20,7 @@
     <div class="media-body">
       <h4 class="media-heading"><a href="/topics/{{ topic.id }}">{{ topic.name }}</a></h4>
       <ul class="list-inline">
-        <li><strong>Last Updated:</strong> {{ topic.updatedAt }}</li>
+        <li><strong>Last Updated:</strong> {{ topic.updatedAt | calendar }}</li>
         <li><strong># Tasks:</strong> {{ topic.Tasks | length }}</li>
       </ul>
       <p>{{ topic.description }}</p>
