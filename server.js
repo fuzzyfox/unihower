@@ -109,7 +109,7 @@ nunjucksEnv.addFilter( 'calendar', function( str ) {
   return moment( str ).calendar();
 });
 nunjucksEnv.addFilter( 'relativeMoment', function( str ) {
-  return moment( str ).fromNow();
+  return moment( str ).from( moment() );
 });
 
 // make nunjucks the default view renderer
@@ -162,6 +162,7 @@ app.get( '/users/:id', routes.auth.enforce, routes.users.user );
 app.get( '/topics', routes.auth.enforce, routes.topics.topics );
 app.get( '/topics/create', routes.auth.enforce, routes.topics.create );
 app.get( '/topics/:id', routes.auth.enforce, routes.topics.topic );
+app.get( '/topics/:id/update', routes.auth.enforce, routes.topics.update );
 
 // task management
 app.get( '/tasks', routes.auth.enforce, routes.tasks.tasks );

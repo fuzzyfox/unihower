@@ -25,11 +25,8 @@
 
         <div class="form-group">
           <label for="dueDate">Due Date</label>
-          <div class="input-group date" id="dueDateInputGroup">
-            <input type="text" class="form-control" name="dueDate" id="dueDate">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          </div>
-          <p class="help-block">Optionally set a due date for this task.</p>
+          <input type="text" class="form-control" name="dueDate" id="dueDate">
+          <p class="help-block">Optionally set a due date for this task. e.g. "in three days"</p>
         </div>
 
         <div class="form-group">
@@ -51,30 +48,52 @@
 {% endblock %}
 
 {% block custom_scripts %}
+<script src="/vendor/sugar/release/sugar.min.js"></script>
 <script src="/vendor/moment/min/moment.min.js"></script>
-<script src="/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/assets/js/graph.js"></script>
 <script>
-  /*
-    Add date time picker to page
+  /**
+   * Returns true if date is valid and in the future.
+   *
+   * @param  {String} dateInput Date to check validity of.
+   * @return {Boolean}          True if valid.
    */
-  $(function() {
-    $( '#dueDate' ).datetimepicker({
-      showClear: true,
-      showTodayButton: true,
-      format: 'MMMM Do YYYY',
-      minDate: moment(),
-      icons: {
-        time: 'fa fa-clock-o',
-        date: 'fa fa-calendar',
-        up: 'fa fa-arrow-up',
-        down: 'fa fa-arrow-down',
-        previous: 'fa fa-arrow-left',
-        next: 'fa fa-arrow-right',
-        clear: 'fa fa-trash',
-        today: 'fa fa-crosshairs'
-      }
-    });
+  function validateDate( dateInput ) {
+    var date = Date.future( dateInput ).valueOf();
+
+    if( date ) {
+      return moment( date ).isAfter();
+    }
+
+    return false;
+  }
+
+  /*
+    Realtime due date validity indication
+   */
+  $( '#dueDate' ).on( 'keyup', function() {
+    var valid = validateDate( $( this ).val() );
+
+    if( ! $( this ).val() ) {
+      valid = true;
+    }
+
+    if( valid ) {
+      $( this ).parents( '.form-group' ).removeClass( 'has-error' ).addClass( 'has-success' );
+    }
+    else {
+      $( this ).parents( '.form-group' ).addClass( 'has-error' ).removeClass( 'has-success' );
+    }
+  });
+
+  $( '#dueDate' ).on( 'blur', function() {
+    var valid = validateDate( $( this ).val() );
+
+    if( $( this ).val() && !valid ) {
+      return;
+    }
+
+    $( this ).parents( '.form-group' ).removeClass( 'has-error' ).removeClass( 'has-success' );
   });
 
   /*
@@ -94,7 +113,18 @@
    */
   $( 'form#newTaskForm' ).on( 'submit', function( event ) {
     event.preventDefault();
+    // check we have a valid date
+    if( $( this ).find( '#dueDate' ).val() && !validateDate( $( this ).find( '#dueDate' ).val() ) ) {
+      window.alert( 'please enter a valid due date' );
+      return false;
+    }
 
+    // convert date into pure js safe date
+    if( $( this ).find( '#dueDate' ).val() ) {
+      $( this ).find( '#dueDate' ).val( Date.future( $( this ).find( '#dueDate' ).val() ).toString() );
+    }
+
+    // send data to server
     $.ajax({
       type: 'POST',
       url: $( this ).attr( 'action' ),

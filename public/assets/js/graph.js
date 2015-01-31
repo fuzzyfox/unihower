@@ -107,6 +107,8 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
       graph.preventPlot = true;
 
       plot.animate( 400 ).scale( 1.7, 1.7 ).center( coordX, coordY );
+
+      $( '[rel=task-' + task.id + ']' ).addClass( 'highlight' );
     });
     plot.on( 'mouseleave', function() {
       graph.preventPlot = false;
@@ -117,6 +119,8 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
       else {
         plot.animate( 400 ).scale( 1, 1 ).center( coordX, coordY );
       }
+
+      $( '[rel=task-' + task.id + ']' ).removeClass( 'highlight' );
     });
     plot.on( 'click', function() {
       window.location.href = '/tasks/' + task.id;

@@ -2,19 +2,19 @@
 
 {% block main %}
 <div class="container">
-  <h2>New Topic</h2>
-  <form id="newTopicForm" action="/api/topics" method="POST">
+  <h2>{{ 'New' if not id else 'Update' }} Topic {% if id %}<small>{{ name }}</small>{% endif %}</h2>
+  <form id="newTopicForm" action="/api/topics{{ '/' + id if id }}" method="{{ 'POST' if not id else 'PUT' }}">
     <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
 
     <div class="form-group">
       <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="My Topic Name" required>
+      <input type="text" class="form-control" id="name" name="name" placeholder="My Topic Name" value="{{ name }}" required>
       <p class="help-block">Name your topic something short and descriptive like "co600 project" or "Week 14 Assignments". Required.</p>
     </div>
 
     <div class="form-group">
       <label for="description">Description</label>
-      <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+      <textarea class="form-control" name="description" id="description" rows="3">{{ description }}</textarea>
       <div class="help-block">
         <p>It may help to provide some extra context about this topic for later. Optional. For example:</p>
         <p>
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-success">Create</button>
+    <button type="submit" class="btn btn-success">{{ 'Create' if not id else 'Update' }}</button>
   </form>
 </div>
 {% endblock %}
@@ -41,7 +41,7 @@
     event.preventDefault();
 
     $.ajax({
-      type: 'POST',
+      type: $( this ).attr( 'method' ),
       url: $( this ).attr( 'action' ),
       data: $( this ).serialize()
     }).done( function( data ) {

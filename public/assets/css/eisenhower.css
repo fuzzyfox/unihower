@@ -8427,3 +8427,24 @@ select.form-control:focus {
 .eisenhower-graph .task {
   cursor: pointer;
 }
+.table > thead > tr > td.highlight,
+.table > tbody > tr > td.highlight,
+.table > tfoot > tr > td.highlight,
+.table > thead > tr > th.highlight,
+.table > tbody > tr > th.highlight,
+.table > tfoot > tr > th.highlight,
+.table > thead > tr.highlight > td,
+.table > tbody > tr.highlight > td,
+.table > tfoot > tr.highlight > td,
+.table > thead > tr.highlight > th,
+.table > tbody > tr.highlight > th,
+.table > tfoot > tr.highlight > th {
+  background-color: #e3f2fd;
+}
+.table-hover > tbody > tr > td.highlight:hover,
+.table-hover > tbody > tr > th.highlight:hover,
+.table-hover > tbody > tr.highlight:hover > td,
+.table-hover > tbody > tr:hover > .highlight,
+.table-hover > tbody > tr.highlight:hover > th {
+  background-color: #cae6fc;
+}

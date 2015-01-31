@@ -12,6 +12,9 @@
       <h3>Description</h3>
       {{ description | markdown }}
       {% endif %}
+      <div class="clearfix">
+        <a href="/topics/{{ id }}/update" class="btn btn-sm btn-default pull-right"><i class="fa fa-pencil"></i> Update Topic</a>
+      </div>
 
       <h3>Topic Tasks</h3>
       <table class="table table-striped">
@@ -24,16 +27,16 @@
         </thead>
         <tbody>
           {% for task in Tasks %}
-          <tr>
+          <tr rel="task-{{ task.id }}">
             <td><span class="label label-state-{{ task.state }}">{{ task.state }}</span></td>
-            <td>{{ task.description }}</td>
+            <td><a href="/tasks/{{ task.id }}">{{ task.description }}</a></td>
             <td>{{ task.updatedAt | calendar }}</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
 
-      <a href="/tasks/create?topic={{ id }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Create Task</a>
+      <a href="/tasks/create?topic={{ id }}" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Create Task</a>
     </div>
   </div>
 </main>

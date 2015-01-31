@@ -49,6 +49,8 @@ module.exports = function( env ) {
     create: function( req, res ) {
       debug( 'Create task: %s', req.body.description );
 
+      debug( req.body );
+
       // handle topic id association
       var TopicId = req.body.TopicId;
       if( req.body.TopicId !== undefined ) {

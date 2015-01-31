@@ -3,21 +3,20 @@
 {% block main %}
 <div class="container">
   <div class="row">
-    <div class="col-md-3 col-sm-hidden col-xs-hidden">
+    <div class="col-md-4 col-sm-hidden col-xs-hidden">
       <div class="eisenhower-graph" data-tasks-url="{{ '/api/topics/' + Topic.id + '/tasks' if Topic else '/api/users/' + user.id + '/tasks' }}" data-highlight-task="{{ id }}"></div>
       {% if Topic %}
-      <p class="text-muted text-center">Showing relative to tasks in topic:<br>{{ Topic.name }}</p>
+      <p class="text-muted text-center">Showing relative to tasks in topic:<br><a href="/topics/{{ Topic.id }}">{{ Topic.name }}</a></p>
       {% else %}
       <p class="text-muted text-center">Showing relative to all tasks.</p>
       {% endif %}
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
       <ul class="list-inline">
         <li><strong>State:</strong> <span class="label label-state-{{ state }}">{{ state }}</span></li>
+        <li><strong>Created:</strong> {{ creeatedAt | calendar }}</li>
         <li><strong>Last Updated:</strong> {{ updatedAt | calendar }}</li>
-        {% if Topic %}
-        <li><strong>Topic:</strong> <a href="/topics/{{ Topic.id }}">{{ Topic.name }}</a></li>
-        {% endif %}
+        {% if dueDate %}<li><strong>Due:</strong> {{ dueDate | relativeMoment }}</li>{% endif %}
       </ul>
       <p class="lead">{{ description }}</p>
     </div>

@@ -97,6 +97,39 @@ module.exports = function( env ) {
       debug( 'Get topic creation form.' );
 
       res.render( 'topics/create.html' );
+    },
+    /**
+     * Handle requests for topic update form.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    update: function( req, res ) {
+      debug( 'Update topic: %d', req.params.id );
+
+      return db.Topic.find({
+        where: {
+          id: req.params.id
+        },
+        include: [ db.Task ]
+      }).done( function( err, topic ) {
+        if( err ) {
+          debug( 'ERROR: Failed to get topic. (err, taskId)' );
+          debug( err, req.params.id );
+
+          return errorResponse.internal( req, res, err );
+        }
+
+        if( !topic ) {
+          return errorResponse.notFound( req, res );
+        }
+
+        if( topic.UserId !== req.session.user.id ) {
+          return errorResponse.forbidden( req, res );
+        }
+
+        res.render( 'topics/create.html', JSON.parse( JSON.stringify( topic ) ) );
+      });
     }
   };
 };
