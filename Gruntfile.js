@@ -13,6 +13,7 @@ module.exports = function( grunt ) {
         '*.js',
         'models/**/*.js',
         'routes/**/*.js',
+        'libs/**/*.js',
         'test/**/*.js'
       ]
     },
