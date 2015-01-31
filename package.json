@@ -1,6 +1,6 @@
 {
   "name": "eisenhower",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A tool for the prioritisation of tasks based on Eisenhower Desicion Matricies.",
   "main": "server.js",
   "scripts": {
