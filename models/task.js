@@ -23,6 +23,10 @@ module.exports = function( sequelize, DataTypes ) {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    dueDate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     state: {
       type: DataTypes.ENUM,
       allowNull: false,

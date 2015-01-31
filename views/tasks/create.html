@@ -1,5 +1,9 @@
 {% extends '_default.html' %}
 
+{% block custom_styles %}
+<link rel="stylesheet" href="/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+{% endblock %}
+
 {% block main %}
 <div class="container">
   <h2>New Task</h2>
@@ -17,6 +21,15 @@
           <label for="description">Description</label>
           <input type="text" class="form-control" id="description" name="description" placeholder="Something I need to do." required>
           <p class="help-block">A short description of your task e.g. "Write co600 report"</p>
+        </div>
+
+        <div class="form-group">
+          <label for="dueDate">Due Date</label>
+          <div class="input-group date" id="dueDateInputGroup">
+            <input type="text" class="form-control" name="dueDate" id="dueDate">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          </div>
+          <p class="help-block">Optionally set a due date for this task.</p>
         </div>
 
         <div class="form-group">
@@ -38,8 +51,32 @@
 {% endblock %}
 
 {% block custom_scripts %}
+<script src="/vendor/moment/min/moment.min.js"></script>
+<script src="/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/assets/js/graph.js"></script>
 <script>
+  /*
+    Add date time picker to page
+   */
+  $(function() {
+    $( '#dueDate' ).datetimepicker({
+      showClear: true,
+      showTodayButton: true,
+      format: 'MMMM Do YYYY',
+      minDate: moment(),
+      icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-arrow-up',
+        down: 'fa fa-arrow-down',
+        previous: 'fa fa-arrow-left',
+        next: 'fa fa-arrow-right',
+        clear: 'fa fa-trash',
+        today: 'fa fa-crosshairs'
+      }
+    });
+  });
+
   /*
     Set coordinates for plotting
    */
