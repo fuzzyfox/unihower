@@ -4,8 +4,12 @@
 <div class="container">
   <nav>
     <ol class="breadcrumb">
+      {% if TopicId %}
       <li><a href="/">Topics</a></li>
       <li><a href="/topics/{{ TopicId }}">{{ Topic.name }}</a></li>
+      {% else %}
+      <li><a href="/tasks">All Tasks</a></li>
+      {% endif %}
       <li class="active">{{ description | truncate( 30 ) }}</li>
     </ol>
   </nav>
