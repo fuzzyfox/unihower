@@ -21,7 +21,7 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     index: function( req, res ) {
-      if( req.session.user ) {
+      if( req.session.user.id ) {
         return res.redirect( '/topics' );
       }
 

@@ -2,6 +2,15 @@
 
 {% block main %}
 <main class="container">
+  {% if user.isAdmin %}
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/users">Users</a></li>
+      <li class="active">{{ name if name else email }}</li>
+    </ol>
+  </nav>
+  {% endif %}
+
   <div class="row">
     <div class="col-md-3">
       <img src="//secure.gravatar.com/avatar/{{ emailHash }}?s=500" alt="avatar" class="img-responsive">

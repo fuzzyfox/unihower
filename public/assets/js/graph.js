@@ -102,6 +102,15 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
     // add task details to plot
     plot.data( 'task', task );
 
+    // enable tooltip
+    plot.data( 'toggle', 'tooltip' );
+    plot.attr( 'title', task.description );
+    $( plot.node ).tooltip({
+      container: 'body',
+      viewport: '#' + graph.attr( 'id' ),
+      placement: 'auto'
+    });
+
     // handle events for this plot
     plot.on( 'mouseenter', function() {
       graph.preventPlot = true;

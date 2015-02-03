@@ -2,7 +2,19 @@
 
 {% block main %}
 <div class="container">
-  <h2>{{ 'New' if not id else 'Update' }} Topic {% if id %}<small>{{ name }}</small>{% endif %}</h2>
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/topics">Topics</a></li>
+      {% if id %}
+      <li><a href="/tasks/{{ id }}">{{ name }}</a></li>
+      <li class="active"><i class="fa fa-pencil"></i> Edit Topic</li>
+      {% else %}
+      <li class="active"><i class="fa fa-plus"></i> Create Topic</li>
+      {% endif %}
+    </ol>
+  </nav>
+
+  <h2>{{ 'New' if not id else 'Edit' }} Topic {% if id %}<small>{{ name }}</small>{% endif %}</h2>
   <form id="newTopicForm" action="/api/topics{{ '/' + id if id }}" method="{{ 'POST' if not id else 'PUT' }}">
     <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
 

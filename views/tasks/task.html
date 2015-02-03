@@ -2,6 +2,14 @@
 
 {% block main %}
 <div class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/">Topics</a></li>
+      <li><a href="/topics/{{ TopicId }}">{{ Topic.name }}</a></li>
+      <li class="active">{{ description | truncate( 30 ) }}</li>
+    </ol>
+  </nav>
+
   <div class="row">
     <div class="col-md-4 col-sm-hidden col-xs-hidden">
       <div class="eisenhower-graph" data-tasks-url="{{ '/api/topics/' + Topic.id + '/tasks' if Topic else '/api/users/' + user.id + '/tasks' }}" data-highlight-task="{{ id }}"></div>
@@ -19,6 +27,22 @@
         {% if dueDate %}<li><strong>Due:</strong> {{ dueDate | relativeMoment }}</li>{% endif %}
       </ul>
       <p class="lead">{{ description }}</p>
+
+      <div class="btn-group pull-right">
+        {% if state == 'incomplete' %}
+        <a href="#complete" class="btn btn-sm btn-success" id="taskCompleteButton">
+          <i class="fa fa-check"></i> Mark Complete
+        </a>
+        {% endif %}
+
+        <a href="/tasks/{{ id }}/update" class="btn btn-sm btn-primary">
+          <i class="fa fa-pencil"></i> Edit Task
+        </a>
+
+        <a href="#delete" class="btn btn-sm btn-danger" id="taskDeleteButton">
+          <i class="fa fa-trash"></i> Delete Task
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -26,4 +50,44 @@
 
 {% block custom_scripts %}
 <script src="/assets/js/graph.js"></script>
+<script>
+  $(function() {
+    $( '#taskCompleteButton' ).on( 'click', function() {
+      $.ajax({
+        type: 'PUT',
+        url: '/api/tasks/{{ id }}',
+        data: {
+          _csrf: '{{ csrfToken }}',
+          state: 'complete'
+        },
+        dataType: 'json'
+      }).done( function( data ) {
+        window.location.reload();
+      }).fail( function() {
+        console.log( arguments );
+      });
+
+      return false;
+    });
+
+    $( '#taskDeleteButton' ).on( 'click', function() {
+      if( window.confirm( 'Are you sure you want to delete this task?' ) ) {
+        $.ajax({
+          type: 'DELETE',
+          url: '/api/tasks/{{ id }}',
+          data: {
+            _csrf: '{{ csrfToken }}'
+          },
+          dataType: 'json'
+        }).done( function( data ) {
+          window.location.href = "/topics/{{ TopicId }}";
+        }).fail( function() {
+          console.log( arguments );
+        });
+      }
+
+      return false;
+    });
+  });
+</script>
 {% endblock %}

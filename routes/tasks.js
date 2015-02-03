@@ -23,6 +23,7 @@ module.exports = function( env ) {
   var db = require( '../models' )( env );
   var errorResponse = require( './errors' )( env );
   var debug = require( 'debug' )( 'routes:tasks' );
+  var lodash = require( 'lodash' );
 
   return {
     /**
@@ -112,6 +113,55 @@ module.exports = function( env ) {
         }
 
         res.render( 'tasks/create.html', { query: req.query, topics: topics } );
+      });
+    },
+    /**
+     * Handle requests for task update form.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    update: function( req, res ) {
+      debug( 'Update task: %d', req.params.id );
+
+      return db.Task.find({
+        where: {
+          id: req.params.id,
+        },
+        include: [ db.Topic ]
+      }).done( function( err, task ) {
+        if( err ) {
+          debug( 'ERROR: Failed to get task. (err, taskId)' );
+          debug( err, req.params.id );
+
+          return errorResponse.internal( req, res, err );
+        }
+
+        if( ! task ) {
+          return errorResponse.notFound( req, res );
+        }
+
+        if( task.UserId !== req.session.user.id ) {
+          return errorResponse.forbidden( req, res );
+        }
+
+        return db.Topic.findAll({
+          where: {
+            UserId: req.session.user.id
+          }
+        }).done( function( err, topics ) {
+          if( err ) {
+            debug( 'ERROR: Failed to load user %d\'s topics. (err, userId)' );
+            debug( err, req.session.user.id );
+
+            return errorResponse.internal( req, res, err );
+          }
+
+          res.render( 'tasks/create.html', lodash.extend( JSON.parse( JSON.stringify( task ) ), {
+            query: req.query,
+            topics: topics
+          }) );
+        });
       });
     }
   };

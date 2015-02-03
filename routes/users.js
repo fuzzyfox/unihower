@@ -95,6 +95,10 @@ module.exports = function( env ) {
     create: function( req, res ) {
       debug( 'Get user creation form.' );
 
+      if( !req.session.email ) {
+        return errorResponse.unauthorized( req, res, 'Please login with persona before finishing account creation.' );
+      }
+
       if( req.session.user.id && !req.session.user.isAdmin ) {
         debug( '↳ User session exists and non-admin, redirect to user details.' );
 

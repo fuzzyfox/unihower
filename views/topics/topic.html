@@ -2,6 +2,13 @@
 
 {% block main %}
 <main class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/">Topics</a></li>
+      <li class="active">{{ name }}</li>
+    </ol>
+  </nav>
+
   <div class="row">
     <div class="col-md-6">
       <div class="eisenhower-graph" data-topic-id="{{ id }}" data-graph-size="500"></div>
@@ -13,7 +20,15 @@
       {{ description | markdown }}
       {% endif %}
       <div class="clearfix">
-        <a href="/topics/{{ id }}/update" class="btn btn-sm btn-default pull-right"><i class="fa fa-pencil"></i> Update Topic</a>
+        <div class="btn-group pull-right">
+          <a href="/topics/{{ id }}/update" class="btn btn-sm btn-primary">
+            <i class="fa fa-pencil"></i> Edit Topic
+          </a>
+
+          <a href="#delete" class="btn btn-sm btn-danger" id="topicDeleteButton">
+            <i class="fa fa-trash"></i> Delete Topic
+          </a>
+        </div>
       </div>
 
       <h3>Topic Tasks</h3>
@@ -44,4 +59,26 @@
 
 {% block custom_scripts %}
 <script src="/assets/js/graph.js"></script>
+<script>
+  $(function() {
+    $( '#topicDeleteButton' ).on( 'click', function() {
+      if( window.confirm( 'Are you sure you want to delete this topic?' ) ) {
+        $.ajax({
+          type: 'DELETE',
+          url: '/api/topics/{{ id }}',
+          data: {
+            _csrf: '{{ csrfToken }}'
+          },
+          dataType: 'json'
+        }).done( function( data ) {
+          window.location.href = "/topics";
+        }).fail( function() {
+          console.log( arguments );
+        });
+      }
+
+      return false;
+    });
+  });
+</script>
 {% endblock %}

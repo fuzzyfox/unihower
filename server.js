@@ -168,6 +168,7 @@ app.get( '/topics/:id/update', routes.auth.enforce, routes.topics.update );
 app.get( '/tasks', routes.auth.enforce, routes.tasks.tasks );
 app.get( '/tasks/create', routes.auth.enforce, routes.tasks.create );
 app.get( '/tasks/:id', routes.auth.enforce, routes.tasks.task );
+app.get( '/tasks/:id/update', routes.auth.enforce, routes.tasks.update );
 
 // create a new user (api)
 app.post( '/api/users', routes.api.users.create );
