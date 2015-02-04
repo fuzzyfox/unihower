@@ -102,4 +102,5 @@ module.exports = function( grunt ) {
 
   grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
+  grunt.registerTask( 'build', [ 'less:prod' ] );
 };
