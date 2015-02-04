@@ -52,7 +52,7 @@
 
         <div class="form-group">
           <label for="dueDate">Due Date</label>
-          <input type="text" class="form-control" name="dueDate" id="dueDate" value="{{ dueDate | moment if dueDate }}">
+          <input type="text" class="form-control" name="dueDate" id="dueDate" value="{{ dueDate | moment( 'dddd, MMMM Do YYYY, h:mm a' ) if dueDate }}">
           <p class="help-block">Optionally set a due date for this task. e.g. "in three days"</p>
         </div>
 
@@ -187,6 +187,9 @@
   function plotTopicTasks( tasks ) {
     tasks.forEach( function( task ) {
       var plot = eisenhowerGraph.plotTask( task, eisenhowerGraph.graphs[ 0 ], null, 0.4 );
+      if( plot.data( 'task' ).id === {{ id if id else 'null' }} ) {
+        return plot.remove();
+      }
       topicPlots.push( plot );
     });
   }

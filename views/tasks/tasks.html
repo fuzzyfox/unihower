@@ -21,7 +21,7 @@
           <tr>
             <th>state</th>
             <th>description</th>
-            <th>last updated</th>
+            <th>due date</th>
             <th>topic</th>
           </tr>
         </thead>
@@ -30,7 +30,7 @@
           <tr>
             <td>{{ task.state }}</td>
             <td><a href="/tasks/{{ task.id }}">{{ task.description | truncate(140) if task.description }}</a></td>
-            <td>{{ task.updatedAt | calendar }}</td>
+            <td>{{ task.dueDate | calendar if task.dueDate else '-' }}</td>
             <td>
               {% if task.Topic %}
               <a href="/topics/{{ task.TopicId }}">{{ task.Topic.name }}</a>

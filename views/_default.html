@@ -18,21 +18,22 @@
         <a href="/" class="navbar-brand">Eisenhower</a>
       </div>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
         {% if user.email %}
         <li><a href="/topics"><i class="fa fa-folder-open"></i> Topics</a></li>
         <li><a href="/tasks/create"><i class="fa fa-plus"></i> Create Task</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user.name if user.name else user.email }} <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/users/{{ user.id }}">Profile</a></li>
-            <li><a href="#">Settings</a></li>
+            <li><a href="/users/{{ user.id }}"><i class="fa fa-user fa-fw"></i> My Account</a></li>
+            <li><a href="/users/{{ user.id }}/update"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>
             <li class="divider"></li>
-            <li><a href="#" class="persona-logout"><span class="fa fa-lock"></span> logout</a></li>
+            <li><a href="#" class="persona-logout"><i class="fa fa-lock fa-fw"></i> logout</a></li>
           </ul>
         </li>
         {% else %}
         <li>
-          <a href="#" class="persona-login"><span class="fa fa-lock"></span> Login with Persona</a>
+          <a href="#" class="persona-login"><i class="fa fa-lock fa-fw"></i> Login with Persona</a>
         </li>
         {% endif %}
       </ul>

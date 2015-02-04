@@ -8,24 +8,28 @@
 
     <div class="form-group">
       <label for="name">Name</label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="Dwight Eisenhower">
+      <input type="text" class="form-control" id="name" name="name" placeholder="Dwight Eisenhower" max-length="70">
       <p class="help-block">This is completely optional, however we do use this in any messages/notifications we send to you.</p>
     </div>
 
     <div class="form-group">
       <label for="email">Email address</label>
-      <input type="email" class="form-control" id="email" name="email" value="{{ persona }}" readonly required>
+      <input type="email" class="form-control" id="email" name="email" value="{{ persona }}" {{ 'readonly' if not user.isAdmin }} required>
       <p class="help-block">This is set using Persona and cannot be changed.</p>
     </div>
 
+    {% if not user.isAdmin %}
     <div class="form-group">
       <label for="terms">
         <input type="checkbox" id="terms" required>
         I have read and agree to the <a href="/legal#termsOfService">Terms Of Service</a>.
       </label>
     </div>
+    {% endif %}
 
+    {% if not user.isAdmin %}
     <button type="button" class="btn btn-default persona-logout">Nevermind</button>
+    {% endif %}
     <button type="submit" class="btn btn-success">Register</button>
   </form>
 </div>

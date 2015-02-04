@@ -78,16 +78,18 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
   function plotTask( task, graph, color, opacity ) {
     color = color || stateColor( task.state ) || '#2196F3';
     opacity = opacity || 1;
+    icon = ( task.state === 'complete' ) ? '✔' : '×';
 
     var plot = graph.group().attr( 'class', 'task' );
 
     // add base circle
-    plot.add( graph.circle( 30 ).fill( color ) );
+    plot.add( graph.circle( 30 ) );
 
     // add icon to center of plot
-    plot.add( graph.text( 'x' ).fill( '#ffffff' ) );
+    plot.add( graph.text( icon ).fill( '#ffffff' ).font( { size: '1.4em', align: 'center' } ) );
     plot.last().center( plot.first().attr( 'cx' ), plot.first().attr( 'cy' ) );
 
+    // set plot opacity
     plot.opacity( opacity );
 
     // adjust task coordinates to work on SVG coordinate system
@@ -101,25 +103,25 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
 
     // add task details to plot
     plot.data( 'task', task );
+    plot.data( 'task-state', task.state );
 
     // enable tooltip
     plot.data( 'toggle', 'tooltip' );
     plot.attr( 'title', task.description );
     $( plot.node ).tooltip({
       container: 'body',
-      viewport: '#' + graph.attr( 'id' ),
+      // viewport: '#' + graph.attr( 'id' ),
       placement: 'auto'
     });
 
-    // handle events for this plot
+    // when plot is hovered highlight it and any related elements
     plot.on( 'mouseenter', function() {
       graph.preventPlot = true;
 
       plot.animate( 400 ).scale( 1.7, 1.7 ).center( coordX, coordY );
 
       $( '[rel=task-' + task.id + ']' ).addClass( 'highlight' );
-    });
-    plot.on( 'mouseleave', function() {
+    }).on( 'mouseleave', function() {
       graph.preventPlot = false;
 
       if( task.id === graph.highlightTask ) {
@@ -131,14 +133,33 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
 
       $( '[rel=task-' + task.id + ']' ).removeClass( 'highlight' );
     });
+
+    // on plot click visit task details page
     plot.on( 'click', function() {
       window.location.href = '/tasks/' + task.id;
+    });
+
+    // when task related element hovered highlight plot
+    $( '[rel=task-' + task.id + ']' ).on( 'mouseenter', function() {
+      $( this ).addClass( 'highlight' );
+      $( plot.node ).tooltip( 'show' );
+      plot.animate( 400 ).scale( 1.7, 1.7 ).center( coordX, coordY );
+    }).on( 'mouseleave', function() {
+      $( this ).removeClass( 'highlight' );
+      $( plot.node ).tooltip( 'hide' );
+      if( task.id === graph.highlightTask ) {
+        plot.animate( 400 ).scale( 1.5, 1.5 ).center( coordX, coordY );
+      }
+      else {
+        plot.animate( 400 ).scale( 1, 1 ).center( coordX, coordY );
+      }
     });
 
     // highlight task if needed
     if( graph.highlightTask ) {
       if( task.id === graph.highlightTask ) {
         plot.scale( 1.5, 1.5 );
+        plot.front();
       }
       else {
         plot.opacity( opacity * 0.4 );
@@ -166,17 +187,22 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
       height: $self.data( 'graphSize' ),
       class: 'img-responsive'
     });
-    graphs.push( graph );
 
     graph.highlightTask = $self.data( 'highlightTask' );
 
     // draw axes on graph
-    var axes = graph.group();
-    axes.add( graph.line( 20, 250, 480, 250 ).stroke( { width: 1, color: '#444' } ) );
-    axes.add( graph.line( 250, 20, 250, 480 ).stroke( { width: 1, color: '#444' } ) );
+    var axes = graph.group().attr( 'class', 'axes' );
+    axes.add( graph.line( 20, 250, 480, 250 ).stroke( { width: 1 } ) );
+    axes.add( graph.line( 250, 20, 250, 480 ).stroke( { width: 1 } ) );
     // add arrow heads
-    axes.add( graph.path( 'M 250 20 C 254 28, 258 30, 252 32 L 250 31, 248 32 C 242 30, 246 28, 250 20 Z' ).style( { fill: '#444', stroke: '#444' } ) );
-    axes.add( graph.path( 'M 480 250 C 472 254, 470 258, 468 252 L 469 250, 468 248 C 470 242, 472 246, 480 250 Z' ).style( { fill: '#444', stroke: '#444' } ) );
+    axes.add( graph.path( 'M 250 20 C 254 28, 258 30, 252 32 L 250 31, 248 32 C 242 30, 246 28, 250 20 Z' ) );
+    axes.add( graph.path( 'M 480 250 C 472 254, 470 258, 468 252 L 469 250, 468 248 C 470 242, 472 246, 480 250 Z' ) );
+
+    // add labels
+    axes.add( graph.text( 'Most Urgent' ).center( 250, 10 ) );
+    axes.add( graph.text( 'Least Urgent' ).center( 250, 490 ) );
+    axes.add( graph.text( 'Most Important' ).center( 490, 250 ).rotate( 90 ) );
+    axes.add( graph.text( 'Least Important' ).center( 10, 250 ).rotate( -90 ) );
 
     // get topic tasks if they exist
     if( $self.data( 'topicId' ) ) {
@@ -269,6 +295,8 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
         }
       });
     }
+
+    graphs.push( graph );
   });
 
   return {

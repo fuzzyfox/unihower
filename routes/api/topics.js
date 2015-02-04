@@ -43,18 +43,19 @@ module.exports = function( env ) {
      */
     create: function( req, res ) {
       debug( 'Create topic: %s', req.body.name );
-      return db.Topic.create( req.body ).done( function( err, topic ) {
+
+      return db.User.find( req.session.user.id ).done( function( err, user ) {
         if( err ) {
-          debug( 'ERROR: Failed to create topic. (err, body)' );
-          debug( err, req.body );
+          debug( 'ERROR: Failed ot get user to associate to. (err, body, session)' );
+          debug( err, req.body, req.session );
 
           return errorResponse.internal( req, res, err );
         }
 
-        topic.setUser( req.session.user.id ).done( function( err, user ) {
+        user.addTopic( db.Topic.build( req.body ) ).done( function( err, topic ) {
           if( err ) {
-            debug( 'ERROR: Failed to associate toic to user. (err, body, session)' );
-            debug( err, req.body, req.session );
+            debug( 'ERROR: Failed to create topic. (err, body)' );
+            debug( err, req.body );
 
             return errorResponse.internal( req, res, err );
           }

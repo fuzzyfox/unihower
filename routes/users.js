@@ -102,10 +102,38 @@ module.exports = function( env ) {
       if( req.session.user.id && !req.session.user.isAdmin ) {
         debug( '↳ User session exists and non-admin, redirect to user details.' );
 
-        res.redirect( '/users/' + req.session.user.id );
+        res.redirect( '/topics' );
       }
 
       res.render( 'users/create.html' );
+    },
+    /**
+     * Handle requests for user update form.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    update: function( req, res ) {
+      debug( 'Update user form.' );
+
+      if( ( req.session.user.id !== parseInt( req.params.id, 10 ) ) && ( !req.session.user.isAdmin ) ) {
+        return errorResponse.forbidden( req, res );
+      }
+
+      return db.User.find( req.params.id ).done( function( err, user ) {
+        if( err ) {
+          debug( 'ERROR: Failed to get user. (err, userId)' );
+          debug( err, req.params.id );
+
+          return errorResponse.internal( req, res, err );
+        }
+
+        if( !user ){
+          return errorResponse.notFound( req, res );
+        }
+
+        res.render( 'users/update.html', JSON.parse( JSON.stringify( user ) ) );
+      });
     }
   };
 };

@@ -5,13 +5,41 @@
 @fa-font-path: '../../vendor/font-awesome/fonts';
 
 .label-state {
-  &-incomplete:extend(.label-warning) {}
-  &-complete:extend(.label-success) {}
+  &-incomplete:extend( .label-warning ) {}
+  &-complete:extend( .label-success ) {}
 }
 
-.eisenhower-graph .task {
-  cursor: pointer;
+.eisenhower-graph {
+  .axes {
+    text, tspan {
+      font-family: @font-family-base;
+      fill: @text-muted;
+    }
+
+    line {
+      stroke: @text-color;
+    }
+
+    path {
+      fill: @text-color;
+      stroke: @text-color;
+    }
+  }
+
+  .task {
+    cursor: pointer;
+
+    ellipse {
+      fill: @brand-warning;
+    }
+
+    &[data-task-state=complete] {
+      ellipse {
+        fill: @brand-success;
+      }
+    }
+  }
 }
 
 // highlight table row background
-.table-row-variant(highlight; lighten( @brand-primary, 40% ) );
+.table-row-variant( highlight; lighten( @brand-info, 50% ) );

@@ -1,0 +1,124 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+  <nav>
+    <ol class="breadcrumb">
+      {% if user.isAdmin %}
+      <li><a href="/users">Users</a></li>
+      <li><a href="/users/{{ id }}">{{ name if name else email }}</a></li>
+      {% else %}
+      <li><a href="/users/{{ id }}">Account</a></li>
+      {% endif %}
+      <li class="active"><i class="fa fa-pencil"></i> Edit Account</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-md-3">
+      <img src="//secure.gravatar.com/avatar/{{ emailHash }}?s=500" alt="avatar" class="img-responsive">
+      <p class="text-muted text-center">Image via <a href="//gravatar.com" target="_blank">Gravatar</a></p>
+    </div>
+    <div class="col-md-9">
+      <!-- <h3>{{ name }}</h3>
+      <dl>
+        {% if isAdmin %}
+        <dt>Administrator</dt>
+        <dd>True</dd>
+        {% endif %}
+        <dt>Email</dt>
+        <dd>{{ email }}</dd>
+        <dt>Registered</dt>
+        <dd>{{ createdAt | calendar }}</dd>
+      </dl> -->
+
+      <form action="/api/users/{{ id }}" method="PUT" id="updateUserForm">
+        <input type="hidden" name="_csrf" id="_csrf" value="{{ csrfToken }}">
+
+        <h4>Account Details</h4>
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{ name }}" placeholder="Dwight Eisenhower" max-length="70"{{ ' disabled' if id != user.id }}>
+          <p class="help-block">This is completely optional, however we do use this in any messages/notifications we send to you.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" class="form-control" id="email" name="email" value="{{ email }}"{{ ' disabled' if not user.isAdmin}}>
+          {% if user.isAdmin %}
+          <p class="text-danger">Ensure this is a correct/valid email address. This address <strong>MUST</strong> be that which the user wishes to login with.</p>
+          {% else %}
+          <p class="help-block">This is set using Persona and cannot be changed at this time.</p>
+          {% endif %}
+        </div>
+
+        {% if id == user.id %}
+        <h4>Notifications</h4>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label for="sendNotifications">
+              <input type="checkbox" value="1" name="sendNotifications" id="sendNotifications"{{ ' checked' if sendNotifications }}>
+              Send me notifications and reminders.
+            </label>
+            <p class="help-block">We hate spam as much as you. You'll only ever hear from us if you requested a reminder or we have important information for you.</p>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if user.isAdmin %}
+        <div class="panel panel-{{ 'warning' if isAdmin else 'danger' }}">
+          <div class="panel-heading">
+            <div class="panel-title">Administrator Access</div>
+          </div>
+          <div class="panel-body">
+            {% if isAdmin %}
+            <p>
+              If revoking administrator rights ensure that at least one administrator remains.
+            </p>
+            {% else %}
+            <p>
+              Allowing administrator access will grant the user <strong>FULL</strong> access/modify to <strong>ALL</strong> user details.
+            </p>
+            {% endif %}
+            <div class="checkbox">
+              <label for="isAdmin">
+                <input type="checkbox" value="{{ not isAdmin }}" name="isAdmin" id="isAdmin">
+                {% if isAdmin %}
+                Revoke administrator access?
+                {% else %}
+                <span class="text-danger">Grant administrator access?</span>
+                {% endif %}
+              </label>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">Update</button>
+      </form>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+  $( 'form#updateUserForm' ).on( 'submit', function( event ) {
+    event.preventDefault();
+
+    $.ajax({
+      type: $( this ).attr( 'method' ),
+      url: $( this ).attr( 'action' ),
+      data: $( this ).serialize()
+    }).done( function( data ) {
+      window.location.href = '/users/' + data.id;
+    }).fail( function() {
+      console.log( arguments );
+    });
+
+    return false;
+  });
+</script>
+{% endblock %}

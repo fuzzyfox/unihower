@@ -49,40 +49,20 @@ module.exports = function( env ) {
     create: function( req, res ) {
       debug( 'Create task: %s', req.body.description );
 
-      // handle topic id association
-      var TopicId = req.body.TopicId;
-      if( req.body.TopicId !== undefined ) {
-        delete req.body.TopicId;
-      }
-
-      // create task
-      return db.Task.create( req.body ).done( function( err, task ) {
+      return db.User.find( req.session.user.id ).done( function( err, user ) {
         if( err ) {
-          debug( 'ERROR: Failed to create task. (err, body)' );
-          debug( err, req.body );
+          debug( 'ERROR: Failed to get user to associate to. (err, body, session)' );
+          debug( err, req.body, req.session );
 
           return errorResponse.internal( req, res, err );
         }
 
-        task.setUser( req.session.user.id ).done( function( err, user ) {
+        user.addTask( db.Task.build( req.body ) ).done( function( err, task ) {
           if( err ) {
-            debug( 'ERROR: Failed to associate task to user. (err, body, session)' );
-            debug( err, req.body, req.session );
+            debug( 'ERROR: Failed to create task. (err, body)' );
+            debug( err, req.body );
 
             return errorResponse.internal( req, res, err );
-          }
-
-          if( TopicId ) {
-            return task.setTopic( TopicId ).done( function( err, topic ) {
-              if( err ) {
-                debug( 'ERROR: Failed to  associate task to topic. (err, topicId, session)' );
-                debug( err, TopicId, req.session );
-
-                return errorResponse.internal( req, res, err );
-              }
-
-              res.status( 200 ).json( task );
-            });
           }
 
           res.status( 200 ).json( task );

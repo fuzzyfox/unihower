@@ -8424,8 +8424,26 @@ select.form-control:focus {
 .fa-meanpath:before {
   content: "\f20c";
 }
+.eisenhower-graph .axes text,
+.eisenhower-graph .axes tspan {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  fill: #bbbbbb;
+}
+.eisenhower-graph .axes line {
+  stroke: #666666;
+}
+.eisenhower-graph .axes path {
+  fill: #666666;
+  stroke: #666666;
+}
 .eisenhower-graph .task {
   cursor: pointer;
+}
+.eisenhower-graph .task ellipse {
+  fill: #ff9800;
+}
+.eisenhower-graph .task[data-task-state=complete] ellipse {
+  fill: #4caf50;
 }
 .table > thead > tr > td.highlight,
 .table > tbody > tr > td.highlight,
@@ -8439,12 +8457,12 @@ select.form-control:focus {
 .table > thead > tr.highlight > th,
 .table > tbody > tr.highlight > th,
 .table > tfoot > tr.highlight > th {
-  background-color: #e3f2fd;
+  background-color: #f4def8;
 }
 .table-hover > tbody > tr > td.highlight:hover,
 .table-hover > tbody > tr > th.highlight:hover,
 .table-hover > tbody > tr.highlight:hover > td,
 .table-hover > tbody > tr:hover > .highlight,
 .table-hover > tbody > tr.highlight:hover > th {
-  background-color: #cae6fc;
+  background-color: #edc9f3;
 }
