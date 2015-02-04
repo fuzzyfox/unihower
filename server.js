@@ -64,6 +64,27 @@ app.use( helmet.nosniff() );
 app.use( helmet.xssFilter() );
 app.disable( 'x-powered-by' );
 
+if( env.get( 'force_ssl' ) ) {
+  debugEnv( 'Attempting to force ssl connections' );
+}
+app.use( function( req, res, next ) {
+  if( env.get( 'force_ssl' ) ) {
+    if( req.headers[ 'x-forwarded-proto' ] && req.headers[ 'x-forwarded-proto' ] !== 'https' ) {
+      res.redirect( 'https://' + req.hostname + req.originalUrl );
+
+      return;
+    }
+
+    if( !req.secure && !req.headers[ 'x-forwarded-proto' ] ) {
+      res.redirect( 'https://' + req.hostname + req.originalUrl );
+
+      return;
+    }
+  }
+
+  next();
+});
+
 // persona login
 require( 'express-persona' )( app, {
   audience: env.get( 'persona_audience' )
