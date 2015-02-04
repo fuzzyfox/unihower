@@ -86,7 +86,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
     plot.add( graph.circle( 30 ) );
 
     // add icon to center of plot
-    plot.add( graph.text( icon ).fill( '#ffffff' ).font( { size: '1.4em', align: 'center' } ) );
+    plot.add( graph.text( icon ).font( { size: '1.4em', align: 'center' } ) );
     plot.last().center( plot.first().attr( 'cx' ), plot.first().attr( 'cy' ) );
 
     // set plot opacity

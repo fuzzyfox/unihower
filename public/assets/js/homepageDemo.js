@@ -13,22 +13,6 @@
     class: 'img-responsive'
   } );
 
-  /**
-   * Generate a random pastel colour
-   * @return {String} CSS style hex colour value
-   */
-  function randColor() {
-    var getVal = function() {
-      return ( Math.round( Math.random() * 110 ) + 110 ).toString( 16 );
-    };
-
-    var r = getVal();
-    var g = getVal();
-    var b = getVal();
-
-    return '#' + r + g + b;
-  }
-
   /*
     draw axes
    */
@@ -36,8 +20,8 @@
   var axes = draw.group();
 
   // draw + add x-axis
-  axes.add( draw.line( 20, 250, 480, 250 ).stroke( { width: 1, color: '#444' } ) );
-  axes.add( draw.line( 250, 20, 250, 480 ).stroke( { width: 1, color: '#444' } ) );
+  axes.add( draw.line( 20, 250, 480, 250 ).stroke( { width: 1 } ) );
+  axes.add( draw.line( 250, 20, 250, 480 ).stroke( { width: 1 } ) );
 
   // draw arrow head // u = 4
   axes.add( draw.path( 'M 250 20 C 254 28, 258 30, 252 32 L 250 31, 248 32 C 242 30, 246 28, 250 20 Z' ).style( { fill: '#444', stroke: '#444' } ) );
@@ -53,12 +37,13 @@
   function addTask( x, y ) {
     if( !preventAdd ) {
       var task = draw.group();
+      var state = ( Math.random() > 0.5 ) ? 'complete' : 'incomplete';
 
       // add base circle to task
-      task.add( draw.circle( 30 ).fill( randColor() ) );
+      task.add( draw.circle( 30 ) );
 
       // add icon
-      task.add( draw.text( '×' ).fill( '#ffffff' ) );
+      task.add( draw.text( ( state === 'complete' ) ? '✔' : '×' ) );
       task.last().center( task.first().attr( 'cx' ), task.first().attr( 'cy' ) );
 
       // center on given coordinates
@@ -66,6 +51,7 @@
 
       // add task class
       task.addClass( 'task' );
+      task.data( 'task-state', state );
 
       // add task to tasks array.
       tasks.push( task );

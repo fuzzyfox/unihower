@@ -8442,6 +8442,10 @@ select.form-control:focus {
 .eisenhower-graph .task ellipse {
   fill: #ff9800;
 }
+.eisenhower-graph .task text,
+.eisenhower-graph .task tspan {
+  fill: #ffffff;
+}
 .eisenhower-graph .task[data-task-state=complete] ellipse {
   fill: #4caf50;
 }
