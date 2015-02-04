@@ -78,7 +78,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
   function plotTask( task, graph, color, opacity ) {
     color = color || stateColor( task.state ) || '#2196F3';
     opacity = opacity || 1;
-    icon = ( task.state === 'complete' ) ? '✔' : '×';
+    icon = ( task.state === 'complete' ) ? '' : '';
 
     var plot = graph.group().attr( 'class', 'task' );
 
@@ -86,7 +86,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
     plot.add( graph.circle( 30 ) );
 
     // add icon to center of plot
-    plot.add( graph.text( icon ).font( { size: '1.4em', align: 'center' } ) );
+    plot.add( graph.text( icon ).font( { align: 'center', family: 'FontAwesome' } ) );
     plot.last().center( plot.first().attr( 'cx' ), plot.first().attr( 'cy' ) );
 
     // set plot opacity
