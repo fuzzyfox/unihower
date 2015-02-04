@@ -28,6 +28,15 @@ module.exports = function( env ) {
       res.render( 'index.html' );
     },
     /**
+     * Information about the app and how the system works.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    about: function( req, res ) {
+      res.render( 'about.html' );
+    },
+    /**
      * Legal information page.
      *
      * @param  {http.IncomingMessage} req
