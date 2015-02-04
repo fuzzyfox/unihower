@@ -19,10 +19,11 @@ var debug = require( 'debug' )( 'research' );
 /**
  * Research Lib Export
  *
+ * @param  {Object}  app An ExpressJS application object.
  * @param  {Habitat} env An instance of a habitat environment manipulator.
  * @return {Function}    Function to enable manually adding data.
  */
-module.exports = function( env ) {
+module.exports = function( app, env ) {
   if( !env.get( 'study_name' ) ) {
     debug( 'No study to collect for.' );
     return function() {};
@@ -45,7 +46,7 @@ module.exports = function( env ) {
   // }
 
   /*
-    Automated snooping
+    Automated snooping (database)
    */
   var hooksToSnoopWith = [ 'afterCreate', 'afterFind', 'afterUpdate', 'afterDestroy' ];
   // setup snooping on all models
@@ -98,6 +99,38 @@ module.exports = function( env ) {
         });
       });
     });
+  });
+
+  /*
+    Automated snooping (http)
+   */
+  app.all( '*', function( req, res, next ) {
+    if( req.session.user.id && req.session.user.researchParticipant ) {
+      return db.ResearchData.create({
+        study: study.name,
+        UserId: req.session.user.id,
+        action: 'HTTP-' + req.method,
+        data: req.originalUrl,
+        method: 'http intercept'
+      }).done( function( err, record ) {
+        if( err ) {
+          debug( 'ERROR: Failed to save research data. (err)' );
+          debug( err );
+          return next();
+        }
+
+        next();
+      });
+    }
+
+    if( req.session.user.id ) {
+      debug( 'Refusing to snoop on data due to user prefs.' );
+      return next();
+    }
+
+    debug( 'Refusing to snoop on data as user prefs cannot be determined.' );
+
+    next();
   });
 
   /**
