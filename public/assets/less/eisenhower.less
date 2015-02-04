@@ -4,11 +4,24 @@
 @import '../../vendor/font-awesome/less/font-awesome';
 @fa-font-path: '../../vendor/font-awesome/fonts';
 
+// navbar collapse button fix
+.navbar-inverse {
+  button.navbar-toggle {
+    color: @navbar-inverse-link-color;
+
+    &:hover {
+      color: @navbar-inverse-link-hover-color;
+    }
+  }
+}
+
+// colour labels for task states
 .label-state {
   &-incomplete:extend( .label-warning ) {}
   &-complete:extend( .label-success ) {}
 }
 
+// style graph
 .eisenhower-graph {
   .axes {
     text, tspan {

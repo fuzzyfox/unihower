@@ -8726,6 +8726,12 @@ select.form-control[multiple] {
 .fa-meanpath:before {
   content: "\f20c";
 }
+.navbar-inverse button.navbar-toggle {
+  color: #b2dbfb;
+}
+.navbar-inverse button.navbar-toggle:hover {
+  color: #ffffff;
+}
 .eisenhower-graph .axes text,
 .eisenhower-graph .axes tspan {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
