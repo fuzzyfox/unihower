@@ -172,8 +172,17 @@
       dataType: 'json'
     }).done( function( data ) {
       window.location.href = '/tasks/' + data.id;
-    }).fail( function() {
-      console.log( arguments );
+    }).fail( function( jqXHR ) {
+      if( jqXHR.responseJSON ) {
+        if( typeof jqXHR.responseJSON.message === 'string' ) {
+          window.alert( jqXHR.responseJSON.status + '\n\n' + jqXHR.responseJSON.message );
+        }
+
+        window.alert( jqXHR.responseJSON.status + '\n\nWe\'ve made a note of the problem and will get it fixed as soon as possible.' );
+        return console.log( arguments );
+      }
+
+      window.alert( 'An unknown error occured... try again later' );
     });
 
     return false;
