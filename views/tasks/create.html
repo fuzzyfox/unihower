@@ -151,17 +151,21 @@
   $( 'form#newTaskForm' ).on( 'submit', function( event ) {
     event.preventDefault();
     // check we have a valid date
-    if( $( this ).find( '#dueDate' ).val() && !validateDate( $( this ).find( '#dueDate' ).val() ) ) {
+    if( $( '#dueDate' ).val() && !validateDate( $( '#dueDate' ).val() ) ) {
       window.alert( 'please enter a valid due date' );
       return false;
     }
 
     // convert date into pure js safe date
-    if( $( this ).find( '#dueDate' ).val() ) {
-      $( this ).find( '#dueDate' ).val( Date.future( $( this ).find( '#dueDate' ).val() ).toString() );
+    if( $( '#dueDate' ).val() ) {
+      $( '#dueDate' ).val( Date.future( $( '#dueDate' ).val() ).toString() );
     }
     else {
-      $( this ).find( '#dueDate' ).attr( 'disabled', true );
+      $( '#dueDate' ).attr( 'disabled', true );
+    }
+
+    if( ! $( '#TopicId' ).val() ) {
+      $( '#TopicId' ).attr( 'disabled', true );
     }
 
     // send data to server
