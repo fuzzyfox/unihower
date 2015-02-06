@@ -1,0 +1,54 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li class="active">All Tasks</li>
+    </ol>
+  </nav>
+
+  <h3>All Tasks</h3>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="eisenhower-graph" data-graph-size="500" data-tasks-url="/api/users/{{ user.id }}/tasks"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>state</th>
+            <th>description</th>
+            <th>due date</th>
+            <th>topic</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+          <tr>
+            <td>{{ task.state }}</td>
+            <td><a href="/tasks/{{ task.id }}">{{ task.description | truncate(140) if task.description }}</a></td>
+            <td>{{ task.dueDate | calendar if task.dueDate else '-' }}</td>
+            <td>
+              {% if task.Topic %}
+              <a href="/topics/{{ task.TopicId }}">{{ task.Topic.name }}</a>
+              {% else %}
+              –
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a href="/tasks/create" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Create Task</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends '_default.html' %}
+
+{% block custom_styles %}
+<style>
+  .media:nth-child( even ) {
+    background-color: #eee;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<main class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li class="active">Topics</li>
+    </ol>
+  </nav>
+
+  <h2>Topics</h2>
+
+  {% for topic in topics %}
+  {% if loop.first %}
+  <div class="row">
+  {% endif %}
+    <div class="col-sm-4 col-md-3">
+      <div class="thumbnail">
+        <a href="/topics/{{ topic.id }}" class="eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-readonly="true"></a>
+
+        <div class="caption clearfix">
+          <h4>{{ topic.name }}</h4>
+          {% if topic.description %}{{ topic.description | truncate( 140 ) | markdown }}{% endif %}
+
+          <a href="/topics/{{ topic.id }}" class="pull-right btn btn-sm btn-primary"><i class="fa fa-eye"></i> View Topic</a>
+        </div>
+      </div>
+    </div>
+  {% if not loop.last and not loop.first and loop.index % 4 == 0 %}
+  </div>
+  <div class="row">
+  {% endif %}
+
+  {% if loop.last %}
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  {% if topics.length < 1 %}
+  <div class="row">
+    <div class="col-md-6">
+      <p class="lead">Looks like you've got no topics...</p>
+
+      <h4>What is a topic?</h4>
+      <p>You can think of a topic as a collection of related tasks. They help you group common/related tasks together, and act as the building blocks that keep things manageable and organised.</p>
+
+      <p>It's up to you how specific or general a topic is, just choose whatever works best for you, and experiment a little to refine this for your needs.</p>
+
+      <p>If you prefer general topics try using a timeframe as your topic's title, however if specificity is you preference spend a few moments thinking about what to call it. Your topic can help you clarify and focus tasks you're about to enter.</p>
+
+      <p>Don't worry about having only a few tasks in a topic either. Its much more about your thought processes than filling things up.</p>
+
+      <a href="/topics/create" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Create a topic</a>
+    </div>
+    <div class="col-md-3 col-md-offset-1 hidden-sm hidden-xs">
+      <div class="thumbnail">
+        <div class="eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-readonly="true"></div>
+
+        <div class="caption clearfix">
+          <h4>Getting Started</h4>
+          <p>An example topic with a collection of helpful starter activities to get started with Eisenhower.</p>
+          <p><em>Try hovering over the dots...</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if topics.length > 0 %}
+  <a href="/topics/create" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Create a topic</a>
+  {% endif %}
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+{% if topics.length < 1 %}
+<script>
+  var starterTasks = [
+    {
+      state: 'complete',
+      description: 'Create an account.',
+      coordX: 72,
+      coordY: 31
+    },
+    {
+      state: 'incomplete',
+      description: 'Create a topic.',
+      coordX: 64,
+      coordY: 70
+    },
+    {
+      state: 'incomplete',
+      description: 'Add some tasks to topic(s).',
+      coordX: 42,
+      coordY: 64
+    },
+    {
+      state: 'complete',
+      description: 'Become a productivity ninja.',
+      coordX: 49,
+      coordY: -22
+    },
+    {
+      state: 'incomplete',
+      description: 'Learn to speak Cupcake Ipsum.',
+      coordX: -77,
+      coordY: -54
+    },
+    {
+      state: 'incomplete',
+      description: 'Reward yourself for getting started with Eisenhower.',
+      coordX: -21,
+      coordY: 50
+    },
+  ];
+
+  starterTasks.forEach( function( task ) {
+    var plot = eisenhowerGraph.plotTask( task, eisenhowerGraph.graphs[ 0 ] );
+    plot.on( 'click', function( event ) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      window.stop();
+
+      return false;
+    });
+  });
+</script>
+{% endif %}
+{% endblock %}

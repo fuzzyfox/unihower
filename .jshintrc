@@ -6,6 +6,7 @@
   "immed": true,
   "latedef": true,
   "node": true,
+  "browser": true,
   "indent": 2,
   "newcap": true,
   "noempty": true,

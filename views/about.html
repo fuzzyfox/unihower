@@ -1,0 +1,127 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+  <h1>About Eisenhower</h1>
+
+  <article>
+    <div class="row">
+      <div class="col-md-7">
+        <h2>How does the system work?</h2>
+        <p class="lead">Eisenhower enables enhanced productivity by plotting collections of tasks, called "Topics", based on their urgency and importance.</p>
+
+        <p>The mental processes used in Eisenhower are result of combining <a href="http://www.artofmanliness.com/2013/10/23/eisenhower-decision-matrix/" target="_blank">Eisenhower Decision Matrices</a> and <a href="http://bulletjournal.com/" target="_blank">BulletJournalling</a>, allowing for a visual method of determining task priority.</p>
+      </div>
+    </div>
+
+    <section id="topics">
+      <div class="row">
+        <div class="col-md-7">
+          <h3>What is a topic?</h3>
+          <p>You can think of a topic as a collection of related tasks. They help you group common/related tasks together, and act as the building blocks that keep things manageable and organised.</p>
+
+          <p>It's up to you how specific or general a topic is, just choose whatever works best for you, and experiment a little to refine this for your needs.</p>
+
+          <p>If you prefer general topics try using a timeframe as your topic's title, however if specificity is you preference spend a few moments thinking about what to call it. Your topic can help you clarify and focus tasks you're about to enter.</p>
+
+          <p>Don't worry about having only a few tasks in a topic either. Its much more about your thought processes than filling things up.</p>
+        </div>
+        <div class="col-md-3 col-md-offset-1 hidden-sm hidden-xs">
+          <div class="thumbnail">
+            <div class="eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-readonly="true"></div>
+
+            <div class="caption clearfix">
+              <h4>Getting Started</h4>
+              <p>An example topic with a collection of helpful starter activities to get started with Eisenhower.</p>
+              <p><em>Try hovering over the dots...</em></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tasks">
+      <h3>What is a Task?</h3>
+      <div class="row">
+        <div class="col-md-7">
+          <p>Tasks are actionable items, any kind of actionable item. Some tasks require multiple steps to complete, others take just a few moments of your time. Some tasks have deadlines while others can be done any time. Its up to you if its worth making a note of.</p>
+
+          <h4>Urgency</h4>
+          <p>Urgent tasks require attention at the first chance. They put us into a <em>reactive</em> state of mind, usually needing quick completion or a narrowly-focused mindset.</p>
+
+          <p>These might not be tasks that have an imminent deadline however, and need attention sooner due to how requiring a larger timeframe, or due to a lack of time to complete them closer to their deadlines.</p>
+
+          <h4>Importance</h4>
+          <p>Important tasks contribute to our longer-term missions, values, and/or goals. Sometimes important task are also urgent. When we focus on important activities we work in a more <em>responsive</em> way, allowing us to be more open to new opportunities, or a calmer workflow.</p>
+
+          <h4>Creating a task</h4>
+          <p>You can create tasks by clicking where you would like it to be on the graph. Remember that urgency and importance are independant of one another while plotting tasks.</p>
+
+          <p>We've deliberately left numbers out of the equation here. You should plot tasks based on where you feel they best indicate their urgency and importance in relation to everything else.</p>
+
+          <p>You may need to spend a few moments thinking about where to place your first task, but if you think its wrong at any point its perfectly okay to move it later.</p>
+        </div>
+        <div class="col-md-5">
+          <div href="{{ '/topics' if user.id else '#' }}" class="eisenhower-graph" data-graph-size="500" data-graph-readonly="true"></div>
+        </div>
+      </div>
+    </section>
+  </article>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+<script>
+  var starterTasks = [
+    {
+      state: '{{ 'complete' if user.id else 'incomplete' }}',
+      description: 'Create an account.',
+      coordX: 72,
+      coordY: 31
+    },
+    {
+      state: 'incomplete',
+      description: 'Create a topic.',
+      coordX: 64,
+      coordY: 70
+    },
+    {
+      state: 'incomplete',
+      description: 'Add some tasks to topic(s).',
+      coordX: 42,
+      coordY: 64
+    },
+    {
+      state: 'complete',
+      description: 'Learn about Eisenhower.',
+      coordX: 49,
+      coordY: -22
+    },
+    {
+      state: 'incomplete',
+      description: 'Learn to speak Cupcake Ipsum.',
+      coordX: -77,
+      coordY: -54
+    },
+    {
+      state: 'incomplete',
+      description: 'Reward yourself for getting started with Eisenhower.',
+      coordX: -21,
+      coordY: 50
+    },
+  ];
+
+  starterTasks.forEach( function( task ) {
+    var plot = eisenhowerGraph.plotTask( task, eisenhowerGraph.graphs[ 0 ] );
+    plot.on( 'click', function( event ) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      window.stop();
+
+      return false;
+    });
+  });
+</script>
+{% endblock %}

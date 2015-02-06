@@ -1,0 +1,83 @@
+{% extends '_default.html' %}
+
+{% block custom_styles %}
+<style>
+  .media:nth-child( even ) {
+    background-color: #eee;
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<main class="container">
+  <div class="row">
+    <div class="col-md-7">
+      <h2>Users</h2>
+      {% if users %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Registered</th>
+            <th>Last Active</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}{% if not user.name %}<span class="text-muted">No name given</span>{% endif %}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.createdAt | moment( 'MMM Do YY, HH:mm' ) }}</td>
+            <td>{{ user.lastLogin | relativeMoment }}</td>
+            <td>
+              <div class="btn-group" role="group">
+                <a href="/users/{{ user.id }}" class="btn btn-sm btn-default" title="View"><i class="fa fa-eye"></i><span class="sr-only"> view</span></a>
+                <a href="/users/{{ user.id }}/update" class="btn btn-sm btn-primary"><i class="fa fa-edit" title="Edit"></i><span class="sr-only"> edit</span></a>
+                <a href="/users/{{ user.id }}/#destroy" class="btn btn-sm btn-danger" data-delete-user-id="{{ user.id }}" data-user-human-id="{{ user.email }}"><i class="fa fa-trash" title="Delete"></i><span class="sr-only"> delete</span></a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="alert alert-info" role="alert">No users found.</div>
+      {% endif %}
+    </div>
+    <div class="col-md-5">
+      <h3>User Metircs</h3>
+      <img src="//placehold.it/500x300" alt="chart placeholder" class="img-responsive">
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+  $(function() {
+    $( '[data-delete-user-id]' ).on( 'click', function() {
+      var user = $( this ).data( 'userHumanId' );
+      if( window.confirm( 'Are you sure you want to delete user "' + user + '"' ) ) {
+        $.ajax({
+          type: 'DELETE',
+          url: '/api/users/' + $( this ).data( 'deleteUserId' ),
+          data: {
+            _csrf: '{{ csrfToken }}'
+          },
+          dataType: 'json'
+        }).done( function( data ) {
+          window.location.reload();
+        }).fail( function() {
+          console.log( arguments );
+        });
+      }
+
+      return false;
+    });
+  });
+</script>
+{% endblock %}

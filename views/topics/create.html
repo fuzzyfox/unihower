@@ -1,0 +1,77 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/topics">Topics</a></li>
+      {% if id %}
+      <li><a href="/tasks/{{ id }}">{{ name }}</a></li>
+      <li class="active"><i class="fa fa-pencil"></i> Edit Topic</li>
+      {% else %}
+      <li class="active"><i class="fa fa-plus"></i> Create Topic</li>
+      {% endif %}
+    </ol>
+  </nav>
+
+  <h2>{{ 'New' if not id else 'Edit' }} Topic {% if id %}<small>{{ name }}</small>{% endif %}</h2>
+  <form id="newTopicForm" action="/api/topics{{ '/' + id if id }}" method="{{ 'POST' if not id else 'PUT' }}">
+    <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="My Topic Name" value="{{ name }}" required>
+      <p class="help-block">Name your topic something short and descriptive like "co600 project" or "Week 14 Assignments". Required.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea class="form-control" name="description" id="description" rows="3">{{ description }}</textarea>
+      <div class="help-block">
+        <p>It may help to provide some extra context about this topic for later. Optional. For example:</p>
+        <p>
+          The outcomes of the co600 project (the "deliverables") comprise:<br>
+
+          * An informative poster for display at the project fair<br>
+          * NEW: An abstract which will be used at the poster fair to describe your work and achievements. The abstract template can be found here<br>
+          * A technical report<br>
+          * A well-indexed corpus of material that supports the achievements claimed<br>
+          * Possibly, one or more artefacts (typically computer programs, but possibly taking other forms, such as a VLSI chip design)<br>
+          * An individual report<br>
+        </p>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">{{ 'Create' if not id else 'Update' }}</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+  $( 'form#newTopicForm' ).on( 'submit', function( event ) {
+    event.preventDefault();
+
+    $.ajax({
+      type: $( this ).attr( 'method' ),
+      url: $( this ).attr( 'action' ),
+      data: $( this ).serialize()
+    }).done( function( data ) {
+      window.location.href = '/topics/' + data.id;
+    }).fail( function( jqXHR ) {
+      if( jqXHR.responseJSON ) {
+        if( typeof jqXHR.responseJSON.message === 'string' ) {
+          window.alert( jqXHR.responseJSON.status + '\n\n' + jqXHR.responseJSON.message );
+        }
+
+        window.alert( jqXHR.responseJSON.status + '\n\nWe\'ve made a note of the problem and will get it fixed as soon as possible.' );
+        return console.log( arguments );
+      }
+
+      window.alert( 'An unknown error occured... try again later' );
+    });
+
+    return false;
+  });
+</script>
+{% endblock %}

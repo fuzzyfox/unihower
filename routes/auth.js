@@ -8,10 +8,67 @@
  * @requires routes/errors
  */
 
+/**
+ * Authentication exports
+ *
+ * @param  {Habitat} env An instance of a habitat environment manipulator.
+ * @return {Object}      An object containing all the authentication middleware for routes.
+ */
 module.exports = function( env ) {
   var db = require( '../models' )( env );
   var errorResponse = require( './errors' )( env );
   return {
+    /**
+     * Updates the clients session
+     *
+     * This is useful for maintiaing sessions of guest users and not just
+     * standard users on restricted URIs, but all URIs.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse} res
+     * @param  {Function} next Callback for the next route handler
+     */
+    updateSession: function( req, res, next ) {
+      // not verified with persona... just move on.
+      if( !req.session.email ) {
+        req.session.user = {};
+        return next();
+      }
+
+      // if verified try to find the correct user details.
+      db.User.find({
+        where: {
+          email: req.session.email.toLowerCase()
+        }
+      }).done( function( err, user ) {
+        // if error from db http 500
+        if( err ) {
+          return errorResponse.internal( req, res, err );
+        }
+
+        // if no user returned just continue on, with empty user data in session
+        if( !user ) {
+          req.session.user = {};
+          return next();
+        }
+
+        // found a user
+        // update last login
+        user.lastLogin = ( new Date() ).toISOString();
+
+        // save last login and continue on
+        return user.save().done( function( err ) {
+          // if error saving http 500
+          if( err ) {
+            return errorResponse.internal( req, res, err );
+          }
+
+          // continue on if valid user
+          req.session.user = user.dataValues;
+          next();
+        });
+      });
+    },
     /**
      * A middleware route to ensure a user is verified using Persona
      *
@@ -44,20 +101,20 @@ module.exports = function( env ) {
           return errorResponse.unauthorized( req, res );
         }
 
-        // update last login
-        user.lastLogin = ( new Date() ).toISOString();
+        // // update last login
+        // user.lastLogin = ( new Date() ).toISOString();
 
-        // save last login and continue on
-        return user.save().done( function( err ) {
-          // if error saving http 500
-          if( err ) {
-            return errorResponse.internal( req, res, err );
-          }
+        // // save last login and continue on
+        // return user.save().done( function( err ) {
+        //   // if error saving http 500
+        //   if( err ) {
+        //     return errorResponse.internal( req, res, err );
+        //   }
 
           // continue on if valid user
           req.session.user = user.dataValues;
           next();
-        });
+        // });
       });
     },
     /**

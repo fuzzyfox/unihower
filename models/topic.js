@@ -24,7 +24,7 @@ module.exports = function( sequelize, DataTypes ) {
       allowNull: true
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true
     }
   }, {
@@ -32,7 +32,7 @@ module.exports = function( sequelize, DataTypes ) {
     paranoid: false,
     classMethods: {
       associate: function( models ) {
-        Topic.belongsTo( models.User, { foreignKey: 'UserId' } );
+        Topic.belongsTo( models.User, { foreignKey: 'UserId', onDelete: 'cascade' } );
         Topic.hasMany( models.Task );
       }
     }

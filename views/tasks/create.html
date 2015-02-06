@@ -1,0 +1,220 @@
+{% extends '_default.html' %}
+
+{% if query.topic or TopicId %}
+  {% set topic = {} %}
+  {% for topicItem in topics %}
+    {% if (topicItem.id == query.topic) or (topicItem.id == TopicId) %}
+      {% set topic = topicItem %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% block custom_styles %}
+<link rel="stylesheet" href="/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+{% endblock %}
+
+{% block main %}
+<div class="container">
+  <nav>
+    <ol class="breadcrumb">
+      {% if topic %}
+      <li><a href="/topics">Topics</a></li>
+      <li><a href="/topics/{{ TopicId }}">{{ topic.name }}</a></li>
+      {% else %}
+      <li><a href="/tasks">All Tasks</a></li>
+      {% endif %}
+
+      {% if id %}
+      <li><a href="/tasks/{{ id }}">{{ description | truncate( 30 ) }}</a></li>
+      <li class="active"><i class="fa fa-pencil"></i> Edit Task</li>
+      {% else %}
+      <li class="active"><i class="fa fa-plus"></i> Create Task</li>
+      {% endif %}
+    </ol>
+  </nav>
+
+  <h2>{{ 'New' if not id else 'Edit' }} Task</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="eisenhower-graph" data-x="{{ query.x | round(2) if query.x else coordX }}" data-y="{{ query.y | round(2) if query.y else coordY }}" data-graph-new-task="true" data-graph-readonly="true"></div>
+    </div>
+    <div class="col-md-6">
+      <form id="newTaskForm" action="/api/tasks{{ '/' + id if id }}" method="{{ 'POST' if not id else 'PUT' }}">
+        <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" id="coordX" name="coordX" value="{{ query.x | round(2) if not coordX else coordX }}">
+        <input type="hidden" id="coordY" name="coordY" value="{{ query.y | round(2) if not coordY else coordY }}">
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" class="form-control" id="description" name="description" placeholder="Something I need to do." value="{{ description }}" required>
+          <p class="help-block">A short description of your task e.g. "Write co600 report"</p>
+        </div>
+
+        <div class="form-group">
+          <label for="dueDate">Due Date</label>
+          <input type="text" class="form-control" name="dueDate" id="dueDate" value="{{ dueDate | moment( 'dddd, MMMM Do YYYY, h:mm a' ) if dueDate }}">
+          <p class="help-block">Optionally set a due date for this task. e.g. "in three days"</p>
+        </div>
+
+        <div class="form-group">
+          <label for="TopicId">Topic</label>
+          <select class="form-control" name="TopicId" id="TopicId">
+            <option value="">---</option>
+            {% for topic in topics %}
+            <option value="{{ topic.id }}"{{ ' selected' if (topic.id == query.topic) or (topic.id == TopicId) }}>{{ topic.name if topic.name else topic.description | truncate(70) }}</option>
+            {% endfor %}
+          </select>
+          <p class="help-block">Optionally assign this task to a topic.</p>
+        </div>
+
+        {% if id %}
+        <div class="form-group">
+          <label for="state">State</label>
+          <select class="form-control" name="state" id="state">
+            <option value="incomplete"{{ 'selected' if state == 'incomplete' }}>incomplete</option>
+            <option value="complete"{{ 'selected' if state == 'complete' }}>complete</option>
+          </select>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">{{ 'Create' if not id else 'Update'}}</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/vendor/sugar/release/sugar.min.js"></script>
+<script src="/vendor/moment/min/moment.min.js"></script>
+<script src="/assets/js/graph.js"></script>
+<script>
+  /**
+   * Returns true if date is valid and in the future.
+   *
+   * @param  {String} dateInput Date to check validity of.
+   * @return {Boolean}          True if valid.
+   */
+  function validateDate( dateInput ) {
+    var date = Date.future( dateInput ).valueOf();
+
+    if( date ) {
+      return moment( date ).isAfter();
+    }
+
+    return false;
+  }
+
+  /*
+    Realtime due date validity indication
+   */
+  $( '#dueDate' ).on( 'keyup', function() {
+    var valid = validateDate( $( this ).val() );
+
+    if( ! $( this ).val() ) {
+      valid = true;
+    }
+
+    if( valid ) {
+      $( this ).parents( '.form-group' ).removeClass( 'has-error' ).addClass( 'has-success' );
+    }
+    else {
+      $( this ).parents( '.form-group' ).addClass( 'has-error' ).removeClass( 'has-success' );
+    }
+  });
+
+  $( '#dueDate' ).on( 'blur', function() {
+    var valid = validateDate( $( this ).val() );
+
+    if( $( this ).val() && !valid ) {
+      return;
+    }
+
+    $( this ).parents( '.form-group' ).removeClass( 'has-error' ).removeClass( 'has-success' );
+  });
+
+  /*
+    Set coordinates for plotting
+   */
+  $( 'form#newTaskForm #coordX' ).val( $( '.eisenhower-graph:first' ).attr( 'data-x' ) );
+  $( 'form#newTaskForm #coordY' ).val( $( '.eisenhower-graph:first' ).attr( 'data-y' ) );
+
+  // update plot location on click
+  $( '.eisenhower-graph:first' ).on( 'click', function() {
+    $( 'form#newTaskForm #coordX' ).val( $( this ).attr( 'data-x' ) );
+    $( 'form#newTaskForm #coordY' ).val( $( this ).attr( 'data-y' ) );
+  });
+
+  /*
+    Ajax submit form
+   */
+  $( 'form#newTaskForm' ).on( 'submit', function( event ) {
+    event.preventDefault();
+    // check we have a valid date
+    if( $( '#dueDate' ).val() && !validateDate( $( '#dueDate' ).val() ) ) {
+      window.alert( 'please enter a valid due date' );
+      return false;
+    }
+
+    // convert date into pure js safe date
+    if( $( '#dueDate' ).val() ) {
+      $( '#dueDate' ).val( Date.future( $( '#dueDate' ).val() ).toString() );
+    }
+    else {
+      $( '#dueDate' ).attr( 'disabled', true );
+    }
+
+    if( ! $( '#TopicId' ).val() ) {
+      $( '#TopicId' ).attr( 'disabled', true );
+    }
+
+    // send data to server
+    $.ajax({
+      type: $( this ).attr( 'method' ),
+      url: $( this ).attr( 'action' ),
+      data: $( this ).serialize(),
+      dataType: 'json'
+    }).done( function( data ) {
+      window.location.href = '/tasks/' + data.id;
+    }).fail( function( jqXHR ) {
+      if( jqXHR.responseJSON ) {
+        if( typeof jqXHR.responseJSON.message === 'string' ) {
+          window.alert( jqXHR.responseJSON.status + '\n\n' + jqXHR.responseJSON.message );
+        }
+
+        window.alert( jqXHR.responseJSON.status + '\n\nWe\'ve made a note of the problem and will get it fixed as soon as possible.' );
+        return console.log( arguments );
+      }
+
+      window.alert( 'An unknown error occured... try again later' );
+    });
+
+    return false;
+  });
+
+  /*
+    Plot tasks from topics in gray + readonly
+   */
+  var topicPlots = [];
+
+  function plotTopicTasks( tasks ) {
+    tasks.forEach( function( task ) {
+      var plot = eisenhowerGraph.plotTask( task, eisenhowerGraph.graphs[ 0 ], null, 0.4 );
+      if( plot.data( 'task' ).id === {{ id if id else 'null' }} ) {
+        return plot.remove();
+      }
+      topicPlots.push( plot );
+    });
+  }
+
+  $( '#TopicId' ).on( 'change', function() {
+    topicPlots.forEach( function( plot ) {
+      plot.remove();
+    });
+
+    $.getJSON( '/api/topics/' + $( this ).val() + '/tasks', plotTopicTasks );
+  });
+
+  $.getJSON( '/api/topics/' + $( '#TopicId' ).val() + '/tasks', plotTopicTasks );
+</script>
+{% endblock %}

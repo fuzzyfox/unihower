@@ -25,6 +25,7 @@
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
+  var debug = require( 'debug' )( 'api:tasks' );
 
   return {
     /**
@@ -40,17 +41,27 @@ module.exports = function( env ) {
      *
      * *Method intended for HTTP POST requests.*
      *
+     * @todo prevent users adding tasks to topics they do not own.
+     *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
      */
     create: function( req, res ) {
-      return db.Task.create( req.body ).done( function( err, task ) {
+      debug( 'Create task: %s', req.body.description );
+
+      return db.User.find( req.session.user.id ).done( function( err, user ) {
         if( err ) {
+          debug( 'ERROR: Failed to get user to associate to. (err, body, session)' );
+          debug( err, req.body, req.session );
+
           return errorResponse.internal( req, res, err );
         }
 
-        task.setUser( req.session.user.id ).done( function( err, user ) {
+        user.addTask( db.Task.build( req.body ) ).done( function( err, task ) {
           if( err ) {
+            debug( 'ERROR: Failed to create task. (err, body)' );
+            debug( err, req.body );
+
             return errorResponse.internal( req, res, err );
           }
 
@@ -72,12 +83,18 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     get: function( req, res ) {
+      debug( 'Get task: %d', req.params.id );
+
       return db.Task.find( req.params.id ).done( function( err, task ) {
         if( err ) {
+          debug( 'ERROR: Failed to find task. (err, taskId)' );
+          debug( err, req.params.id );
+
           return errorResponse.internal( req, res, err );
         }
 
         if( task.UserId !== req.session.user.id ) {
+          debug( err, req.session );
           return errorResponse.forbidden( req, res );
         }
 
@@ -106,12 +123,19 @@ module.exports = function( env ) {
      *
      * *Method intended for HTTP PUT/POST requests.*
      *
+     * @todo prevent users adding tasks to topics they do not own.
+     *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
      */
     update: function( req, res ) {
+      debug( 'Update task: %d', req.params.id );
+
       return db.Task.find( req.params.id ).done( function( err, task ) {
         if( err ) {
+          debug( 'ERROR: Failed to find task. (err, params, session)' );
+          debug( err, req.params, req.session );
+
           return errorResponse.internal( req, res, err );
         }
 
@@ -121,6 +145,9 @@ module.exports = function( env ) {
 
         task.updateAttributes( req.body ).done( function( err, task ) {
           if( err ) {
+            debug( 'ERROR: Failed to update task. (err, body)' );
+            debug( err, req.body );
+
             return errorResponse.internal( req, res, err );
           }
 
@@ -142,8 +169,13 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     delete: function( req, res ) {
+      debug( 'Destroy task: %d', req.params.id );
+
       return db.Task.find( req.params.id ).done( function( err, task ) {
         if( err ) {
+          debug( 'ERROR: Failed to find task. (err, taskId)' );
+          debug( err, req.params.id );
+
           return errorResponse.internal( req, res, err );
         }
 
@@ -153,6 +185,9 @@ module.exports = function( env ) {
 
         task.destroy().done( function( err ) {
           if( err ) {
+            debug( 'ERROR: Failed to destroy task. (err, taskId)' );
+            debug( err, req.params.id );
+
             return errorResponse.internal( req, res, err );
           }
 

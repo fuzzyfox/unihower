@@ -1,6 +1,8 @@
 ### Project Specific Ignores
 .env
 docs
+public/vendor
+public/assets/css
 
 ### https://raw.github.com/github/gitignore/14b7566ce157ce95b07006466bacee160f242284/Global/OSX.gitignore
 

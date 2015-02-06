@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <link rel="stylesheet" href="/assets/css/eisenhower.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% block custom_styles %}
+  {% endblock %}
+
+  <title>{{ title }}</title>
+</head>
+<body>
+  {% block header %}
+  <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#primary-nav">
+          <span class="sr-only">Toggle navigation</span>
+          <i class="fa fa-bars"></i>
+        </button>
+
+        <a href="/" class="navbar-brand">Eisenhower</a>
+      </div>
+
+      <div class="navbar-collapse collapse" id="primary-nav">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
+          {% if user.email %}
+          <li><a href="/topics"><i class="fa fa-folder-open"></i> Topics</a></li>
+          <li><a href="/tasks/create"><i class="fa fa-plus"></i> Create Task</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user.name if user.name else user.email }} <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="/users/{{ user.id }}"><i class="fa fa-user fa-fw"></i> My Account</a></li>
+              <li><a href="/users/{{ user.id }}/update"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>
+              <li class="divider"></li>
+              <li><a href="#" class="persona-logout"><i class="fa fa-lock fa-fw"></i> logout</a></li>
+            </ul>
+          </li>
+          {% else %}
+          <li>
+            <a href="#" class="persona-login"><i class="fa fa-lock fa-fw"></i> Login with Persona</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endblock %}
+
+  <noscript>
+    <div class="container">
+      <div class="alert alert-danger lead"><strong>Oh snap!</strong> This site requires JavaScript be enabled to function.</div>
+    </div>
+  </noscript>
+
+  {% block main %}
+  <!-- main content here -->
+  {% endblock %}
+
+  {% block footer %}
+  <footer class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+        <p>
+          Made by <a href="http://wduyck.me">William Duyck</a> and Eliot Brown, at the <a href="https://www.kent.ac.uk/">University of Kent</a>.<br>
+          Code avaialbe on <a href="https://github.com/not-so-creative/eisenhower">GitHub</a> under the <a href="https://mozilla.org/MPL/2.0/">MPL-2.0 License</a>.<br>
+          Theme based on <a href="http://bootswatch.com/paper" rel="nofollow">Bootstwatch Paper</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+  {% endblock %}
+
+  {% if persona != user.email %}
+  <!-- new user modal -->
+  <div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="newUserModalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="newUserModalTitle">New User Login</h4>
+        </div>
+        <div class="modal-body">
+          <form action="/api/users" method="POST">
+            <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
+
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Dwight Eisenhower">
+              <p class="help-block">This is completely optional, however we do use this in any messages/notifications we send to you.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="form-control" id="email" name="email" value="{{ persona }}" readonly required>
+              <p class="help-block">This is set using Persona and cannot be changed.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="terms">
+                <input type="checkbox" id="terms" required>
+                I have read and agree to the <a href="/legal#termsOfService">Terms Of Service</a>.
+              </label>
+            </div>
+
+            <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+            <button type="submit" class="btn btn-success">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- core javascript libs -->
+  <script src="/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/vendor/svg.js/dist/svg.min.js"></script>
+
+  <!-- persona login handling -->
+  <script src="https://login.persona.org/include.js"></script>
+  <script src="/assets/js/persona.js" data-persona="{{ persona }}" data-user="{{ user.email }}"></script>
+
+  <!-- custom scripts for this page -->
+  {% block custom_scripts %}
+  {% endblock %}
+</body>
+</html>

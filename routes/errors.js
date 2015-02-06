@@ -67,7 +67,10 @@ module.exports = function( env ) {
     unauthorized: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 401 ).send( msg || 'Unauthorized' );
+          // res.status( 401 ).send( msg || 'Unauthorized' );
+          res.status( 401 ).render( 'errors/unauthorized.html', {
+            message: msg || 'You must be logged in to use this resource.'
+          });
         },
         json: function() {
           res.status( 401 ).json({
@@ -81,7 +84,7 @@ module.exports = function( env ) {
       });
     },
     /**
-     * HTTP 403 Bad Request
+     * HTTP 403 Forbidden
      *
      * This should be used when the request is successfully authenticiated (see 401), but the
      * action was forbidden.
@@ -95,7 +98,9 @@ module.exports = function( env ) {
     forbidden: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 403 ).send( msg || 'Forbidden' );
+          res.status( 403 ).render( 'errors/forbidden.html', {
+            message: msg || 'You are not permitted to use this resource.'
+          });
         },
         json: function() {
           res.status( 403 ).json({
@@ -115,17 +120,19 @@ module.exports = function( env ) {
      *
      * @param  {http.IncomingMessage} req
      * @param  {http.ServerResponse}  res
-     * @param  {String}               [msg] A custom error message to return. Defaults to "Not Found".
+     * @param  {String}               [msg] A custom error message to return. Defaults to "/url was not found."
      */
     notFound: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 404 ).send( msg || ( req.originalUrl + ' Not Found' ) );
+          res.status( 404 ).render( 'errors/notFound.html', {
+            message: msg || ( req.originalUrl + ' was not found.' )
+          });
         },
         json: function() {
           res.status( 404 ).json({
             status: 'Not Found',
-            message: msg || ( req.originalUrl + ' Not Found' )
+            message: msg || ( req.originalUrl + ' was not found.' )
           });
         },
         default: function() {
@@ -143,7 +150,7 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      * @param  {String}               [msg] A custom error message to return. Defaults to "Unable to process request due to a confilct.".
      */
-    confilct: function( req, res, msg ) {
+    conflict: function( req, res, msg ) {
       res.format({
         html: function() {
           res.status( 409 ).send( msg || 'Confilct' );
@@ -225,7 +232,9 @@ module.exports = function( env ) {
     internal: function( req, res, msg ) {
       res.format({
         html: function() {
-          res.status( 500 ).send( msg || 'Internal Server Error' );
+          res.status( 500 ).render( 'errors/internal.html', {
+            message: msg || 'An unexpected error has occured. Try again later.'
+          });
         },
         json: function() {
           res.status( 500 ).json({

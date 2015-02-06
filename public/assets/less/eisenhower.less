@@ -1,0 +1,62 @@
+@import '../../vendor/bootstrap/less/bootstrap';
+@import '../../vendor/bootswatch/paper/variables';
+@import '../../vendor/bootswatch/paper/bootswatch';
+@import '../../vendor/font-awesome/less/font-awesome';
+@fa-font-path: '../../vendor/font-awesome/fonts';
+
+// navbar collapse button fix
+.navbar-inverse {
+  button.navbar-toggle {
+    color: @navbar-inverse-link-color;
+
+    &:hover {
+      color: @navbar-inverse-link-hover-color;
+    }
+  }
+}
+
+// colour labels for task states
+.label-state {
+  &-incomplete:extend( .label-warning ) {}
+  &-complete:extend( .label-success ) {}
+}
+
+// style graph
+.eisenhower-graph {
+  .axes {
+    text, tspan {
+      font-family: @font-family-base;
+      fill: @text-muted;
+    }
+
+    line {
+      stroke: @text-color;
+    }
+
+    path {
+      fill: @text-color;
+      stroke: @text-color;
+    }
+  }
+
+  .task {
+    cursor: pointer;
+
+    ellipse {
+      fill: @brand-warning;
+    }
+
+    text, tspan {
+      fill: @label-color;
+    }
+
+    &[data-task-state=complete] {
+      ellipse {
+        fill: @brand-success;
+      }
+    }
+  }
+}
+
+// highlight table row background
+.table-row-variant( highlight; lighten( @brand-info, 50% ) );

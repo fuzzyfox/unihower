@@ -1,0 +1,68 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+  {% if user.isAdmin %}
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/users">Users</a></li>
+      <li class="active">{{ name if name else email }}</li>
+    </ol>
+  </nav>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-3">
+      <img src="//secure.gravatar.com/avatar/{{ emailHash }}?s=500" alt="avatar" class="img-responsive">
+      <p class="text-muted text-center">Image via <a href="//gravatar.com" target="_blank">Gravatar</a></p>
+
+      <a href="/users/{{ id }}/update" class="btn btn-sm btn-block btn-primary">
+        <i class="fa fa-cogs"></i> Settings
+      </a>
+
+      <a href="/users/{{ id }}/#destroy" class="btn btn-sm btn-block btn-danger" id="deleteUserButton">
+        <i class="fa fa-trash" title="Delete"></i> Delete Account
+      </a>
+    </div>
+    <div class="col-md-9">
+      <h3>{{ name }}</h3>
+      <dl>
+        {% if user.isAdmin %}
+        <dt>Administrator</dt>
+        <dd>True</dd>
+        {% endif %}
+        <dt>Email</dt>
+        <dd>{{ email }}</dd>
+        <dt>Registered</dt>
+        <dd>{{ createdAt | relativeMoment }}</dd>
+        <dt>Last Active</dt>
+        <dd>{{ lastLogin | relativeMoment }}</dd>
+      </dl>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+<script>
+  $( '#deleteUserButton' ).on( 'click', function() {
+    if( window.confirm( 'Are you sure you want to delete this account? This cannot be undone.' ) ) {
+      $.ajax({
+        type: 'DELETE',
+        url: '/api/users/{{ id }}',
+        data: {
+          _csrf: '{{ csrfToken }}'
+        },
+        dataType: 'json'
+      }).done( function( data ) {
+        window.location.href = '/';
+      }).fail( function() {
+        console.log( arguments );
+      });
+    }
+
+    return false;
+  });
+</script>
+{% endblock %}

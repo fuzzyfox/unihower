@@ -20,7 +20,13 @@ module.exports = function( sequelize, DataTypes ) {
       autoIncrement: true
     },
     description: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    dueDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null
     },
     state: {
       type: DataTypes.ENUM,
@@ -51,11 +57,10 @@ module.exports = function( sequelize, DataTypes ) {
     }
   }, {
     timestamps: true,
-    paranoid: true,
     classMethods: {
       associate: function( models ) {
-        Task.belongsTo( models.User, { foreignKey: 'UserId' } );
-        Task.belongsTo( models.Topic, { foreignKey: 'TopicId' } );
+        Task.belongsTo( models.User, { foreignKey: 'UserId', onDelete: 'cascade' } );
+        Task.belongsTo( models.Topic, { foreignKey: 'TopicId', onDelete: 'cascade' } );
       }
     }
   });
