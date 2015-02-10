@@ -179,6 +179,9 @@ module.exports = function( env ) {
       if( req.session.user.isAdmin ) {
         debug( '↳ Admin updating user record.' );
 
+        // convert isAdmin into a boolean
+        req.body.isAdmin = /^(1|t(rue)?|y(es)?)$/i.test( req.body.isAdmin );
+
         return db.User.find( req.params.id ).done( function( err, user ) {
           if( err ) {
             debug( 'ERROR: Failed to find user. (err, userId)' );
@@ -187,7 +190,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          user.updateAttributes( req.body, [ 'email', 'isAdmin' ] ).done( function( err, user ) {
+          user.updateAttributes( req.body, { fields: [ 'email', 'isAdmin' ] } ).done( function( err, user ) {
             if( err ) {
               debug( 'ERROR: Failed to update user. (err, body)' );
               debug( err, req.body );
