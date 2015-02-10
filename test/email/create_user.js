@@ -72,7 +72,7 @@ function setupDatabase( done ) {
       return done( err );
     }
 
-    db.User.bulkCreate( require( './data/user' ) ).done( function() {
+    db.User.bulkCreate( require( '../data/user' ) ).done( function() {
       done();
     }).catch( function( err ) {
       done( err );

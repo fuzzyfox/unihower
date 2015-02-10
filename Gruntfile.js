@@ -56,7 +56,18 @@ module.exports = function( grunt ) {
         options: {
           reporter: 'spec'
         },
-        src: [ 'test/**/*.js' ]
+        src: [
+          'test/**/*.js',
+          '!test/email/**/*.js'
+        ]
+      },
+      testEmail: {
+        options: {
+          reporter: 'spec'
+        },
+        src: [
+          'test/email/**/*.js'
+        ]
       }
     },
 
@@ -103,5 +114,6 @@ module.exports = function( grunt ) {
 
   grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
+  grunt.registerTask( 'test-email', [ 'jshint', 'mochaTest:testEmail' ] );
   grunt.registerTask( 'build', [ 'less:prod' ] );
 };
