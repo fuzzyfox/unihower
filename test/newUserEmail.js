@@ -141,17 +141,20 @@ describe( '/api/users (new user)', function() {
   });
 
   it( 'GET should send a welcome email to the new user', function( done ) {
-    this.timeout( 2000 );
+    this.timeout( 5000 );
 
-    restmail
-      .get( '/mail/eisenhower' )
-      .set( 'Accept', 'application/json' )
-      .expect( 'Content-Type', /json/ )
-      .expect( 200 )
-      .expect( function( res ) {
-        res.body.should.be.an( 'array' ).with.length( 1 );
-        res.body[ 0 ].should.be.an( 'object' ).with.property( 'subject' ).and.equal( 'Welcome to Eisenhower.' );
-      })
-      .end( done );
+    // allow a second for mail to be sent
+    setTimeout( function() {
+      restmail
+        .get( '/mail/eisenhower' )
+        .set( 'Accept', 'application/json' )
+        .expect( 'Content-Type', /json/ )
+        .expect( 200 )
+        .expect( function( res ) {
+          res.body.should.be.an( 'array' ).with.length( 1 );
+          res.body[ 0 ].should.be.an( 'object' ).with.property( 'subject' ).and.equal( 'Welcome to Eisenhower.' );
+        })
+        .end( done );
+    }, 1000 );
   });
 });
