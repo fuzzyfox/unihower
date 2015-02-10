@@ -25,6 +25,7 @@
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
+  var email = require( '../../libs/email' )( env );
   var debug = require( 'debug' )( 'api:users' );
 
   return {
@@ -60,6 +61,8 @@ module.exports = function( env ) {
 
           return errorResponse.internal( req, res, err );
         }
+
+        email.send( user.id, 'user_created' );
 
         res.status( 200 ).json( user );
       });

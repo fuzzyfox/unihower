@@ -14,7 +14,8 @@ module.exports = function( grunt ) {
         'models/**/*.js',
         'routes/**/*.js',
         'libs/**/*.js',
-        'test/**/*.js'
+        'test/**/*.js',
+        'emailTemplates/**/*.js'
       ]
     },
 
