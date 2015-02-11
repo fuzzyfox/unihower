@@ -45,12 +45,12 @@
   // ------------------------------------------------
   .plot {
     // default colour for plots
-    ellipse {
+    ellipse:not([fill]) {
       fill: @brand-primary;
     }
 
     // ensure icon is visible on backing ellipse
-    text, tspan {
+    text:not([fill]) {
       fill: @label-color;
     }
   }
@@ -66,13 +66,13 @@
     }
 
     // default fill colour = incomplete state
-    ellipse {
+    ellipse, ellipse:not([fill]) {
       fill: @brand-warning;
     }
 
     // complete tasks are successful
     &[data-task-state=complete] {
-      ellipse {
+      ellipse, ellipse:not([fill]) {
         fill: @brand-success;
       }
     }

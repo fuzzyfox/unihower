@@ -402,7 +402,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
       // convert event point to something useful
       var point = graph.eventPointToSVGPoint( event );
       // plot the point
-      var plot = graph.basicPlot( point.x, point.y );
+      var plot = graph.basicPlot( point.x, point.y, { fill: false, color: false } );
 
       if( graph.isReadonly() ) {
         return;
@@ -541,7 +541,7 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
         var y = 250 + ( 2.5 * -$self.data( 'y' ) );
 
         // create plot point
-        graph.basicPlot( x, y );
+        graph.basicPlot( x, y, { fill: false, color: false } );
       }());
     }
 
