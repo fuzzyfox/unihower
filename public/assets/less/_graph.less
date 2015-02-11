@@ -1,0 +1,95 @@
+/**
+ * @file Graph styles
+ *
+ * All the styles needed to make the graph interfaces not only match style
+ * (for the most part) with the chosen bootstrap theme, but also to distinguish
+ * elements within the graph.
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
+.eisenhower-graph {
+  cursor: pointer;
+
+  // ------------------------------------------------
+  // Prevent text selection
+  // ------------------------------------------------
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  // ------------------------------------------------
+  // Axes and labels
+  // ------------------------------------------------
+  .axes {
+    text, tspan {
+      font-family: @font-family-base;
+      fill: @text-muted;
+    }
+
+    line {
+      stroke: @text-color;
+    }
+
+    path {
+      fill: @text-color;
+      stroke: @text-color;
+    }
+  }
+
+  // ------------------------------------------------
+  // Standard plots
+  // ------------------------------------------------
+  .plot {
+    // default colour for plots
+    ellipse {
+      fill: @brand-primary;
+    }
+
+    // ensure icon is visible on backing ellipse
+    text, tspan {
+      fill: @label-color;
+    }
+  }
+
+  // ------------------------------------------------
+  // Task plots (colours and animations)
+  // ------------------------------------------------
+  .task {
+    transition: opacity .4s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    // default fill colour = incomplete state
+    ellipse {
+      fill: @brand-warning;
+    }
+
+    // complete tasks are successful
+    &[data-task-state=complete] {
+      ellipse {
+        fill: @brand-success;
+      }
+    }
+  }
+
+  &[data-graph-new-task] {
+    .plot.task {
+      transition: 0s;
+      opacity: 0.4;
+    }
+  }
+}
+
+// --------------------------------------------------
+// Graphs which are links
+// --------------------------------------------------
+
+a.eisenhower-graph {
+  text-decoration: none;
+}
