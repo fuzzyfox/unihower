@@ -12,10 +12,34 @@
  * @see {@link https://jquery.com/}
  *
  * @todo improve onclick task creation url generation
- * @todo improve task colour selection
- * @todo add hover events for tasks?
  */
 
+/**
+ * Eisenhower Graph Interface(s).
+ *
+ * Provides an easy way to create/interact with task graph SVGs.
+ *
+ * @example
+ *
+ *  // plot a point on an existing graph (when only one on page) using the SVG
+ *  // coordinate system
+ *  var graph = eisenhowerGraph.graphs[ 0 ];
+ *  graph.basicPlot( 234, 120 );
+ *
+ * @example
+ *
+ *  // plot a point on an existing graph (when only one on page) using the
+ *  // task oriented coordinate system
+ *  var graph = eisenhowerGraph.graphs[ 0 ];
+ *  graph.plotTask( {
+ *    coordX: 42,
+ *    coordY: 42,
+ *    description: "Determine the answer to the ultimate question.",
+ *    TopicId: 42
+ *  } );
+ *
+ * @return {Object}
+ */
 var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
   /* --------------------------------------------------
     Utility Functions

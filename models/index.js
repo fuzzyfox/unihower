@@ -1,6 +1,6 @@
 /**
  * @file Loads models into a single usable ORM object.
- * @module models
+ * @module model
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */

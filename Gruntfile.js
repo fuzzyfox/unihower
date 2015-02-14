@@ -1,3 +1,8 @@
+/**
+ * @file defines Grunt tasks used for the development, testing, and building
+ * of the project.
+ */
+
 module.exports = function( grunt ) {
   grunt.initConfig({
     // package information
