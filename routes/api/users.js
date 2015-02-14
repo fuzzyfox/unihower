@@ -106,7 +106,7 @@ module.exports = function( env ) {
 
           // user not found
           if( !user ) {
-            return errorResponse.notfound( req, res );
+            return errorResponse.notFound( req, res );
           }
 
           res.status( 200 ).json({ user: user });
@@ -185,7 +185,7 @@ module.exports = function( env ) {
 
           // user not found
           if( !user ) {
-            return errorResponse.notfound( req, res );
+            return errorResponse.notFound( req, res );
           }
 
           // update user details
@@ -222,7 +222,7 @@ module.exports = function( env ) {
 
           // user not found
           if( !user ) {
-            return errorResponse.notfound( req, res );
+            return errorResponse.notFound( req, res );
           }
 
           // update user details (force remove any changes but those to email and admin flag)
@@ -274,7 +274,7 @@ module.exports = function( env ) {
 
           // user not found
           if( !user ) {
-            return errorResponse.notfound( req, res );
+            return errorResponse.notFound( req, res );
           }
 
           // delete user

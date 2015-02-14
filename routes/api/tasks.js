@@ -109,7 +109,7 @@ module.exports = function( env ) {
 
         // task not found
         if( !task ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // task does not belong to user
@@ -162,7 +162,7 @@ module.exports = function( env ) {
 
         // task not found
         if( !task ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // task does not belong to user
@@ -212,7 +212,7 @@ module.exports = function( env ) {
 
         // task not found
         if( !task ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // task does not belong to user

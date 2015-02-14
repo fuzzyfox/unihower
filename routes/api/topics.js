@@ -111,7 +111,7 @@ module.exports = function( env ) {
 
         // topic not found
         if( !topic ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // topic does not belong to user
@@ -174,7 +174,7 @@ module.exports = function( env ) {
 
         // topic not found
         if( !topic ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // topic does not belong to user
@@ -223,7 +223,7 @@ module.exports = function( env ) {
 
         // topic not found
         if( !topic ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // topic does not belong to user
@@ -276,7 +276,7 @@ module.exports = function( env ) {
 
         // topic not found
         if( !topic ) {
-          return errorResponse.notfound( req, res );
+          return errorResponse.notFound( req, res );
         }
 
         // topic does not belong to user
