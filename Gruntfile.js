@@ -62,6 +62,7 @@ module.exports = function( grunt ) {
         files: {
           'public/ember/app.js': [
             'app/app.js',
+            'app/session.js',
             'app/router.js',
             'app/store.js',
             'app/components/**/*.js',
@@ -69,7 +70,7 @@ module.exports = function( grunt ) {
             'app/helpers/**/*.js',
             'app/models/**/*.js',
             'app/routes/**/*.js',
-            'app/views/**/*.js'
+            'app/views/**/*.js',
           ]
         }
       }

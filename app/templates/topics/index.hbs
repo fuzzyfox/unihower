@@ -1,0 +1,66 @@
+<nav>
+  <ol class="breadcrumb">
+    <li class="active">Topics</li>
+  </ol>
+</nav>
+
+<h2>Topics</h2>
+
+{{#if model}}
+  <div class="row">
+    {{#each model as |topic|}}
+      <div class="col-sm-4 col-md-3">
+        <div class="thumbnail">
+          {{!-- <a href="/topics/{{ topic.id }}" class="eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-readonly="true"></a> --}}
+
+          <div class="caption clearfix">
+            <h4>{{ topic.name }}</h4>
+            {{ topic.description }}
+
+            {{#link-to 'topic' topic class="pull-right btn btn-sm btn-primary"}}
+              <i class="fa fa-eye"></i> View Topic
+            {{/link-to}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}
+
+{{#unless model}}
+<div class="row">
+  <div class="col-md-6">
+    <p class="lead">Looks like you've got no topics...</p>
+
+    <h4>What is a topic?</h4>
+    <p>You can think of a topic as a collection of related tasks. They help you group common/related tasks together, and act as the building blocks that keep things manageable and organised.</p>
+
+    <p>It's up to you how specific or general a topic is, just choose whatever works best for you, and experiment a little to refine this for your needs.</p>
+
+    <p>If you prefer general topics try using a timeframe as your topic's title, however if specificity is you preference spend a few moments thinking about what to call it. Your topic can help you clarify and focus tasks you're about to enter.</p>
+
+    <p>Don't worry about having only a few tasks in a topic either. Its much more about your thought processes than filling things up.</p>
+
+    {{#link-to 'topics.create' class="btn btn-success pull-right"}}
+      <i class="fa fa-plus"></i> Create a topic
+    {{/link-to}}
+  </div>
+  <div class="col-md-3 col-md-offset-1 hidden-sm hidden-xs">
+    <div class="thumbnail">
+      {{!-- <div class="eisenhower-graph" data-topic-id="{{ topic.id }}" data-graph-readonly="true"></div> --}}
+
+      <div class="caption clearfix">
+        <h4>Getting Started</h4>
+        <p>An example topic with a collection of helpful starter activities to get started with Eisenhower.</p>
+        <p><em>Try hovering over the dots...</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+{{/unless}}
+
+{{#if model}}
+  {{#link-to 'topics.create' class="btn btn-success pull-right"}}
+    <i class="fa fa-plus"></i> Create a topic
+  {{/link-to}}
+{{/if}}

@@ -133,7 +133,7 @@ module.exports = function( env ) {
       });
     },
     /**
-     * Returns a 403 forbidden instead of all topic listing.
+     * 302 Redirects to /api/users/:userId/topics
      *
      * This function is here as a placeholder for consistency in the API. No
      * user should be able to access anothers topic details.
@@ -142,7 +142,7 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     list: function( req, res ) {
-      return errorResponse.forbidden( req, res );
+      res.redirect( '/api/users/' + req.session.user.id + '/topics' );
     },
     /**
      * Update a specific topics details.

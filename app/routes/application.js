@@ -11,6 +11,8 @@
  * @return {Ember.Route}
  */
 App.ApplicationRoute = Ember.Route.extend({
+  needs: [ 'session' ],
+
   actions: {
     error: function( error, transition ) {
       console.log( error );
@@ -26,6 +28,10 @@ App.ApplicationRoute = Ember.Route.extend({
       // hacky hack for handlebars not supporing conditionals.
       if( error.code === 401 ) {
         error.unauthorized = true;
+      }
+
+      if( error.code === 404 ) {
+        error.message = window.location.href.replace( /^\w+:\/\//i, '' ).replace( window.location.hostname, '' );
       }
 
       return true;

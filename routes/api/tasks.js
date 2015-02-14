@@ -121,7 +121,7 @@ module.exports = function( env ) {
       });
     },
     /**
-     * Returns a 403 forbidden instead of all task listing.
+     * 302 Redirects to /api/users/:userId/tasks
      *
      * This function is here as a placeholder for consistency in the API. No
      * user should be able to access anothers task details.
@@ -130,7 +130,7 @@ module.exports = function( env ) {
      * @param  {http.ServerResponse}  res
      */
     list: function( req, res ) {
-      return errorResponse.forbidden( req, res );
+      res.redirect( '/api/users/' + req.session.user.id + '/tasks' );
     },
     /**
      * Update a specific tasks details.

@@ -25,5 +25,6 @@ App.User = DS.Model.extend({
     return '//secure.gravatar.com/avatar/' + this.get( 'emailHash' ) + '?s=500';
   }.property( 'emailHash' ),
 
-  topics: DS.hasMany( 'topic', { async: true } )
+  topics: DS.hasMany( 'topic', { async: true } ),
+  tasks: DS.hasMany( 'topic', { async: true } )
 });

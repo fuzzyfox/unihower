@@ -7,7 +7,7 @@
 
 App.Router.map( function() {
   this.resource( 'users', function() {
-    this.resource( 'user', { path: '/:userId' }, function() {
+    this.resource( 'user', { path: '/:user_id' }, function() {
       this.route( 'edit' );
       this.route( 'delete' );
     });
@@ -16,7 +16,7 @@ App.Router.map( function() {
   });
 
   this.resource( 'topics', function() {
-    this.resource( 'topic', { path: '/:topicId' }, function() {
+    this.resource( 'topic', { path: '/:topic_id' }, function() {
       this.route( 'edit' );
       this.route( 'delete' );
     });
@@ -25,7 +25,7 @@ App.Router.map( function() {
   });
 
   this.resource( 'tasks', function() {
-    this.resource( 'task', { path: '/:taskId' }, function() {
+    this.resource( 'task', { path: '/:task_id' }, function() {
       this.route( 'edit' );
       this.route( 'delete' );
     });

@@ -14,6 +14,6 @@ App.ErrorController = Ember.ObjectController.extend({
   needs: [ 'application' ],
   model: {
     code: 500,
-    status: 'Internal Application Error'
+    status: 'Application Error'
   }
 });

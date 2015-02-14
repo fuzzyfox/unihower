@@ -1,6 +1,6 @@
 <nav>
   <ol class="breadcrumb">
-    <li><a href="/">Topics</a></li>
+    <li>{{#link-to 'topics'}}Topics{{/link-to}}</li>
     <li class="active">{{ name }}</li>
   </ol>
 </nav>
@@ -49,7 +49,7 @@
         {{#each tasks as |task|}}
         <tr {{bind-attr rel="task.id"}}>
           <td><span {{bind-attr class=":label :label-state task.state"}}>{{ task.state }}</span></td>
-          <td>{{#link-to 'task' task.id}}{{ task.description }}{{/link-to}}</td>
+          <td>{{#link-to 'task' task}}{{ task.description }}{{/link-to}}</td>
           <td>{{ task.dueDate }}</td>
         </tr>
         {{/each}}

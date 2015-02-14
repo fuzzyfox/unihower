@@ -20,6 +20,7 @@ var bodyParser = require( 'body-parser' );
 var cookieParser = require( 'cookie-parser' );
 var session = require( 'express-session' );
 var csrf = require( 'csurf' );
+var jwt = require( 'jwt-simple' );
 var marked = require( 'marked' );
 var moment = require( 'moment' );
 var nunjucks = require( 'nunjucks' );
@@ -57,11 +58,21 @@ debugEnv( 'debug enabled' );
 debugEnv( 'pkg.version: %s, env: %s', env.get( 'pkg' ).version, env.get( 'node_env' ) );
 
 /*
+  get db models
+ */
+/**
+ * Database ORM instance
+ * @type {Object}
+ */
+var db = require( './models' )( env );
+
+/*
   setup server
  */
 var app = express();
 // static, public dir
 app.use( express.static( __dirname + '/public' ) );
+app.use( '/app', express.static( __dirname + '/app' ) );
 // work nicely with cookies
 app.use( cookieParser() );
 app.use( bodyParser.json() );
@@ -77,7 +88,9 @@ if( env.get( 'node_env' ) !== 'production' ) {
   app.set( 'json spaces', 2 );
 }
 
-// server security
+/*
+  setup server security
+ */
 app.use( helmet.xframe( 'sameorigin' ) );
 app.use( helmet.hsts() );
 app.use( helmet.nosniff() );
@@ -107,7 +120,49 @@ app.use( function( req, res, next ) {
 
 // persona login
 require( 'express-persona' )( app, {
-  audience: env.get( 'persona_audience' )
+  audience: env.get( 'persona_audience' ),
+  verifyResponse: function( err, req, res, email ) {
+    /*
+      handle failed authentication
+     */
+    if( err ) {
+      // send failure response
+      return res.status( 500 ).json({
+        status: 'failure',
+        reason: err
+      });
+    }
+
+    /*
+      handle successful authentication
+     */
+    db.User.find({
+      where: {
+        email: email
+      }
+    }).done( function( err, user ) {
+      // generate expire time for jwt
+      var expires = moment().add( env.get( 'jwt_exp_duration', 1 ), env.get( 'jwt_exp_unit', 'days' ) );
+      // generate jwt
+      var token = jwt.encode({
+        // who should be issuing the token
+        iss: email,
+        // when the token should expire
+        exp: expires.valueOf()
+      }, env.get( 'jwt_secret', env.get( 'session_secret' ) ) );
+
+      // send success response
+      res.status( 200 ).json({
+        status: 'okay',
+        email: email,
+        user: user,
+        accessToken: {
+          token: token,
+          expires: expires
+        }
+      });
+    });
+  }
 });
 
 debugPersona( env.get( 'persona_audience' ) );
@@ -159,15 +214,6 @@ nunjucksEnv.addFilter( 'relativeMoment', function( str ) {
 
 // make nunjucks the default view renderer
 nunjucksEnv.express( app );
-
-/*
-  get models
- */
-/**
- * Database ORM instance
- * @type {Object}
- */
-var db = require( './models' )( env );
 
 /*
   routes
@@ -238,6 +284,9 @@ app.post( '/api/users', routes.api.users.create );
 
 // enforce valid user for all routes now on
 app.all( '/api*', routes.auth.enforce );
+
+// session/user details
+app.get( '/whoami', routes.auth.whoami );
 
 // api for specific user
 app.get( '/api/users/:id', routes.api.users.get );

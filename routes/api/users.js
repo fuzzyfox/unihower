@@ -27,6 +27,7 @@ module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
   var email = require( '../../libs/email' )( env );
+  var lodash = require( 'lodash' );
   var debug = require( 'debug' )( 'api:users' );
 
   return {
@@ -312,6 +313,10 @@ module.exports = function( env ) {
         return db.Topic.findAll({
           where: {
             UserId: req.params.id
+          },
+          include: {
+            model: db.Task,
+            attributes: [ 'id' ]
           }
         }).done( function( err, topics ) {
           // database error finding topics
@@ -321,6 +326,12 @@ module.exports = function( env ) {
 
             return errorResponse.internal( req, res, err );
           }
+
+          // adjust tasks format for emberjs RESTAdapter
+          topics.forEach( function( topic, idx ) {
+            delete topic.dataValues.Tasks;
+            topic.dataValues.tasks = lodash.map( lodash.map( topic.Tasks, 'dataValues' ), 'id' );
+          });
 
           // return results
           res.status( 200 ).json({ topics: topics });
