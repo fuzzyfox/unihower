@@ -1,7 +1,7 @@
 /* global App, Ember */
 /**
  * @file Handles routing of application level items.
- * @module app/route/application
+ * @module app/routes/application
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 

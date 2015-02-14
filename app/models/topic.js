@@ -1,7 +1,7 @@
 /* global App, DS */
 /**
  * @file Defines the Topic model
- * @module app/model/task
+ * @module app/models/task
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 

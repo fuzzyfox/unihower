@@ -1,7 +1,7 @@
 /* global App, Ember */
 /**
  * @file defines the 404 route handler.
- * @module  app/route/notfound
+ * @module app/routes/notfound
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 

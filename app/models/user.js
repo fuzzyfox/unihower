@@ -1,7 +1,7 @@
 /* global App, DS */
 /**
  * @file Defines the User model
- * @module app/model/user
+ * @module app/models/user
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 

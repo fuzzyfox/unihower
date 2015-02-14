@@ -1,7 +1,7 @@
 /* global App, Ember */
 /**
  * @file Define the error controller
- * @module  app/controller/error
+ * @module  app/controllers/error
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 

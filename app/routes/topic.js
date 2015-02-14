@@ -1,7 +1,7 @@
 /* global App, Ember */
 /**
  * @file Handles routing for /topic/:topicId
- * @module app/route/topic
+ * @module app/routes/topic
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 

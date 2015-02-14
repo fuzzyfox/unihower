@@ -1,7 +1,7 @@
 /* global Ember */
 /**
  * @file Declare the Ember application
- * @module app/initializer
+ * @module app
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 
