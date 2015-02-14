@@ -1,6 +1,6 @@
 /**
  * @file Defines the Topic model
- * @module model/topic
+ * @module models/topic
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
