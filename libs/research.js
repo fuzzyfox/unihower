@@ -65,6 +65,11 @@ module.exports = function( app, env ) {
     // snoop using predefined hooks
     hooksToSnoopWith.forEach( function( hookType ) {
       db[ sourceModel ].hook( hookType, function( data ) {
+        // if no data found we cant log anything from the db hooks
+        if( !data ) {
+          return;
+        }
+
         // attempt to determine the user this action related too
         var userId = data.UserId;
 
