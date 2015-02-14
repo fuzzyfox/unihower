@@ -39,6 +39,7 @@
     "grunt-bump": "0.0.16",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-less": "^0.12.0",
+    "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.19",
     "grunt-mocha-test": "^0.12.3",

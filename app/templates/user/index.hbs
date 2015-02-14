@@ -1,0 +1,38 @@
+{{#if isAdmin}}
+<nav>
+  <ol class="breadcrumb">
+    <li>{{#link-to 'users'}}Users{{/link-to}}</li>
+    <li class="active">{{#if name}}{{ name }}{{ else }}{{ email }}{{/if}}</li>
+  </ol>
+</nav>
+{{/if}}
+
+<div class="row">
+  <div class="col-md-3">
+    <img {{bind-attr src=gravatar}} alt="Gravatar Image" class="img-responsive">
+    <p class="text-muted text-center">Image via <a href="//gravatar.com" target="_blank">Gravatar</a></p>
+
+    {{#link-to 'user.edit' class="btn btn-sm btn-block btn-primary"}}
+      <i class="fa fa-cogs"></i> Settings
+    {{/link-to}}
+
+    {{#link-to 'user.delete' class="btn btn-sm btn-block btn-danger"}}
+      <i class="fa fa-trash" title="Delete"></i> Delete Account
+    {{/link-to}}
+  </div>
+  <div class="col-md-9">
+    <h3>{{ name }}</h3>
+    <dl>
+      {{#if isAdmin}}
+      <dt>Administrator</dt>
+      <dd>True</dd>
+      {{/if}}
+      <dt>Email</dt>
+      <dd>{{ email }}</dd>
+      <dt>Registered</dt>
+      <dd>{{ createdAt }}</dd>
+      <dt>Last Active</dt>
+      <dd>{{ lastLogin }}</dd>
+    </dl>
+  </div>
+</div>

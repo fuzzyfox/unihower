@@ -65,7 +65,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( task );
+          res.status( 200 ).json({ task: task });
         });
       });
     },
@@ -98,7 +98,7 @@ module.exports = function( env ) {
           return errorResponse.forbidden( req, res );
         }
 
-        res.status( 200 ).json( task );
+        res.status( 200 ).json({ task: task });
       });
     },
     /**
@@ -151,7 +151,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( task );
+          res.status( 200 ).json({ task: task });
         });
       });
     },

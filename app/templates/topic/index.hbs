@@ -1,0 +1,76 @@
+<nav>
+  <ol class="breadcrumb">
+    <li><a href="/">Topics</a></li>
+    <li class="active">{{ name }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-6">
+    {{!-- <div class="eisenhower-graph" data-topic-id="{{ id }}" data-graph-size="500"></div> --}}
+
+    {{#unless tasks}}
+    <h4>Creating a task</h4>
+    <p>You can create tasks by clicking where you would like it to be on the graph above.</p>
+
+    <p>We've deliberately left numbers out of the equation here. You should plot tasks based on where you feel they best indicate their urgency and importance in relation to everything else.</p>
+
+    <p>You may need to spend a few moments thinking about where to place your first task, but if you think its wrong at any point its perfectly okay to move it later.</p>
+    {{/unless}}
+  </div>
+  <div class="col-md-6">
+    <h2>{{ name }}</h2>
+    {{#if description}}
+    {{ description }}
+    {{/if}}
+    <div class="clearfix">
+      <div class="btn-group pull-right">
+        {{#link-to 'topic.edit' class="btn btn-sm btn-primary"}}
+          <i class="fa fa-pencil"></i> Edit Topic
+        {{/link-to}}
+
+        {{#link-to 'topic.edit' class="btn btn-sm btn-danger"}}
+          <i class="fa fa-trash"></i> Delete Topic
+        {{/link-to}}
+      </div>
+    </div>
+
+    <h3>Topic Tasks</h3>
+    {{!-- {% if Tasks.length > 0 %} --}}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>state</th>
+          <th>description</th>
+          <th>due date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each tasks as |task|}}
+        <tr {{bind-attr rel="task.id"}}>
+          <td><span {{bind-attr class=":label :label-state task.state"}}>{{ task.state }}</span></td>
+          <td>{{#link-to 'task' task.id}}{{ task.description }}{{/link-to}}</td>
+          <td>{{ task.dueDate }}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <a href="/tasks/create?topic=" class="btn btn-default pull-right">
+      <i class="fa fa-plus"></i> Create Task
+    </a>
+    {{#unless tasks}}
+    <p class="lead">Looks like there are no tasks for this topic...</p>
+
+    <h4>What is a Task?</h4>
+    <p>Tasks are actionable items, any kind of actionable item. Some tasks require multiple steps to complete, others take just a few moments of your time. Some tasks have deadlines while others can be done any time. Its up to you if its worth making a note of.</p>
+
+    <h5>Urgency</h5>
+    <p>Urgent tasks require attention at the first chance. They put us into a <em>reactive</em> state of mind, usually needing quick completion or a narrowly-focused mindset.</p>
+
+    <p>These might not be tasks that have an imminent deadline however, and need attention sooner due to how requiring a larger timeframe, or due to a lack of time to complete them closer to their deadlines.</p>
+
+    <h5>Importance</h5>
+    <p>Important tasks contribute to our longer-term missions, values, and/or goals. Sometimes important task are also urgent. When we focus on important activities we work in a more <em>responsive</em> way, allowing us to be more open to new opportunities, or a calmer workflow.</p>
+    {{/unless}}
+  </div>
+</div>

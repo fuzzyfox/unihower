@@ -39,8 +39,10 @@
 
 // colour labels for task states
 .label-state {
-  &-incomplete:extend( .label-warning ) {}
-  &-complete:extend( .label-success ) {}
+  &:extend( .label-primary );
+
+  &.incomplete:extend( .label-warning ) {}
+  &.complete:extend( .label-success ) {}
 }
 
 // highlight table row background

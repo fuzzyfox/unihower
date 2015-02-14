@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-md-7">
+    <h2>Users</h2>
+
+    {{!-- {{#if controller}} --}}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Registered</th>
+          <th>Last Active</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each model as |user|}}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}{{#unless user.name}}<span class="text-muted">No name given</span>{{/unless}}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.createdAt }}</td>
+          <td>{{ user.lastLogin }}</td>
+          <td>
+            <div class="btn-group" role="group">
+              {{#link-to 'user' user class="btn btn-sm btn-default"}}
+                <i class="fa fa-eye"></i><span class="sr-only"> view</span>
+              {{/link-to}}
+
+              {{#link-to 'user.edit' user class="btn btn-sm btn-primary"}}
+                <i class="fa fa-pencil"></i><span class="sr-only"> edit</span>
+              {{/link-to}}
+
+              {{#link-to 'user.delete' user class="btn btn-sm btn-danger"}}
+                <i class="fa fa-trash"></i><span class="sr-only"> delete</span>
+              {{/link-to}}
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{!-- {{ else }}
+    <div class="alert alert-info" role="alert">No users found.</div>
+    {{/if}} --}}
+  </div>
+  <div class="col-md-5">
+    <h3>User Metircs</h3>
+    <img src="//placehold.it/500x300" alt="chart placeholder" class="img-responsive">
+  </div>
+</div>

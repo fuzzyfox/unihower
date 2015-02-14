@@ -1,0 +1,14 @@
+<header>
+  <h1>Oops!</h1>
+  <h2>{{ code }} {{ status }}</h2>
+  <p class="lead">{{ message }}</p>
+
+  {{#unless unauthorized }}
+  {{#link-to "application" class="btn btn-primary"}}Take me home{{/link-to}}
+  {{/unless}}
+
+  {{#if unauthorized }}
+  {{#link-to "application" class="btn btn-primary"}}Take me home{{/link-to}}
+  <a href="#" class="btn btn-primary persona-login" {{action 'login' }}><i class="fa fa-lock"></i> Login with Persona</a>
+  {{/if}}
+</header>

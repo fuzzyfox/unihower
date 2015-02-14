@@ -64,7 +64,7 @@ module.exports = function( env ) {
 
         email.send( user.id, 'user_created' );
 
-        res.status( 200 ).json( user );
+        res.status( 200 ).json({ user: user });
       });
     },
     /**
@@ -96,7 +96,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( user );
+          res.status( 200 ).json({ user: user });
         });
       }
 
@@ -124,7 +124,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( users );
+          res.status( 200 ).json({ users: users });
         });
       }
 
@@ -171,7 +171,7 @@ module.exports = function( env ) {
               return errorResponse.internal( req, res, err );
             }
 
-            res.status( 200 ).json( user );
+            res.status( 200 ).json({ user: user });
           });
         });
       }
@@ -198,7 +198,7 @@ module.exports = function( env ) {
               return errorResponse.internal( req, res, err );
             }
 
-            res.status( 200 ).json( user );
+            res.status( 200 ).json({ user: user });
           });
         });
       }
@@ -271,7 +271,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( topics );
+          res.status( 200 ).json({ topics: topics });
         });
       }
 
@@ -303,7 +303,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( tasks );
+          res.status( 200 ).json({ tasks: tasks });
         });
       }
 

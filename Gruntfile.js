@@ -1,3 +1,7 @@
+var fs = require( 'fs' );
+var path = require( 'path' );
+var templateCompiler = require( './public/vendor/ember/ember-template-compiler' );
+
 module.exports = function( grunt ) {
   grunt.initConfig({
     // package information
@@ -15,7 +19,8 @@ module.exports = function( grunt ) {
         'routes/**/*.js',
         'libs/**/*.js',
         'test/**/*.js',
-        'emailTemplates/**/*.js'
+        'emailTemplates/**/*.js',
+        'app/**/*.js'
       ]
     },
 
@@ -35,6 +40,40 @@ module.exports = function( grunt ) {
         },
         files: {
           'public/assets/css/eisenhower.css': 'public/assets/less/eisenhower.less'
+        }
+      }
+    },
+
+    // uglify scripts
+    uglify: {
+      ember: {
+        options: {
+          mangle: false,
+          beautify: true,
+          sourceMap: true
+        },
+        files: {
+          'public/ember/app.js': [
+            'app/app.js',
+            'app/router.js',
+            'app/store.js',
+            'app/components/**/*.js',
+            'app/controllers/**/*.js',
+            'app/helpers/**/*.js',
+            'app/models/**/*.js',
+            'app/routes/**/*.js',
+            'app/views/**/*.js'
+          ]
+        }
+      }
+    },
+
+    // emberjs template precompilation
+    compileHtmlBars: {
+      build: {
+        templateBasePath: 'app/templates/',
+        files: {
+          'public/ember/templates.js': 'app/templates/**/*.hbs'
         }
       }
     },
@@ -87,7 +126,24 @@ module.exports = function( grunt ) {
       },
       styles: {
         files: [ 'public/assets/less/**/*.less' ],
-        tasks: [ 'less:dev' ]
+        tasks: [ 'less:dev' ],
+        options: {
+          livereload: true
+        }
+      },
+      compileHtmlBars: {
+        files: [ 'app/templates/**/*.hbs' ],
+        tasks: [ 'compileHtmlBars' ],
+        options: {
+          livereload: true
+        }
+      },
+      emberApp: {
+        files: [ 'app/**/*.js' ],
+        tasks: [ 'jshint', 'uglify:ember' ],
+        options: {
+          livereload: true
+        }
       }
     },
 
@@ -105,15 +161,49 @@ module.exports = function( grunt ) {
     }
   });
 
+  // precomile task handling for ember templates
+  grunt.registerMultiTask( 'compileHtmlBars', 'Pre-compile HTMLBars tempates', function() {
+
+    var done = this.async();
+    var self = this;
+
+    this.files.forEach( function( file ) {
+
+      var stream = fs.createWriteStream( path.join( __dirname, file.dest ), {
+        encoding: 'utf8'
+      });
+
+      stream.once( 'open', function( fd ) {
+        grunt.log.writeln( 'Pre-compiling ' + file.src.length + ' handlebars templates...' );
+
+        // process each template
+        file.src.forEach( function( f ) {
+          // load the template
+          var template = fs.readFileSync( path.join( process.cwd(), f ), {
+            encoding: 'utf8'
+          });
+          var name = f.replace( new RegExp( '^' + self.data.templateBasePath ), '' ).replace( /\.hbs$/, '' );
+
+          // compile the template
+          stream.write( 'Ember.TEMPLATES["' + name + '"] = Ember.HTMLBars.template(' );
+          stream.write( templateCompiler.precompile( template ) + ');\n\n' );
+        });
+
+        stream.end( done );
+      });
+    });
+  });
+
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
   grunt.loadNpmTasks( 'grunt-contrib-less' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-mocha-test' );
-  grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks( 'grunt-bump' );
+  grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 
-  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
+  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'uglify:ember', 'compileHtmlBars', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
   grunt.registerTask( 'test-email', [ 'jshint', 'mochaTest:testEmail' ] );
-  grunt.registerTask( 'build', [ 'less:prod' ] );
+  grunt.registerTask( 'build', [ 'less:prod', 'uglify:ember', 'compileHtmlBars' ] );
 };

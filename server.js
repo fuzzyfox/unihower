@@ -171,9 +171,14 @@ require( './libs/research' )( app, env );
 app.get( '/healthcheck', routes.healthcheck );
 
 // public web routes (ex. API)
-app.get( '/', routes.public.index );
+// app.get( '/', routes.public.index );
 app.get( '/about', routes.public.about );
 app.get( '/legal', routes.public.legal );
+
+// emberjs app
+app.get( '/', function( req, res ) {
+  res.render( 'emberapp.html' );
+});
 
 // user management
 app.get( '/users', routes.auth.enforceAdmin, routes.users.users );

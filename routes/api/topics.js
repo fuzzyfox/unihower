@@ -60,7 +60,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( topic );
+          res.status( 200 ).json({ topic: topic });
         });
       });
     },
@@ -79,7 +79,15 @@ module.exports = function( env ) {
     get: function( req, res ) {
       debug( 'Get topic: %d', req.params.id );
 
-      return db.Topic.find( req.params.id ).done( function( err, topic ) {
+      return db.Topic.find({
+        where: {
+          id: req.params.id
+        },
+        include: [{
+          model: db.Task,
+          attributes: [ 'id' ]
+        }]
+      }).done( function( err, topic ) {
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, topicId)' );
           debug( err, req.params.id );
@@ -91,7 +99,16 @@ module.exports = function( env ) {
           return errorResponse.forbidden( req, res );
         }
 
-        res.status( 200 ).json( topic );
+        var tasks = [];
+        topic.Tasks.forEach( function( task ) {
+          tasks.push( task.id );
+        });
+
+        topic = JSON.parse( JSON.stringify( topic ) );
+        delete topic.Tasks;
+        topic.tasks = tasks;
+
+        res.status( 200 ).json({ topic: topic });
       });
     },
     /**
@@ -144,7 +161,7 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          res.status( 200 ).json( topic );
+          res.status( 200 ).json({ topic: topic });
         });
       });
     },
@@ -218,7 +235,7 @@ module.exports = function( env ) {
           return errorResponse.forbidden( req, res );
         }
 
-        res.status( 200 ).json( topic.Tasks );
+        res.status( 200 ).json({ tasks: topic.Tasks });
       });
     }
   };
