@@ -1,11 +1,14 @@
 /**
  * @file Contains all the logic for sending emails to users from generating emails
  * from templates, to actually sending the emails.
- * @module lib/email
+ * @module email
  *
  * @todo Make mail transport configurable
+ * @todo Enable the sending of non-templated emails
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ *
+ * @requires models
  */
 
 /**

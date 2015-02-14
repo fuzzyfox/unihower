@@ -1,7 +1,14 @@
+/**
+ * @file defines Grunt tasks used for the development, testing, and building
+ * of the project.
+ */
+
+// load a few this needed to precompile ember templates
 var fs = require( 'fs' );
 var path = require( 'path' );
 var templateCompiler = require( './public/vendor/ember/ember-template-compiler' );
 
+// move onto defining the grunt tasks/config
 module.exports = function( grunt ) {
   grunt.initConfig({
     // package information

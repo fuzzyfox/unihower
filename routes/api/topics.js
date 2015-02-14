@@ -44,7 +44,9 @@ module.exports = function( env ) {
     create: function( req, res ) {
       debug( 'Create topic: %s', req.body.name );
 
+      // find active user in db
       return db.User.find( req.session.user.id ).done( function( err, user ) {
+        // database error finding user
         if( err ) {
           debug( 'ERROR: Failed ot get user to associate to. (err, body, session)' );
           debug( err, req.body, req.session );
@@ -52,7 +54,17 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // only way there will be no user at this stage is if the user has just
+        // been removed while the create topic request was being made
+        //
+        // user is forbidden from performing action now
+        if( !user ) {
+          return errorResponse.forbidden( req, res );
+        }
+
+        // build topic from given data, then add to the user
         user.addTopic( db.Topic.build( req.body ) ).done( function( err, topic ) {
+          // database error creating topic
           if( err ) {
             debug( 'ERROR: Failed to create topic. (err, body)' );
             debug( err, req.body );
@@ -79,6 +91,7 @@ module.exports = function( env ) {
     get: function( req, res ) {
       debug( 'Get topic: %d', req.params.id );
 
+      // find topic in database
       return db.Topic.find({
         where: {
           id: req.params.id
@@ -88,6 +101,7 @@ module.exports = function( env ) {
           attributes: [ 'id' ]
         }]
       }).done( function( err, topic ) {
+        // database error finding topic
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, topicId)' );
           debug( err, req.params.id );
@@ -95,6 +109,12 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // topic not found
+        if( !topic ) {
+          return errorResponse.notfound( req, res );
+        }
+
+        // topic does not belong to user
         if( topic.UserId !== req.session.user.id ) {
           return errorResponse.forbidden( req, res );
         }
@@ -108,6 +128,7 @@ module.exports = function( env ) {
         delete topic.Tasks;
         topic.tasks = tasks;
 
+        // return topic
         res.status( 200 ).json({ topic: topic });
       });
     },
@@ -141,7 +162,9 @@ module.exports = function( env ) {
     update: function( req, res ) {
       debug( 'Update topic: %d', req.params.id );
 
+      // find topic in database
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
+        // database error finding topic
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, params, session)' );
           debug( err, req.params, req.session );
@@ -149,11 +172,19 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // topic not found
+        if( !topic ) {
+          return errorResponse.notfound( req, res );
+        }
+
+        // topic does not belong to user
         if( topic.UserId !== req.session.user.id ) {
           return errorResponse.forbidden( req, res, err );
         }
 
+        // update topic
         topic.updateAttributes( req.body ).done( function( err, topic ) {
+          // database error updating topic
           if( err ) {
             debug( 'ERROR: Failed to update topic. (err, body)' );
             debug( err, req.body );
@@ -180,7 +211,9 @@ module.exports = function( env ) {
     delete: function( req, res ) {
       debug( 'Destroy topic: %d', req.params.id );
 
+      // find topic in database
       return db.Topic.find( req.params.id ).done( function( err, topic ) {
+        // database error finding topic
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, topicId)' );
           debug( err, req.params.id );
@@ -188,11 +221,19 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // topic not found
+        if( !topic ) {
+          return errorResponse.notfound( req, res );
+        }
+
+        // topic does not belong to user
         if( topic.UserId !== req.session.user.id ) {
           return errorResponse.forbidden( req, res );
         }
 
+        // delete topic from database
         topic.destroy().done( function( err ) {
+          // database error while deleting
           if( err ) {
             debug( 'ERROR: Failed to destroy topic. (err, topicId)' );
             debug( err, req.params.id );
@@ -218,12 +259,14 @@ module.exports = function( env ) {
     tasks: function( req, res ) {
       debug( 'Get topic %d\'s associated tasks.', req.params.id );
 
+      // find topic
       return db.Topic.find({
         where: {
           id: req.params.id
         },
         include: [ db.Task ]
       }).done( function( err, topic ) {
+        // database error finding topic w/ tasks
         if( err ) {
           debug( 'ERROR: Failed to find topic\'s tasks. (err, topicId)' );
           debug( err, req.params.id );
@@ -231,10 +274,17 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // topic not found
+        if( !topic ) {
+          return errorResponse.notfound( req, res );
+        }
+
+        // topic does not belong to user
         if( topic.UserId !== req.session.user.id ) {
           return errorResponse.forbidden( req, res );
         }
 
+        // respond w/ results
         res.status( 200 ).json({ tasks: topic.Tasks });
       });
     }

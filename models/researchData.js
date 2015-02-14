@@ -1,6 +1,6 @@
 /**
  * @file Defines the Research model
- * @module model/task
+ * @module models/task
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */

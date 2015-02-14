@@ -1,6 +1,6 @@
 /**
  * @file Loads all routes into a single object.
- * @module routes/index
+ * @module routes
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */

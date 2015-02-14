@@ -1,3 +1,14 @@
+/**
+ * @file configures and initializes the httpd, and sets up available routes
+ * @module httpd
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ *
+ * @requires models
+ * @requires routes
+ * @requires research
+ */
+
 /*
   require packages
  */
@@ -23,6 +34,12 @@ if( process.env.NODE_ENV !== 'testing' ) {
 else {
   Habitat.load( __dirname + '/.env-test' );
 }
+
+/**
+ * Environment manipulator.
+ *
+ * @type {Habitat}
+ */
 var env = new Habitat();
 // drop package.json info into env
 env.set( 'pkg', require( './package.json' ) );
@@ -31,6 +48,9 @@ env.set( 'pkg', require( './package.json' ) );
 debug.enable( env.get( 'debug' ) );
 debug.useColors();
 
+/*
+  setup debuggers
+ */
 var debugEnv = debug( 'env' );
 var debugPersona = debug( 'persona' );
 debugEnv( 'debug enabled' );
@@ -110,7 +130,11 @@ if( debug( 'http' ).enabled ) {
 /*
   setup nunjucks
  */
-// configure nunjucks
+
+/**
+ * Configured Nunjucks environment.
+ * @type {Nunjucks.Environment}
+ */
 var nunjucksEnv = nunjucks.configure( 'views', {
   autoescape: true,
   watch: true
@@ -139,12 +163,19 @@ nunjucksEnv.express( app );
 /*
   get models
  */
+/**
+ * Database ORM instance
+ * @type {Object}
+ */
 var db = require( './models' )( env );
 
 /*
   routes
  */
-// load routes + handlers
+/**
+ * Route handlers.
+ * @type {Object}
+ */
 var routes = require( './routes' )( env );
 
 // keep sessions up to date no matter what.
@@ -259,11 +290,19 @@ if( process.env.NODE_ENV !== 'testing' ) {
       return console.error( error );
     }
 
+    /**
+     * HTTP Server
+     * @return {http.server}
+     */
     var server = app.listen( env.get( 'port' ) || 3000, function() {
       console.log( 'Now listening on port %d', server.address().port );
     });
   });
 }
 else {
+  /**
+   * Exported HTTP Server
+   * @type {http.server}
+   */
   module.exports = app.listen( env.get( 'port' ) );
 }
