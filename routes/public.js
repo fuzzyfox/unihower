@@ -37,6 +37,15 @@ module.exports = function( env ) {
       res.render( 'about.html' );
     },
     /**
+     * Information to help you use the system
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    help: function(req, res) {
+      res.render( 'help.html' );
+    },
+    /**
      * Legal information page.
      *
      * @param  {http.IncomingMessage} req

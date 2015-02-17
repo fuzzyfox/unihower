@@ -1,0 +1,23 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+	<h1>Help pages</h1>
+	<div class="list-group">
+		<!-- <a href="#" class="list-group-item">Topics</a> -->
+		<a href="help_topics" class="list-group-item">
+    		<h4 class="list-group-item-heading">Topics</h4>
+    		<p class="list-group-item-text">Create and delete a topic</p>
+  		</a>
+  		<a href="help_tasks" class="list-group-item">
+    		<h4 class="list-group-item-heading">Tasks</h4>
+    		<p class="list-group-item-text">Create and delete a task</p>
+  		</a>
+  		<a href="help_settings" class="list-group-item">
+    		<h4 class="list-group-item-heading">Settings</h4>
+    		<p class="list-group-item-text">Change your name or email address. Delete your account.</p>
+  		</a>
+	</div>
+
+</main>
+{% endblock %}
