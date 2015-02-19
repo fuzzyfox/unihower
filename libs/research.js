@@ -1,6 +1,5 @@
 /**
- * @file Enables the collection of data for use in research
- * @module libs/research
+ * @file Enables the collection of data for use in research.
  *
  * This works by using hooks into the database ORM (sequelize) and recording a
  * copy of all data being created/retrieved/destroyed by users of the system.
@@ -9,7 +8,9 @@
  *
  * Note: A "study" must be configured in the environment for this all to happen.
  *
- * @todo turn on/off functionality based on a study timeframe.
+ * @module research
+ *
+ * @todo turn on/off functionality based on a study timeframe
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
@@ -64,6 +65,11 @@ module.exports = function( app, env ) {
     // snoop using predefined hooks
     hooksToSnoopWith.forEach( function( hookType ) {
       db[ sourceModel ].hook( hookType, function( data ) {
+        // if no data found we cant log anything from the db hooks
+        if( !data ) {
+          return;
+        }
+
         // attempt to determine the user this action related too
         var userId = data.UserId;
 

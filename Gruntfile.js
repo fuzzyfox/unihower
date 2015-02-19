@@ -1,3 +1,8 @@
+/**
+ * @file defines Grunt tasks used for the development, testing, and building
+ * of the project.
+ */
+
 module.exports = function( grunt ) {
   grunt.initConfig({
     // package information
@@ -14,7 +19,8 @@ module.exports = function( grunt ) {
         'models/**/*.js',
         'routes/**/*.js',
         'libs/**/*.js',
-        'test/**/*.js'
+        'test/**/*.js',
+        'emailTemplates/**/*.js'
       ]
     },
 
@@ -55,7 +61,18 @@ module.exports = function( grunt ) {
         options: {
           reporter: 'spec'
         },
-        src: [ 'test/**/*.js' ]
+        src: [
+          'test/**/*.js',
+          '!test/email/**/*.js'
+        ]
+      },
+      testEmail: {
+        options: {
+          reporter: 'spec'
+        },
+        src: [
+          'test/email/**/*.js'
+        ]
       }
     },
 
@@ -102,5 +119,6 @@ module.exports = function( grunt ) {
 
   grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
+  grunt.registerTask( 'test-email', [ 'jshint', 'mochaTest:testEmail' ] );
   grunt.registerTask( 'build', [ 'less:prod' ] );
 };

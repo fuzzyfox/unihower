@@ -1,6 +1,6 @@
 /**
  * @file Defines the User model
- * @module model/user
+ * @module models/user
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */

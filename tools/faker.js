@@ -1,6 +1,6 @@
 /**
  * @file Generates random data for use in tests.
- * @module tools/faker
+ * @module tool/faker
  *
  * @example Generate users
  *  $ node tools/faker --model=user --num-items=20
@@ -12,9 +12,6 @@
  *  $ node tools/faker --model=task --num-items=234 --max-user-id=20 --max-topic-id=27
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
- *
- * @requires minimist
- * @requires faker
  */
 
 /*

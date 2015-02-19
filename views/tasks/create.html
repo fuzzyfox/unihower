@@ -140,7 +140,7 @@
   $( 'form#newTaskForm #coordY' ).val( $( '.eisenhower-graph:first' ).attr( 'data-y' ) );
 
   // update plot location on click
-  $( '.eisenhower-graph:first' ).on( 'click', function() {
+  $( '.eisenhower-graph:first' ).on( 'mouseup touchend', function() {
     $( 'form#newTaskForm #coordX' ).val( $( this ).attr( 'data-x' ) );
     $( 'form#newTaskForm #coordY' ).val( $( this ).attr( 'data-y' ) );
   });
@@ -196,15 +196,18 @@
     Plot tasks from topics in gray + readonly
    */
   var topicPlots = [];
+  var graph = Object.values( eisenhowerGraph.graphs )[ 0 ];
 
   function plotTopicTasks( tasks ) {
+    graph._readonly = false;
     tasks.forEach( function( task ) {
-      var plot = eisenhowerGraph.plotTask( task, eisenhowerGraph.graphs[ 0 ], null, 0.4 );
+      var plot = graph.plotTask( task );
       if( plot.data( 'task' ).id === {{ id if id else 'null' }} ) {
         return plot.remove();
       }
       topicPlots.push( plot );
     });
+    graph._readonly = true;
   }
 
   $( '#TopicId' ).on( 'change', function() {

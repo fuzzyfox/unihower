@@ -50,7 +50,7 @@
       task.center( x, y );
 
       // add task class
-      task.addClass( 'task' );
+      task.addClass( 'task' ).addClass( 'plot' );
       task.data( 'task-state', state );
 
       // add task to tasks array.

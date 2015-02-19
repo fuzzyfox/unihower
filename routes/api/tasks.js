@@ -49,7 +49,9 @@ module.exports = function( env ) {
     create: function( req, res ) {
       debug( 'Create task: %s', req.body.description );
 
+      // find user
       return db.User.find( req.session.user.id ).done( function( err, user ) {
+        // database error finding user
         if( err ) {
           debug( 'ERROR: Failed to get user to associate to. (err, body, session)' );
           debug( err, req.body, req.session );
@@ -57,7 +59,17 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // only way there will be no user at this stage is if the user has just
+        // been removed while the create topic request was being made
+        //
+        // user is forbidden from performing action now
+        if( !user ) {
+          return errorResponse.forbidden( req, res );
+        }
+
+        // build task from given data and add to user
         user.addTask( db.Task.build( req.body ) ).done( function( err, task ) {
+          // database error creating task
           if( err ) {
             debug( 'ERROR: Failed to create task. (err, body)' );
             debug( err, req.body );
@@ -85,7 +97,9 @@ module.exports = function( env ) {
     get: function( req, res ) {
       debug( 'Get task: %d', req.params.id );
 
+      // find task
       return db.Task.find( req.params.id ).done( function( err, task ) {
+        // database error finding task
         if( err ) {
           debug( 'ERROR: Failed to find task. (err, taskId)' );
           debug( err, req.params.id );
@@ -93,8 +107,13 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // task not found
+        if( !task ) {
+          return errorResponse.notFound( req, res );
+        }
+
+        // task does not belong to user
         if( task.UserId !== req.session.user.id ) {
-          debug( err, req.session );
           return errorResponse.forbidden( req, res );
         }
 
@@ -131,7 +150,9 @@ module.exports = function( env ) {
     update: function( req, res ) {
       debug( 'Update task: %d', req.params.id );
 
+      // find task
       return db.Task.find( req.params.id ).done( function( err, task ) {
+        // database error while finding task
         if( err ) {
           debug( 'ERROR: Failed to find task. (err, params, session)' );
           debug( err, req.params, req.session );
@@ -139,11 +160,19 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // task not found
+        if( !task ) {
+          return errorResponse.notFound( req, res );
+        }
+
+        // task does not belong to user
         if( task.UserId !== req.session.user.id ) {
           return errorResponse.forbidden( req, res, err );
         }
 
+        // update task
         task.updateAttributes( req.body ).done( function( err, task ) {
+          // database error while updating task
           if( err ) {
             debug( 'ERROR: Failed to update task. (err, body)' );
             debug( err, req.body );
@@ -171,7 +200,9 @@ module.exports = function( env ) {
     delete: function( req, res ) {
       debug( 'Destroy task: %d', req.params.id );
 
+      // find task
       return db.Task.find( req.params.id ).done( function( err, task ) {
+        // database error finding task
         if( err ) {
           debug( 'ERROR: Failed to find task. (err, taskId)' );
           debug( err, req.params.id );
@@ -179,11 +210,19 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // task not found
+        if( !task ) {
+          return errorResponse.notFound( req, res );
+        }
+
+        // task does not belong to user
         if( task.UserId !== req.session.user.id ) {
           return errorResponse.forbidden( req, res );
         }
 
+        // delete task
         task.destroy().done( function( err ) {
+          // database error while deleting task
           if( err ) {
             debug( 'ERROR: Failed to destroy task. (err, taskId)' );
             debug( err, req.params.id );

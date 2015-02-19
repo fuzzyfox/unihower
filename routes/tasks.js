@@ -3,6 +3,9 @@
  * @module routes/tasks
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ *
+ * @requires models
+ * @requires routes/errors
  */
 
 /**

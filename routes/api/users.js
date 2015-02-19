@@ -5,6 +5,7 @@
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  *
  * @requires models
+ * @requires email
  * @requires routes/errors
  */
 
@@ -25,6 +26,7 @@
 module.exports = function( env ) {
   var db = require( '../../models' )( env );
   var errorResponse = require( '../errors' )( env );
+  var email = require( '../../libs/email' )( env );
   var debug = require( 'debug' )( 'api:users' );
 
   return {
@@ -50,10 +52,12 @@ module.exports = function( env ) {
 
       // create user
       return db.User.create( req.body ).done( function( err, user ) {
+        // on user collision error
         if( err && err.name === 'SequelizeUniqueConstraintError' ) {
           return errorResponse.conflict( req, res, 'User account already exists.' );
         }
 
+        // database error
         if( err ) {
           debug( 'ERROR: Failed to create user. (err, body)' );
           debug( err, req.body );
@@ -61,6 +65,10 @@ module.exports = function( env ) {
           return errorResponse.internal( req, res, err );
         }
 
+        // send welcome email
+        email.send( user.id, 'user_created' );
+
+        // respond w/ new user details
         res.status( 200 ).json( user );
       });
     },
@@ -80,17 +88,25 @@ module.exports = function( env ) {
     get: function( req, res ) {
       debug( 'Get user: %d', req.params.id );
 
+      // ensure requesting own details OR an admin making request
       if( ( req.session.user.id === parseInt( req.params.id, 10 ) ) || ( req.session.user.isAdmin ) ) {
-        if(req.session.user.isAdmin) {
+        if( req.session.user.isAdmin ) {
           debug( '↳ Getting user as Admin' );
         }
 
+        // search database for details
         return db.User.find( req.params.id ).done( function( err, user ) {
+          // database error finding user
           if( err ) {
             debug( 'ERROR: Failed to find user. (err, userId)' );
             debug( err, req.params.id );
 
             return errorResponse.internal( req, res, err );
+          }
+
+          // user not found
+          if( !user ) {
+            return errorResponse.notFound( req, res );
           }
 
           res.status( 200 ).json( user );
@@ -112,8 +128,11 @@ module.exports = function( env ) {
     list: function( req, res ) {
       debug( 'Get ALL users' );
 
+      // ensure admin making request
       if( req.session.user.isAdmin ) {
+        // find all users in databse
         return db.User.findAll().done( function( err, users ) {
+          // database error
           if( err ) {
             debug( 'ERROR: Failed to findAll users. (err)' );
             debug( err );
@@ -121,10 +140,12 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // return database results
           res.status( 200 ).json( users );
         });
       }
 
+      // naughty non-admin
       return errorResponse.forbidden( req, res );
     },
     /**
@@ -144,6 +165,7 @@ module.exports = function( env ) {
     update: function( req, res ) {
       debug( 'Update user: %d', req.params.id );
 
+      // handle user making request to update selves
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
         debug( '↳ User updating own record.' );
         // prevent non-administrators making others (or themselves administrators)
@@ -151,8 +173,9 @@ module.exports = function( env ) {
           return errorResponse.unauthorized( req, res, 'You must be an administrator to perform that action.' );
         }
 
-        // update user
+        // find user in database
         return db.User.find( req.params.id ).done( function( err, user ) {
+          // database error
           if( err ) {
             debug( 'ERROR: Failed to find user. (err, userId)' );
             debug( err, req.params.id );
@@ -160,7 +183,14 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // user not found
+          if( !user ) {
+            return errorResponse.notFound( req, res );
+          }
+
+          // update user details
           user.updateAttributes( req.body ).done( function( err, user ) {
+            // database error while updating
             if( err ) {
               debug( 'ERROR: Failed to update user. (err, body)' );
               debug( err, req.body );
@@ -173,10 +203,16 @@ module.exports = function( env ) {
         });
       }
 
+      // handle admin making update to another user
       if( req.session.user.isAdmin ) {
         debug( '↳ Admin updating user record.' );
 
+        // convert isAdmin into a boolean (damn sequelize not doing this for us)
+        req.body.isAdmin = /^(1|t(rue)?|y(es)?)$/i.test( req.body.isAdmin );
+
+        // find user we want to update
         return db.User.find( req.params.id ).done( function( err, user ) {
+          // database error finding user
           if( err ) {
             debug( 'ERROR: Failed to find user. (err, userId)' );
             debug( err, req.params.id );
@@ -184,7 +220,14 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
-          user.updateAttributes( req.body, [ 'email', 'isAdmin' ] ).done( function( err, user ) {
+          // user not found
+          if( !user ) {
+            return errorResponse.notFound( req, res );
+          }
+
+          // update user details (force remove any changes but those to email and admin flag)
+          user.updateAttributes( req.body, { fields: [ 'email', 'isAdmin' ] } ).done( function( err, user ) {
+            // database error making request
             if( err ) {
               debug( 'ERROR: Failed to update user. (err, body)' );
               debug( err, req.body );
@@ -197,6 +240,7 @@ module.exports = function( env ) {
         });
       }
 
+      // naughty non-admin
       return errorResponse.forbidden( req, res );
     },
     /**
@@ -215,8 +259,12 @@ module.exports = function( env ) {
     delete: function( req, res ) {
       debug( 'Destroy user: %d', req.params.id );
 
+      // check user deleting selves OR admin deleting another user
       if( ( req.session.user.id === parseInt( req.params.id, 10 ) ) || ( req.session.user.isAdmin ) ) {
+
+        // find user in database
         return db.User.find( req.params.id ).done( function( err, user ) {
+          // database error finding user
           if( err ) {
             debug( 'ERROR: Failed to find user. (err, userId)' );
             debug( err, req.params.id );
@@ -224,6 +272,12 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // user not found
+          if( !user ) {
+            return errorResponse.notFound( req, res );
+          }
+
+          // delete user
           user.destroy().done( function( err ) {
             if( err ) {
               debug( 'ERROR: Failed to destroy user. (err, userId)' );
@@ -237,6 +291,7 @@ module.exports = function( env ) {
         });
       }
 
+      // naughty non-admin
       return errorResponse.forbidden( req, res );
     },
     /**
@@ -252,12 +307,14 @@ module.exports = function( env ) {
     topics: function( req, res ) {
       debug( 'Get user %d\'s topics.', req.params.id );
 
+      // check user requesting own data
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
         return db.Topic.findAll({
           where: {
             UserId: req.params.id
           }
         }).done( function( err, topics ) {
+          // database error finding topics
           if( err ) {
             debug( 'ERROR: Failed to find user\'s topics. (err, userId)' );
             debug( err, req.params.id );
@@ -265,10 +322,12 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // return results
           res.status( 200 ).json( topics );
         });
       }
 
+      // naughty user
       return errorResponse.forbidden( req, res );
     },
     /**
@@ -284,12 +343,14 @@ module.exports = function( env ) {
     tasks: function( req, res ) {
       debug( 'Get user %d\'s associated tasks.', req.params.id );
 
+      // ensure user requesting own data
       if( req.session.user.id === parseInt( req.params.id, 10 ) ) {
         return db.Task.findAll({
           where: {
             UserId: req.params.id
           }
         }).done( function( err, tasks ) {
+          // database error finding tasks
           if( err ) {
             debug( 'ERROR: Failed to find user\'s tasks. (err, userId)' );
             debug( err, req.params.id );
@@ -297,10 +358,12 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // return results
           res.status( 200 ).json( tasks );
         });
       }
 
+      // naughty user
       return errorResponse.forbidden( req, res );
     }
   };
