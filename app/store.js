@@ -13,6 +13,14 @@
 App.ApplicationAdapter = DS.RESTAdapter.extend({
   namespace: 'api',
 
+  /**
+   * Enable error handling based on REST API responses.
+   *
+   * @see {@link http://emberjs.com/api/data/classes/DS.InvalidError.html}
+   *
+   * @param  {jqXHR} jqXHR jQuery XMLHTTPRequest object
+   * @return {Mixed}       Either an Ember Data DS.InvalidError when response 422/409 else Ember.Error
+   */
   ajaxError: function( jqXHR ) {
     var error = this._super( jqXHR );
 
@@ -26,3 +34,21 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
     }
   }
 });
+
+/**
+ * Application data store (local cache).
+ *
+ * @type {DS.Store}
+ */
+// App.store.reopen({
+//   *
+//    * Clear all cached data in the store.
+//    *
+//    * @see {@link https://stackoverflow.com/a/26409785}
+
+//   clear: function() {
+//     for( var key in this.typeMaps ) {
+//       this.unloadAll( this.typeMaps[ key ].type );
+//     }
+//   }
+// });

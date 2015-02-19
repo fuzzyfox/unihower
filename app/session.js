@@ -42,24 +42,22 @@ Ember.Application.initializer({
 
         // attach current user data to local session
         if( !Ember.isEmpty( authAccountId ) ) {
-          this.set( 'authAccount', App.User.find( authAccountId ) );
+          // this.set( 'authAccount', App.User.find( authAccountId ) );
+          console.log( 'NEED TO SET USER HERE' );
         }
       }.observes( 'authAccountId' ),
 
-      reset: function( transition, newSession ) {
-        if( typeof transition !== 'string' ) {
-          newSession = transition;
-          transition = 'index';
-        }
-
-        App.__container__.lookup( 'route:application' ).transitionTo( transition ); // jshint ignore:line
-        Ember.run.sync();
+      reset: function( newSession ) {
+        // on next run loop
         Ember.run.next( this, function() {
+          // update the access properties
           this.setProperties( Ember.$.extend( {
             accessToken: null,
             authAccountId: null
           }, newSession ) );
 
+          // reset the app (clear local data, refresh routes)
+          App.reset();
         });
       }
     }).create();
