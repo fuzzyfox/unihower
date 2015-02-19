@@ -1,0 +1,11 @@
+Welcome to Eisenhower{{ ' ' + user.name if user.name }}. Let's get you started.
+
+Thank you for taking part in the trial version of our visual productivity tool.
+
+This email is just to confirm that you're account has successfully been created, and you should now be able to sign in at:
+
+{{ website }}
+
+If you do not wish to receive any more emails from us you can change you email preferences by visiting:
+
+{{ website }}/users/{{ user.id }}/update

@@ -1,8 +1,30 @@
+/**
+ * @file Main styles for Eisenhower
+ *
+ * This file imports all the vendor dependencies, as well as all the required
+ * styles for commonly used elements on the site.
+ *
+ * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
+ */
+
+// --------------------------------------------------
+// Vendor Imports
+// --------------------------------------------------
 @import '../../vendor/bootstrap/less/bootstrap';
 @import '../../vendor/bootswatch/paper/variables';
 @import '../../vendor/bootswatch/paper/bootswatch';
 @import '../../vendor/font-awesome/less/font-awesome';
 @fa-font-path: '../../vendor/font-awesome/fonts';
+
+// --------------------------------------------------
+// Eisenhower Imports
+// --------------------------------------------------
+
+@import './_graph';
+
+// --------------------------------------------------
+// Custom Styles
+// --------------------------------------------------
 
 // navbar collapse button fix
 .navbar-inverse {
@@ -19,43 +41,6 @@
 .label-state {
   &-incomplete:extend( .label-warning ) {}
   &-complete:extend( .label-success ) {}
-}
-
-// style graph
-.eisenhower-graph {
-  .axes {
-    text, tspan {
-      font-family: @font-family-base;
-      fill: @text-muted;
-    }
-
-    line {
-      stroke: @text-color;
-    }
-
-    path {
-      fill: @text-color;
-      stroke: @text-color;
-    }
-  }
-
-  .task {
-    cursor: pointer;
-
-    ellipse {
-      fill: @brand-warning;
-    }
-
-    text, tspan {
-      fill: @label-color;
-    }
-
-    &[data-task-state=complete] {
-      ellipse {
-        fill: @brand-success;
-      }
-    }
-  }
 }
 
 // highlight table row background

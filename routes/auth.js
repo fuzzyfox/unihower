@@ -5,7 +5,7 @@
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  *
  * @requires models
- * @requires routes/errors
+ * @requires route/errors
  */
 
 /**
@@ -17,9 +17,10 @@
 module.exports = function( env ) {
   var db = require( '../models' )( env );
   var errorResponse = require( './errors' )( env );
+
   return {
     /**
-     * Updates the clients session
+     * Middleware that updates client sessions when routes are called
      *
      * This is useful for maintiaing sessions of guest users and not just
      * standard users on restricted URIs, but all URIs.
@@ -101,20 +102,9 @@ module.exports = function( env ) {
           return errorResponse.unauthorized( req, res );
         }
 
-        // // update last login
-        // user.lastLogin = ( new Date() ).toISOString();
-
-        // // save last login and continue on
-        // return user.save().done( function( err ) {
-        //   // if error saving http 500
-        //   if( err ) {
-        //     return errorResponse.internal( req, res, err );
-        //   }
-
-          // continue on if valid user
-          req.session.user = user.dataValues;
-          next();
-        // });
+        // continue on if valid user
+        req.session.user = user.dataValues;
+        next();
       });
     },
     /**

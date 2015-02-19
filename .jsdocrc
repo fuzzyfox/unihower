@@ -1,6 +1,6 @@
 {
   "source": {
-    "include": [ "server.js", "models", "routes", "tools", "test", "README.md" ],
+    "include": [ "server.js", "models", "routes", "libs", "tools", "test", "README.md" ],
     "exludePattern": "^\\.(.*)"
   },
   "templates": {
