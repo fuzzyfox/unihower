@@ -66,7 +66,7 @@ module.exports = function( env ) {
         }
 
         // send welcome email
-        email.send( user.id, 'user_created' );
+        email.send( user.id, 'userCreated' );
 
         // respond w/ new user details
         res.status( 200 ).json( user );
