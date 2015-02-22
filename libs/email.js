@@ -21,19 +21,51 @@ module.exports = function( env ) {
   var debug = require( 'debug' )( 'email' );
   // nodemailer requirement
   var nodemailer = require( 'nodemailer' );
-  var transport = nodemailer.createTransport();
   // ORM
   var db = require( '../models' )( env );
   // lodash
   var lodash = require( 'lodash' );
   // nunjucks
   var nunjucks = require( 'nunjucks' );
+
+  /*
+    setup nunjucks environment for email
+   */
   var nunjucksEnv = nunjucks.configure( 'emailTemplates', {
     autoescape: true,
     watch: true
   });
   // add website var to nunjucks
   nunjucksEnv.addGlobal( 'website', env.get( 'persona_audience' ).replace( /:\d+$/i, '' ) );
+
+  /*
+    setup transport based on config
+   */
+  var transport;
+  switch( env.get( 'email_transport' ) ) {
+    case 'smtp':
+      var smtpTransport = require( 'nodemailer-smtp-transport' )({
+        port: env.get( 'email_port' ),
+        host: env.get( 'email_host' ),
+        secure: env.get( 'email_secure' ),
+        authMethod: env.get( 'email_auth_method' ),
+        ignoreTLS: env.get( 'email_ignore_tls' ),
+        auth: {
+          user: env.get( 'email_auth_user' ),
+          pass: env.get( 'email_auth_pass' )
+        },
+        tls: {
+          ciphers:'SSLv3'
+        }
+      });
+      transport = nodemailer.createTransport( smtpTransport );
+    break;
+    case 'direct':
+      transport = nodemailer.createTransport();
+    break;
+    default:
+      transport = nodemailer.createTransport();
+  }
 
   return {
     /**
@@ -85,7 +117,7 @@ module.exports = function( env ) {
           to: {
             address: user.email
           },
-          from: env.get( 'email_from' ),
+          from: meta.from || env.get( 'email_from' ),
           subject: meta.subject
         };
 
@@ -213,7 +245,7 @@ module.exports = function( env ) {
 
         // start to construct message options
         var msgOptions = {
-          from: env.get( 'email_from' ),
+          from: meta.from || env.get( 'email_from' ),
           subject: meta.subject
         };
 
