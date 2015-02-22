@@ -1,0 +1,71 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<div class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/admin">Admin</a></li>
+      <li class="active"><i class="fa fa-email"></i> Send Mass Email</li>
+    </ol>
+  </nav>
+
+  <h2>Send Mass Email</h2>
+  <form id="newEmailForm" action="/admin/email" method="POST">
+    <input type="hidden" id="_csrf" name="_csrf" value="{{ csrfToken }}">
+
+    <div class="form-group">
+      <label for="subject">Subject</label>
+      <input type="text" class="form-control" id="subject" name="subject" required>
+      <p class="help-block">Ensure that this is short, but descriptive and relevant to the content of the message.</p>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea class="form-control" name="message" id="message" rows="5"></textarea>
+      <div class="help-block">
+        <p>Any user specific details can be added using nunjucks templating, the <code>{% raw %}{{ user }}{% endraw %}</code> object is available, as well as the website address as <code>{% raw %}{{ website }}{% endraw %}</code>.</p>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Send</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+  $( 'form#newEmailForm' ).on( 'submit', function( event ) {
+    var $self = $( this );
+    event.preventDefault();
+
+    $self.find( '' ).prop( 'disabled', true );
+    $self.find( 'button[type=submit]:first' ).html( 'Sending <i class="fa fa-spinner fa-spin"></i>' );
+
+    $.ajax({
+      type: $self.attr( 'method' ),
+      url: $self.attr( 'action' ),
+      data: $self.serialize()
+    }).done( function( data ) {
+      $self[ 0 ].reset();
+      window.alert( 'Message sent.' );
+      console.log( data );
+    }).fail( function( jqXHR ) {
+      if( jqXHR.responseJSON ) {
+        if( typeof jqXHR.responseJSON.message === 'string' ) {
+          window.alert( jqXHR.responseJSON.status + '\n\n' + jqXHR.responseJSON.message );
+        }
+
+        window.alert( jqXHR.responseJSON.status + '\n\nWe\'ve made a note of the problem and will get it fixed as soon as possible.' );
+        return console.log( arguments );
+      }
+
+      window.alert( 'An unknown error occured... try again later' );
+    }).always( function() {
+      $self.prop( 'disabled', false );
+      $self.find( 'button[type=submit]:first' ).html( 'Send' );
+    });
+
+    return false;
+  });
+</script>
+{% endblock %}

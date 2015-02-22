@@ -224,6 +224,14 @@ app.get( '/tasks/create', routes.auth.enforce, routes.tasks.create );
 app.get( '/tasks/:id', routes.auth.enforce, routes.tasks.task );
 app.get( '/tasks/:id/update', routes.auth.enforce, routes.tasks.update );
 
+// administration
+app.all( '/admin*', routes.auth.enforceAdmin );
+
+app.get( '/admin/email', routes.admin.email.get );
+app.post( '/admin/email', routes.admin.email.post );
+
+app.get( '/admin/users', routes.admin.users );
+
 // create a new user (api)
 app.post( '/api/users', routes.api.users.create );
 

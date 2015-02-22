@@ -80,6 +80,7 @@ module.exports = function( grunt ) {
     watch: {
       express: {
         files: [
+          '.env',
           '*.js',
           'models/**/*.js',
           'routes/**/*.js',

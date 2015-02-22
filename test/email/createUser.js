@@ -2,7 +2,7 @@
 
 /**
  * @file BDD tests for the new user email
- * @module test/newUserEmail
+ * @module test/email/createUser
  *
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
@@ -81,13 +81,13 @@ function setupDatabase( done ) {
 }
 
 /*
-  descripbe user api
+  describe user api
  */
 
 describe( '/api/users (new user)', function() {
   // any pre-test setup
   before( function( done ) {
-    this.timeout( 2000 );
+    this.timeout( 3000 );
     // setup test db
     setupDatabase( function( err ) {
       if( err ) {
