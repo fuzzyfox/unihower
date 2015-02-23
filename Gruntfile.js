@@ -4,6 +4,9 @@
  */
 
 module.exports = function( grunt ) {
+  /*
+    Initialise grunt configuration
+   */
   grunt.initConfig({
     // package information
     pkg: grunt.file.readJSON( 'package.json' ),
@@ -24,23 +27,13 @@ module.exports = function( grunt ) {
       ]
     },
 
-    // less precompilation
-    less: {
-      // configure for development environment
-      dev: {
-        files: {
-          'public/assets/css/eisenhower.css': 'public/assets/less/eisenhower.less'
-        }
-      },
-      // configure for production environment
-      prod: {
-        options: {
-          cleancss: true,
-          sourceMap: true
-        },
-        files: {
-          'public/assets/css/eisenhower.css': 'public/assets/less/eisenhower.less'
-        }
+    // minify css files
+    cssmin: {
+      target: {
+        files: [{
+          expand: true,
+          src: 'public/assets/css/**/*.css'
+        }]
       }
     },
 
@@ -93,7 +86,7 @@ module.exports = function( grunt ) {
       },
       styles: {
         files: [ 'public/assets/less/**/*.less' ],
-        tasks: [ 'less:dev' ]
+        tasks: [ 'less' ]
       }
     },
 
@@ -111,15 +104,51 @@ module.exports = function( grunt ) {
     }
   });
 
+  /*
+    Custom task to compile less w/ all possible bootswatch themes
+   */
+  (function(){
+    var tasks = {};
+
+    // get all theme names
+    var themeBaseDir = 'public/vendor/bootswatch/';
+    var themes = grunt.file.expand( [ themeBaseDir + '*/', '!' + themeBaseDir + 'fonts/' ] );
+    var themeNames = [];
+    themes.forEach( function( theme ) {
+      themeNames.push( theme.replace( themeBaseDir, '' ).replace( '/', '' ) );
+    });
+
+    themeNames.forEach( function( theme ) {
+      tasks[ theme ] = {
+        options: {
+          modifyVars: {
+            'bootswatch-theme': theme
+          },
+        },
+        dest: 'public/assets/css/eisenhower-' + theme + '.css',
+        src: 'public/assets/less/eisenhower.less'
+      };
+    });
+
+    grunt.config( 'less', tasks );
+  })();
+
+  /*
+    Load task via npm
+   */
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
   grunt.loadNpmTasks( 'grunt-contrib-less' );
+  grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
   grunt.loadNpmTasks( 'grunt-express-server' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-mocha-test' );
-  grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks( 'grunt-bump' );
 
-  grunt.registerTask( 'default', [ 'jshint', 'less:dev', 'express:dev', 'watch' ] );
+  /*
+    Register specific tasks
+   */
+  grunt.registerTask( 'default', [ 'jshint', 'less', 'express:dev', 'watch' ] );
   grunt.registerTask( 'test', [ 'jshint', 'mochaTest:test' ] );
   grunt.registerTask( 'test-email', [ 'jshint', 'mochaTest:testEmail' ] );
-  grunt.registerTask( 'build', [ 'less:prod' ] );
+  grunt.registerTask( 'build', [ 'less', 'cssmin' ] );
 };

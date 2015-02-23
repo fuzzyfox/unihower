@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 
-  <link rel="stylesheet" href="/assets/css/eisenhower.css">
+  <link rel="stylesheet" href="/assets/css/eisenhower-{{ cookies.theme if cookies.theme else 'paper' }}.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% block title %}500 Internal Server Error{% endblock %}</title>
