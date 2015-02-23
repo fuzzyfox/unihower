@@ -1,4 +1,4 @@
-/* global SVG */
+/* global SVG, jQuery */
 
 ( function( SVG ) {
   /*
