@@ -191,6 +191,7 @@ app.use( function( req, res, next ) {
 
   res.locals.user = req.session.user;
   res.locals.persona = req.session.email;
+  res.locals.cookies = req.cookies;
 
   next();
 });
