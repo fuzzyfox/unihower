@@ -8,30 +8,99 @@
   #demoGraph .task {
     cursor: inherit;
   }
+  .jumbotron {
+    margin-top: -40px;
+  }
 </style>
 {% endblock %}
 
 {% block main %}
-<main class="container">
+<main>
   <header class="jumbotron">
-    <div class="row">
-      <div class="col-md-4 hidden-sm hidden-xs">
-        <div id="demoGraph" class="panel panel-default eisenhower-graph"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-sm-12">
+          <h1>Eisenhower</h1>
+
+          <blockquote>
+            <p>What is important is seldom urgent and what is urgent is seldom important.</p>
+            <cite>– Dwight D. Eisenhower</cite>
+          </blockquote>
+
+          <p>
+            Inspired by Dwight Eisenhower’s <a href="http://www.artofmanliness.com/2013/10/23/eisenhower-decision-matrix/" target="_blank">Decision Matricies</a> we’ve a system for task management and priortization that tool allows for a very visual and effective way to get things done by using a simple graph.
+          </p>
+        </div>
+        <div class="col-md-4 hidden-sm hidden-xs">
+          <div id="demoGraph" class="panel panel-default eisenhower-graph"></div>
+        </div>
       </div>
-      <div class="col-md-8 col-sm-12">
-        <h1>Eisenhower</h1>
-
-        <blockquote>
-          <p>What is important is seldom urgent and what is urgent is seldom important.</p>
-          <cite>– Dwight D. Eisenhower</cite>
-        </blockquote>
-
-        {% if not user.email %}
-        <a href="#" class="persona-login btn btn-primary btn-lg pull-right">Register now</a>
-        {% endif %}
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 text-center">
+          {% if not user.email %}
+          <p>
+            <a href="#" class="persona-login btn btn-primary btn-lg">Register now</a>
+            OR <a href="/about" class="btn btn-default btn-lg">Learn More</a>
+          </p>
+          {% endif %}
+        </div>
       </div>
     </div>
   </header>
+
+  <section class="container">
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <div class="thumnail">
+          <div class="fa-stack text-success" style="font-size:100px">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-refresh fa-inverse fa-stack-1x"></i>
+          </div>
+          <div class="caption">
+            <h3>Always in sync</h3>
+            <p>Thank to the power of the web you can access your tasks anywhere, anytime. With mobile apps and offline support on the way soon you wont even need an internet connection!</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="thumnail">
+          <i class="fa fa-github" style="font-size:200px"></i>
+          <div class="caption">
+            <h3>Open Source</h3>
+            <p>Eisenhower is completely open source, this means that you can run your own version, <a href="https://github.com/not-so-creative/eisenhower">checkout the code</a>, and even help out with imrpoving it.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="thumnail">
+          <div class="fa-stack text-warning" style="font-size:100px">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-exclamation-triangle fa-inverse fa-stack-1x"></i>
+          </div>
+          <div class="caption">
+            <h3>Under Construction</h3>
+            <p>Eisenhower is still under heavy development, though we’re confident that it can still help you out. Just let us know if you find <a href="https://github.com/not-so-creative/eisenhower/issues/new">things that seems broken</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-primary" style="margin-top: 3em;padding-top: 3em;padding-bottom:3em;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <blockquote style="font-size:1.6em">
+              <p>A year from now you may wish you had started today.</p>
+              <cite>– Karen Lamb</cite>
+            </blockquote>
+            <p class="text-center">
+              <a href="#" class="btn btn-default btn-lg persona-login">Start Today</a>
+            </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 {% endblock %}
 

@@ -16,6 +16,7 @@
  */
 
 var debug = require( 'debug' )( 'research' );
+var moment = require( 'moment' );
 
 /**
  * Research Lib Export
@@ -33,18 +34,23 @@ module.exports = function( app, env ) {
   // get database, and study details
   var db = require( '../models' )( env );
   var study = env.get( 'study' );
+
+  // validate start time and check if we've passed it before allowing research
+  // data to be collected
+  if( study.start && ( !moment( study.start ).isValid() || moment( study.start ).isAfter( moment() ) ) ) {
+    return function() {};
+  }
+
+  // validate finish time and check if we've passed it before allowing research
+  // data to be collected
+  if( study.finish && ( !moment( study.finish ).isValid() || moment( study.finish ).isBefore( moment() ) ) ) {
+    return function() {};
+  }
+
   debug( 'Collecting data for study.\n' +
          '   Study: %s\n' +
          '   Start: %s\n' +
          '  Finish: %s', study.name, study.start, study.finish );
-
-  // if( study.start ) {
-  //   // validate study start time and only snoop if now is after start
-  // }
-
-  // if( study.finish ) {
-  //   // validate study finish and only snoop if now is before finish
-  // }
 
   /*
     Automated snooping (database)
