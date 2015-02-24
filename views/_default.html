@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
-  <link rel="stylesheet" href="/assets/css/eisenhower.css">
   <meta name="viewport" content="width=device-width,user-scalable=no">
+
+  <link rel="stylesheet" href="/assets/css/eisenhower-{{ cookies.theme if cookies.theme else 'paper' }}.css">
 
   {% block custom_styles %}
   {% endblock %}
@@ -13,7 +13,7 @@
 </head>
 <body>
   {% block header %}
-  <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#primary-nav">
@@ -64,11 +64,11 @@
   <footer class="container">
     <hr>
     <div class="row">
-      <div class="col-md-10">
+      <div class="col-md-8">
         <p>
-          Made by <a href="http://wduyck.me">William Duyck</a> and <a href="http://eliotbrown.co.uk">Eliot Brown</a>, at the <a href="https://www.kent.ac.uk/">University of Kent</a>.<br>
+          Made with love by <a href="//www.notsocreative.org.uk">Not So Creative</a>, at the <a href="https://www.kent.ac.uk/">University of Kent</a>.<br>
           Code avaialbe on <a href="https://github.com/not-so-creative/eisenhower">GitHub</a> under the <a href="https://mozilla.org/MPL/2.0/">MPL-2.0 License</a>.<br>
-          Theme based on <a href="http://bootswatch.com/paper" rel="nofollow">Bootstwatch Paper</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.
+          Themes based on <a href="http://bootswatch.com/" rel="nofollow">Bootstwatch</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.
         </p>
       </div>
       <div class="col-md-2">
@@ -77,6 +77,27 @@
           <li><a href="/legal#terms">Terms of service</a></li>
           <li><a href="/legal#privacy">Privacy policy</a></li>
         </ul>
+      </div>
+      <div class="col-md-2">
+        <p class="text-muted"><small>Theme</small></p>
+        <select name="themeSelector" id="themeSelector" class="form-control input-sm">
+          <option value="cerulean"{{ ' selected' if cookies.theme == 'cerulean' }}>Cerulean</option>
+          <option value="cosmo"{{ ' selected' if cookies.theme == 'cosmo' }}>Cosmo</option>
+          <option value="cyborg"{{ ' selected' if cookies.theme == 'cyborg' }}>Cyborg</option>
+          <option value="darkly"{{ ' selected' if cookies.theme == 'darkly' }}>Darkly</option>
+          <option value="flatly"{{ ' selected' if cookies.theme == 'flatly' }}>Flatly</option>
+          <option value="journal"{{ ' selected' if cookies.theme == 'journal' }}>Journal</option>
+          <option value="lumen"{{ ' selected' if cookies.theme == 'lumen' }}>Lumen</option>
+          <option value="paper"{{ ' selected' if cookies.theme == 'paper' }}{{ ' selected' if not cookies.theme }}>Paper</option>
+          <option value="readable"{{ ' selected' if cookies.theme == 'readable' }}>Readable</option>
+          <option value="sandstone"{{ ' selected' if cookies.theme == 'sandstone' }}>Sandstone</option>
+          <option value="simplex"{{ ' selected' if cookies.theme == 'simplex' }}>Simplex</option>
+          <option value="slate"{{ ' selected' if cookies.theme == 'slate' }}>Slate</option>
+          <option value="spacelab"{{ ' selected' if cookies.theme == 'spacelab' }}>Spacelab</option>
+          <option value="superhero"{{ ' selected' if cookies.theme == 'superhero' }}>Superhero</option>
+          <option value="united"{{ ' selected' if cookies.theme == 'united' }}>United</option>
+          <option value="yeti"{{ ' selected' if cookies.theme == 'yeti' }}>Yeti</option>
+        </select>
       </div>
     </div>
   </footer>
@@ -131,6 +152,9 @@
   <!-- persona login handling -->
   <script src="https://login.persona.org/include.js"></script>
   <script src="/assets/js/persona.js" data-persona="{{ persona }}" data-user="{{ user.email }}"></script>
+
+  <!-- theme selection -->
+  <script src="/assets/js/themeSelect.js"></script>
 
   <!-- custom scripts for this page -->
   {% block custom_scripts %}

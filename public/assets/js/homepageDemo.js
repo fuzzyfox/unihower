@@ -1,4 +1,4 @@
-/* global SVG */
+/* global SVG, jQuery */
 
 ( function( SVG ) {
   /*
@@ -17,15 +17,15 @@
     draw axes
    */
   // create group for axes
-  var axes = draw.group();
+  var axes = draw.group().addClass( 'axes' );
 
   // draw + add x-axis
   axes.add( draw.line( 20, 250, 480, 250 ).stroke( { width: 1 } ) );
   axes.add( draw.line( 250, 20, 250, 480 ).stroke( { width: 1 } ) );
 
   // draw arrow head // u = 4
-  axes.add( draw.path( 'M 250 20 C 254 28, 258 30, 252 32 L 250 31, 248 32 C 242 30, 246 28, 250 20 Z' ).style( { fill: '#444', stroke: '#444' } ) );
-  axes.add( draw.path( 'M 480 250 C 472 254, 470 258, 468 252 L 469 250, 468 248 C 470 242, 472 246, 480 250 Z' ).style( { fill: '#444', stroke: '#444' } ) );
+  axes.add( draw.path( 'M 250 20 C 254 28, 258 30, 252 32 L 250 31, 248 32 C 242 30, 246 28, 250 20 Z' ) );
+  axes.add( draw.path( 'M 480 250 C 472 254, 470 258, 468 252 L 469 250, 468 248 C 470 242, 472 246, 480 250 Z' ) );
 
   // tasks array.
   var tasks = [];

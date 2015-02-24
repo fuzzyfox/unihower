@@ -10,12 +10,16 @@
 // --------------------------------------------------
 // Vendor Imports
 // --------------------------------------------------
+
+// bootstrap
 @import '../../vendor/bootstrap/less/bootstrap';
-@import '../../vendor/bootswatch/paper/variables';
-@import '../../vendor/bootswatch/paper/bootswatch';
+// bootswatch
+@bootswatch-theme: 'paper';
+@import '../../vendor/bootswatch/@{bootswatch-theme}/variables';
+@import '../../vendor/bootswatch/@{bootswatch-theme}/bootswatch';
+// font-awesome
 @import '../../vendor/font-awesome/less/font-awesome';
 @fa-font-path: '../../vendor/font-awesome/fonts';
-
 // --------------------------------------------------
 // Eisenhower Imports
 // --------------------------------------------------
