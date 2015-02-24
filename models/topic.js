@@ -29,7 +29,7 @@ module.exports = function( sequelize, DataTypes ) {
     }
   }, {
     timestamps: true,
-    paranoid: false,
+    paranoid: true,
     classMethods: {
       associate: function( models ) {
         Topic.belongsTo( models.User, { foreignKey: 'UserId', onDelete: 'cascade' } );

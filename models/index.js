@@ -12,6 +12,7 @@ var fs = require( 'fs' );
 var path = require( 'path' );
 var lodash = require( 'lodash' );
 var Sequelize = require( 'sequelize' );
+var Umzug = require( 'umzug' ); // migrator framework
 var debugLib = require( 'debug' );
 var debug = debugLib( 'models' );
 
@@ -28,19 +29,55 @@ var debug = debugLib( 'models' );
  * @return {Function}    When provided with an environment this returned function returns a usable ORM.
  */
 module.exports = function( env ) {
+  // if an instance of the database already exists use that.
   if( env.dbInstance ) {
     return env.dbInstance;
   }
 
-  // create an object to return w/ the ORM
+  /**
+   * Ready flag to indicate when all setup tasks are complete
+   * @type {Boolean}
+   */
+  var readyFlag = false;
+  /**
+   * Functions that need to be run once we're ready
+   * @type {Array}
+   */
+  var readyFns = [];
+
+  /**
+   * Trigger functions that depend on the database being ready.
+   */
+  function readyTrigger() {
+    if( readyFlag ) {
+      return;
+    }
+
+    debug( 'Database ORM ready' );
+    readyFlag = true;
+
+    for( var i = 0, len = readyFns.length; i < len; i++ ) {
+      readyFns[ i ].call();
+    }
+  }
+
+  /**
+   * Object to return the ORM in
+   * @type {Object}
+   */
   var db = {};
 
-  // get an instance of Sequelize
+  /**
+   * Configured Sequelize instance
+   * @type {Sequelize}
+   */
   var sequelize = new Sequelize( env.get( 'db_connection_uri' ), {
     logging: debugLib( 'sequelize' )
   });
 
-  // load all model definitions
+  /*
+    load all model definitions
+   */
   fs.readdirSync( __dirname ).filter( function( file ) {
     // filter file matches to remove dotfiles and this file
     return ( ( file.indexOf( '.' ) !== 0 ) && ( file !== 'index.js' ) );
@@ -51,19 +88,63 @@ module.exports = function( env ) {
     db[ model.name ] = model;
   });
 
-  // associate models with each other
+  /*
+    associate models with each other
+   */
   Object.keys( db ).forEach( function( modelName ) {
     if( 'associate' in db[ modelName ] ) {
       db[ modelName ].associate( db );
     }
   });
 
-  debug( 'Models loaded: ', Object.keys( db ).join( ', ' ) );
+  /*
+    run database synchronisation and migrations
+   */
+  // sync db
+  sequelize.sync({
+    force: env.get( 'db_force_sync' )
+  }).complete( function( err ) {
+    if( err ) {
+      debug( 'ERROR: Failed to synchronise with database.' );
+      debug( err );
+      throw err;
+    }
+
+    // configure migrator instance
+    var umzug = new Umzug({
+      storage: 'sequelize',
+      storageOptions: {
+        sequelize: sequelize
+      },
+      migrations: {
+        params: [
+          sequelize.getQueryInterface(),
+          sequelize.constructor
+        ],
+        path: process.cwd() + '/migrations'
+      },
+      logging: debugLib( 'umzug' )
+    });
+
+    umzug.up().then( function() {
+      // all done, trigger waiting callbacks
+      readyTrigger();
+    });
+  });
 
   // create a usable ORM w/ instance and library
   db = lodash.extend( {
     sequelize: sequelize,
-    Sequelize: Sequelize
+    Sequelize: Sequelize,
+    /**
+     * DB ready function.
+     *
+     * Triggers given callback method ONCE the database ORM is ready for use.
+     * @param  {Function} fn Callback Function
+     */
+    ready: function( fn ) {
+      return ( readyFlag ) ? fn.call() : readyFns.push( fn );
+    }
   }, db );
 
   // cache db on env

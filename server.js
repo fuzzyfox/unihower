@@ -288,11 +288,7 @@ app.use( function( req, res ) {
   setup db + launch server
  */
 if( process.env.NODE_ENV !== 'testing' ) {
-  db.sequelize.sync( { force: env.get( 'db_force_sync' ) } ).complete( function( error ) {
-    if( error ) {
-      return console.error( error );
-    }
-
+  db.ready( function() {
     /**
      * HTTP Server
      * @return {http.server}

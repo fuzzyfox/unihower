@@ -57,6 +57,7 @@ module.exports = function( sequelize, DataTypes ) {
     }
   }, {
     timestamps: true,
+    paranoid: true,
     classMethods: {
       associate: function( models ) {
         Task.belongsTo( models.User, { foreignKey: 'UserId', onDelete: 'cascade' } );
