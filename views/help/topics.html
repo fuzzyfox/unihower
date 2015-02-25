@@ -1,7 +1,7 @@
 {% extends '_default.html' %}
 
 {% block main %}
-<main class="container" data-spy="scroll" data-target=".scrollspy">
+<main class="container">
 
 
 	<h1>Eisenhower Help</h1>
@@ -130,10 +130,11 @@
     </section>
 	</div>
 
-  	<div class="col-md-3 scrollspy">
-  			<ul id="nav" class="nav nav-stacked hidden-xs hidden-sm" data-spy="affix">
+  	<aside class="col-md-3">
+			<nav class="hidden-print hidden-xs hidden-sm scrollspy">
+  			<ul data-spy="affix" class="nav nav-pills nav-stacked">
   				<li><a href="#topic">Topics</a>
-  					<ul class="nav nav-stacked">
+  					<ul class="nav nav-stacked nav-pills">
   						<li><a href="#create">- Create topics</a></li>
   						<li><a href="#modify">- Modify topics</a></li>
   						<li><a href="#delete">- Delete topics</a></li>
@@ -145,7 +146,16 @@
             Back to top
           </a>
   			</ul>
-  	</div>
+			</nav>
+  	</aside>
   </div>
 </main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+	$(function(){
+		$( 'body' ).scrollspy({ target: '.scrollspy' });
+	});
+</script>
 {% endblock %}
