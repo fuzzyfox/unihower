@@ -216,12 +216,14 @@ app.get( '/users/:id/update', routes.auth.enforce, routes.users.update );
 // topic management
 app.get( '/topics', routes.auth.enforce, routes.topics.topics );
 app.get( '/topics/create', routes.auth.enforce, routes.topics.create );
+app.get( '/topics/trash', routes.auth.enforce, routes.topics.trash );
 app.get( '/topics/:id', routes.auth.enforce, routes.topics.topic );
 app.get( '/topics/:id/update', routes.auth.enforce, routes.topics.update );
 
 // task management
 app.get( '/tasks', routes.auth.enforce, routes.tasks.tasks );
 app.get( '/tasks/create', routes.auth.enforce, routes.tasks.create );
+app.get( '/tasks/trash', routes.auth.enforce, routes.tasks.trash );
 app.get( '/tasks/:id', routes.auth.enforce, routes.tasks.task );
 app.get( '/tasks/:id/update', routes.auth.enforce, routes.tasks.update );
 

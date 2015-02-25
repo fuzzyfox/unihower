@@ -98,7 +98,12 @@ module.exports = function( env ) {
       debug( 'Get task: %d', req.params.id );
 
       // find task
-      return db.Task.find( req.params.id ).done( function( err, task ) {
+      return db.Task.find({
+        where: {
+          id: req.params.id
+        },
+        paranoid: false
+      }).done( function( err, task ) {
         // database error finding task
         if( err ) {
           debug( 'ERROR: Failed to find task. (err, taskId)' );
@@ -151,7 +156,12 @@ module.exports = function( env ) {
       debug( 'Update task: %d', req.params.id );
 
       // find task
-      return db.Task.find( req.params.id ).done( function( err, task ) {
+      return db.Task.find({
+        where: {
+          id: req.params.id
+        },
+        paranoid: false
+      }).done( function( err, task ) {
         // database error while finding task
         if( err ) {
           debug( 'ERROR: Failed to find task. (err, params, session)' );
@@ -180,6 +190,22 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // undo soft delete
+          if( req.body.deletedAt === '' ) {
+            task.setDataValue( 'deletedAt', null );
+            return task.save({ paranoid: false }).done( function( err, topic ) {
+              // database err restoring topic
+              if( err ) {
+                debug( 'ERROR: Failed to restore task. (err)' );
+                debug( err );
+
+                return errorResponse.internal( req, res, err );
+              }
+
+              res.status( 200 ).json( topic );
+            });
+          }
+
           res.status( 200 ).json( task );
         });
       });
@@ -201,7 +227,12 @@ module.exports = function( env ) {
       debug( 'Destroy task: %d', req.params.id );
 
       // find task
-      return db.Task.find( req.params.id ).done( function( err, task ) {
+      return db.Task.find({
+        where: {
+          id: req.params.id
+        },
+        paranoid: false
+      }).done( function( err, task ) {
         // database error finding task
         if( err ) {
           debug( 'ERROR: Failed to find task. (err, taskId)' );
@@ -221,7 +252,9 @@ module.exports = function( env ) {
         }
 
         // delete task
-        task.destroy().done( function( err ) {
+        task.destroy({
+          force: req.query.force || !!task.deletedAt
+        }).done( function( err ) {
           // database error while deleting task
           if( err ) {
             debug( 'ERROR: Failed to destroy task. (err, taskId)' );

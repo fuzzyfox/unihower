@@ -1,0 +1,108 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+  <nav>
+    <ol class="breadcrumb">
+      <li><a href="/topics">Topics</a></li>
+      <li class="active"><i class="fa fa-trash"></i> Trash</li>
+    </ol>
+  </nav>
+
+  <h2>Trashed Topics</h2>
+
+  {% for topic in topics %}
+  {% if loop.first %}
+  <div class="row">
+  {% endif %}
+    <div class="col-sm-4 col-md-3">
+      <div class="thumbnail">
+        <a href="/topics/{{ topic.id }}" class="eisenhower-graph" data-tasks-url="/api/topics/{{ topic.id }}/tasks?showDeleted=1" data-graph-readonly="true"></a>
+
+        <div class="caption clearfix">
+          <h4>{{ topic.name }}</h4>
+          {% if topic.description %}{{ topic.description | truncate( 140 ) | markdown }}{% endif %}
+
+          <div class="btn-group pull-right">
+            <a href="#restore-{{ topic.id }}" data-topic="{{ topic.id }}" class="btn btn-sm btn-success">
+              <i class="fa fa-refresh"></i> Restore Topic
+            </a>
+            <a href="#delete-{{ topic.id }}" data-topic="{{ topic.id }}" class="btn btn-sm btn-danger">
+              <i class="fa fa-trash"></i> Delete Topic
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% if not loop.last and not loop.first and loop.index % 4 == 0 %}
+  </div>
+  <div class="row">
+  {% endif %}
+
+  {% if loop.last %}
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  {% if topics.length < 1 %}
+  <div class="alert alert-info">
+    <p><i class="fa fa-info-circle"></i> You have no topics in the trash.</p>
+  </div>
+  {% endif %}
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script src="/assets/js/graph.js"></script>
+<script>
+  $( function() {
+    function ajaxFailHandler( jqXHR ) {
+      if( jqXHR.responseJSON ) {
+        if( typeof jqXHR.responseJSON.message === 'string' ) {
+          window.alert( jqXHR.responseJSON.status + '\n\n' + jqXHR.responseJSON.message );
+        }
+
+        window.alert( jqXHR.responseJSON.status + '\n\nWe\'ve made a note of the problem and will get it fixed as soon as possible.' );
+        return console.log( arguments );
+      }
+
+      window.alert( 'An unknown error occured... try again later' );
+    };
+
+    $( 'a[href^="#delete-"]' ).on( 'click', function() {
+
+      if( window.confirm( 'Are you sure you want to delete this topic? This action cannot be undone.' ) ) {
+        $.ajax({
+          method: 'DELETE',
+          url: '/api/topics/' + $( this ).data( 'topic' ) + '?force=1',
+          data: {
+            _csrf: '{{ csrfToken }}'
+          },
+          dataType: 'json'
+        }).done( function() {
+          window.location.reload();
+        }).fail( ajaxFailHandler );
+      }
+
+      return false;
+    });
+
+    $( 'a[href^="#restore-"]' ).on( 'click', function() {
+
+      $.ajax({
+        method: 'PUT',
+        url: '/api/topics/' + $( this ).data( 'topic' ),
+        data: {
+          _csrf: '{{ csrfToken }}',
+          deletedAt: null
+        },
+        dataType: 'json'
+      }).done( function() {
+        window.location.reload();
+      }).fail( ajaxFailHandler );
+
+      return false;
+    });
+  });
+</script>
+{% endblock %}

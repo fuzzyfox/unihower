@@ -166,6 +166,41 @@ module.exports = function( env ) {
           }) );
         });
       });
+    },
+    /**
+     * Handle request for listing of a users "deleted" topics.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    trash: function( req, res ) {
+      debug( 'Get deleted tasks.' );
+
+      // all tasks that have been "deleted"
+      var where = {
+        UserId: req.session.user.id,
+        deletedAt: { $ne: null }
+      };
+
+      // filter even more by Topic
+      if( req.query.topic ) {
+        where.TopicId = req.query.topic;
+      }
+
+      // run query on db for tasks
+      return db.Task.findAll({
+        where: where,
+        include: [ db.Topic ],
+        paranoid: false
+      }).done( function( err, tasks ) {
+        // database error
+        if( err ) {
+          debug( 'ERROR: Failed to get deleted tasks from db. (err)' );
+          return debug( err );
+        }
+
+        res.render( 'tasks/trash.html', { tasks: tasks, topicId: req.query.topic } );
+      });
     }
   };
 };

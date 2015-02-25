@@ -28,10 +28,17 @@
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/about"><i class="fa fa-info-circle"></i> About</a></li>
           {% if user.email %}
-          <li><a href="/topics"><i class="fa fa-folder-open"></i> Topics</a></li>
           <li><a href="/tasks/create"><i class="fa fa-plus"></i> Create Task</a></li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user.name if user.name else user.email }} <span class="caret"></span></a>
+            <a href="/topics" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-folder-open"></i> Topics <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="/topics"><i class="fa fa-eye fa-fw"></i> All Topics</a></li>
+              <li><a href="/topics/create"><i class="fa fa-plus fa-fw"></i> Create Topic</a></li>
+              <li><a href="/topics/trash"><i class="fa fa-trash fa-fw"></i> Trashed Topics</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="/users/{{ user.id }}" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user.name if user.name else user.email }} <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li><a href="/users/{{ user.id }}"><i class="fa fa-user fa-fw"></i> My Account</a></li>
               <li><a href="/users/{{ user.id }}/update"><i class="fa fa-cogs fa-fw"></i> Settings</a></li>

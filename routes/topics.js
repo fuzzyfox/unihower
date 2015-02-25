@@ -133,6 +133,31 @@ module.exports = function( env ) {
 
         res.render( 'topics/create.html', JSON.parse( JSON.stringify( topic ) ) );
       });
+    },
+    /**
+     * Handle request for listing of a users "deleted" topics.
+     *
+     * @param  {http.IncomingMessage} req
+     * @param  {http.ServerResponse}  res
+     */
+    trash: function( req, res ) {
+      debug( 'Get deleted topics.' );
+
+      return db.Topic.findAll({
+        where: {
+          UserId: req.session.user.id,
+          deletedAt: { $ne: null }
+        },
+        paranoid: false
+      }).done( function( err, topics ) {
+        // database error
+        if( err ) {
+          debug( 'ERROR: Failed to get deleted topics from db. (err)' );
+          return debug( err );
+        }
+
+        res.render( 'topics/trash.html', { topics: topics } );
+      });
     }
   };
 };

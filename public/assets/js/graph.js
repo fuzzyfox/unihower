@@ -149,6 +149,11 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
    * @return {SVG.G}      SVG group that is a plot
    */
   function plotTask( task ) {
+    // trashonly mode check
+    if( this._trashonly && !task.deletedAt ) {
+      return {};
+    }
+
     // convert origin center coords to origin top left.
     var x = 250 + ( 2.5 * task.coordX );
     var y = 250 + ( 2.5 * -task.coordY );
@@ -262,6 +267,12 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
        * @type {Boolean}
        */
       _readonly: false,
+      /**
+       * Flag to indicate graph should only show "trashed" tasks.
+       *
+       * @type {Boolean}
+       */
+      _trashonly: false,
       /**
        * SVG group to contain all plot points.
        *
@@ -588,6 +599,11 @@ var eisenhowerGraph = (function( window, document, SVG, $, undefined ) {
      */
     if( $self.data( 'graphReadonly') ) {
       graph._readonly = true;
+    }
+
+    if( $self.data( 'trashOnly' ) ) {
+      graph._readonly = true;
+      graph._trashonly = true;
     }
   });
 

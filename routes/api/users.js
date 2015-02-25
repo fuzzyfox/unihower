@@ -312,7 +312,8 @@ module.exports = function( env ) {
         return db.Topic.findAll({
           where: {
             UserId: req.params.id
-          }
+          },
+          paranoid: !req.query.showDeleted
         }).done( function( err, topics ) {
           // database error finding topics
           if( err ) {
@@ -348,7 +349,8 @@ module.exports = function( env ) {
         return db.Task.findAll({
           where: {
             UserId: req.params.id
-          }
+          },
+          paranoid: !req.query.showDeleted
         }).done( function( err, tasks ) {
           // database error finding tasks
           if( err ) {

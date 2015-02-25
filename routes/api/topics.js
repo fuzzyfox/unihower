@@ -92,7 +92,12 @@ module.exports = function( env ) {
       debug( 'Get topic: %d', req.params.id );
 
       // find topic in database
-      return db.Topic.find( req.params.id ).done( function( err, topic ) {
+      return db.Topic.find({
+        where: {
+          id: req.params.id
+        },
+        paranoid: false
+      }).done( function( err, topic ) {
         // database error finding topic
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, topicId)' );
@@ -146,7 +151,12 @@ module.exports = function( env ) {
       debug( 'Update topic: %d', req.params.id );
 
       // find topic in database
-      return db.Topic.find( req.params.id ).done( function( err, topic ) {
+      return db.Topic.find({
+        where: {
+          id: req.params.id
+        },
+        paranoid: false
+      }).done( function( err, topic ) {
         // database error finding topic
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, params, session)' );
@@ -175,6 +185,22 @@ module.exports = function( env ) {
             return errorResponse.internal( req, res, err );
           }
 
+          // undo soft delete
+          if( req.body.deletedAt === '' ) {
+            topic.setDataValue( 'deletedAt', null );
+            return topic.save({ paranoid: false }).done( function( err, topic ) {
+              // database err restoring topic
+              if( err ) {
+                debug( 'ERROR: Failed to restore topic. (err)' );
+                debug( err );
+
+                return errorResponse.internal( req, res, err );
+              }
+
+              res.status( 200 ).json( topic );
+            });
+          }
+
           res.status( 200 ).json( topic );
         });
       });
@@ -195,7 +221,12 @@ module.exports = function( env ) {
       debug( 'Destroy topic: %d', req.params.id );
 
       // find topic in database
-      return db.Topic.find( req.params.id ).done( function( err, topic ) {
+      return db.Topic.find({
+        where: {
+          id: req.params.id
+        },
+        paranoid: false
+      }).done( function( err, topic ) {
         // database error finding topic
         if( err ) {
           debug( 'ERROR: Failed to find topic. (err, topicId)' );
@@ -215,7 +246,9 @@ module.exports = function( env ) {
         }
 
         // delete topic from database
-        topic.destroy().done( function( err ) {
+        topic.destroy({
+          force: req.query.force || !!topic.deletedAt
+        }).done( function( err ) {
           // database error while deleting
           if( err ) {
             debug( 'ERROR: Failed to destroy topic. (err, topicId)' );
@@ -247,7 +280,8 @@ module.exports = function( env ) {
         where: {
           id: req.params.id
         },
-        include: [ db.Task ]
+        include: [ db.Task ],
+        paranoid: !req.query.showDeleted
       }).done( function( err, topic ) {
         // database error finding topic w/ tasks
         if( err ) {

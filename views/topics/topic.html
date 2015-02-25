@@ -34,7 +34,7 @@
           </a>
 
           <a href="#delete" class="btn btn-sm btn-danger" id="topicDeleteButton">
-            <i class="fa fa-trash"></i> Delete Topic
+            <i class="fa fa-trash"></i> Trash Topic
           </a>
         </div>
       </div>
@@ -59,10 +59,11 @@
           {% endfor %}
         </tbody>
       </table>
-      <a href="/tasks/create?topic={{ id }}" class="btn btn-default pull-right">
-        <i class="fa fa-plus"></i> Create Task
-      </a>
+      <a href="/tasks/trash?topic={{ id }}" class="pull-right"><i class="fa fa-trash"></i> Trashed Tasks</a>
       {% else %}
+      <div class="clearfix">
+        <a href="/tasks/trash?topic={{ id }}" class="pull-right"><i class="fa fa-trash"></i> Trashed Tasks</a>
+      </div>
       <p class="lead">Looks like there are no tasks for this topic...</p>
 
       <h4>What is a Task?</h4>
