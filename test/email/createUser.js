@@ -67,11 +67,7 @@ function validUserObject( res ) {
  * @param  {Function} done Async callback for mocha
  */
 function setupDatabase( done ) {
-  db.sequelize.sync( { force: true } ).complete( function( err ) {
-    if( err ) {
-      return done( err );
-    }
-
+  db.ready( function() {
     db.User.bulkCreate( require( '../data/user' ) ).done( function() {
       done();
     }).catch( function( err ) {

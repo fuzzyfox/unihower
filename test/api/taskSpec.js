@@ -62,11 +62,7 @@ function validTaskObject( res ) {
  * @param  {Function} done Async callback for mocha
  */
 function setupDatabase( done ) {
-  db.sequelize.sync( { force: true } ).complete( function( err ) {
-    if( err ) {
-      return done( err );
-    }
-
+  db.ready( function() {
     db.User.bulkCreate( require( '../data/user' ) ).done( function() {
       db.Topic.bulkCreate( require( '../data/topic' ) ).done( function() {
         db.Task.bulkCreate( require( '../data/task' ) ).done( function() {
