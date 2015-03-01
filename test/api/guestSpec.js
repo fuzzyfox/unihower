@@ -7,82 +7,21 @@
  * @license https://www.mozilla.org/MPL/2.0/ MPL-2.0
  */
 
-// force testing env
-process.env.NODE_ENV = 'testing';
+ // force testing env
+ process.env.NODE_ENV = 'testing';
 
-/*
-  require packages
- */
-var Habitat = require( 'habitat' );
-var supertest = require( 'supertest' );
-require( 'chai' ).should();
+ var test = require( '../_testSetup' );
+ require( 'chai' ).should();
 
-// load environment
-Habitat.load( process.cwd() + '/.env-test' );
-var env = new Habitat();
-// laod package into env
-env.set( 'pkg', require( process.cwd() + '/package' ) );
-
-// get instance of server app + models
-var app = require( process.cwd() + '/server' );
-var db = require( process.cwd() + '/models' )( env );
-
-// configure supertest
-var agent = supertest.agent( app );
-
-/**
- * Determines if `res.body` is a valid user object, and throws an error if one
- * is encountered by the tests.
- *
- * @param  {http.IncomingMessge} res
- */
-function validUserObject( res ) {
-  // valid (required) properties and their types for a user object
-  var keyTypes = {
-    id: 'number',
-    name: 'string',
-    email: 'string',
-    isAdmin: 'boolean',
-    sendNotifications: 'boolean',
-    createdAt: 'string',
-    updatedAt: 'string'
-  };
-
-  // check that the property exists and is of correct type
-  Object.keys( keyTypes ).forEach( function( key ) {
-    res.body.should.have.property( key ).and.be.a( keyTypes[ key ] );
-  });
-
-  // check if last login datetime exists, and if so that its type string
-  if( res.body.lastLogin ) {
-    res.body.lastLogin.should.be.a( 'string' );
-  }
-}
-
-/**
- * Setup the database with clean slate, and test data
- *
- * @param  {Function} done Async callback for mocha
- */
-function setupDatabase( done ) {
-  db.ready( function() {
-    db.User.bulkCreate( require( '../data/user' ) ).done( function() {
-      done();
-    }).catch( function( err ) {
-      done( err );
-    });
-  });
-}
-
-/*
-  descripbe user api
- */
+ /*
+   describe user api
+  */
 
 describe( '/api/users (guest user)', function() {
-  before( setupDatabase );
+  before( test.setupDatabase );
 
   it( 'GET should exist', function( done ) {
-    agent
+    test.agent
       .get( '/api/users' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
@@ -96,14 +35,19 @@ describe( '/api/users (guest user)', function() {
       email: 'j.doe@restmail.net'
     };
 
-    agent
+    test.agent
       .post( '/api/users' )
       .send( newUser )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
-      .expect( validUserObject )
-      .end( done );
+      .end( function( err, res ) {
+        if( err ) {
+          return done( err );
+        }
+
+        test.validateAgainstModel( 'User', res.body, done );
+      });
   });
 
   it( 'POST should NOT create an admin user', function( done ) {
@@ -113,7 +57,7 @@ describe( '/api/users (guest user)', function() {
       isAdmin: true
     };
 
-    agent
+    test.agent
       .post( '/api/users' )
       .send( newUser )
       .set( 'Accept', 'application/json' )

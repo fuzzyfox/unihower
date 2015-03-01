@@ -56,7 +56,8 @@ module.exports = function( grunt ) {
         },
         src: [
           'test/**/*.js',
-          '!test/email/**/*.js'
+          '!test/email/**/*.js',
+          '!test/**/_*.js'
         ]
       },
       testEmail: {
@@ -64,7 +65,8 @@ module.exports = function( grunt ) {
           reporter: 'spec'
         },
         src: [
-          'test/email/**/*.js'
+          'test/email/**/*.js',
+          '!test/**/_*.js'
         ]
       }
     },

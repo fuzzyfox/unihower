@@ -10,71 +10,11 @@
 // force testing env
 process.env.NODE_ENV = 'testing';
 
-/*
-  require packages
- */
-var Habitat = require( 'habitat' );
-var supertest = require( 'supertest' );
+var test = require( '../_testSetup' );
 var request = require( 'request' );
-require( 'chai' ).should();
-
-// load environment
-Habitat.load( process.cwd() + '/.env-test' );
-var env = new Habitat();
-// laod package into env
-env.set( 'pkg', require( process.cwd() + '/package' ) );
-
-// get instance of server app + models
-var app = require( process.cwd() + '/server' );
-var db = require( process.cwd() + '/models' )( env );
-
-// configure supertest
-var agent = supertest.agent( app );
+var supertest = require( 'supertest' );
 var restmail = supertest( 'http://restmail.net' );
-
-/**
- * Determines if `res.body` is a valid user object, and throws an error if one
- * is encountered by the tests.
- *
- * @param  {http.IncomingMessge} res
- */
-function validUserObject( res ) {
-  // valid (required) properties and their types for a user object
-  var keyTypes = {
-    id: 'number',
-    name: 'string',
-    email: 'string',
-    isAdmin: 'boolean',
-    sendNotifications: 'boolean',
-    createdAt: 'string',
-    updatedAt: 'string'
-  };
-
-  // check that the property exists and is of correct type
-  Object.keys( keyTypes ).forEach( function( key ) {
-    res.body.should.have.property( key ).and.be.a( keyTypes[ key ] );
-  });
-
-  // check if last login datetime exists, and if so that its type string
-  if( res.body.lastLogin ) {
-    res.body.lastLogin.should.be.a( 'string' );
-  }
-}
-
-/**
- * Setup the database with clean slate, and test data
- *
- * @param  {Function} done Async callback for mocha
- */
-function setupDatabase( done ) {
-  db.ready( function() {
-    db.User.bulkCreate( require( '../data/user' ) ).done( function() {
-      done();
-    }).catch( function( err ) {
-      done( err );
-    });
-  });
-}
+require( 'chai' ).should();
 
 /*
   describe user api
@@ -83,9 +23,8 @@ function setupDatabase( done ) {
 describe( '/api/users (new user)', function() {
   // any pre-test setup
   before( function( done ) {
-    this.timeout( 3000 );
-    // setup test db
-    setupDatabase( function( err ) {
+    this.timeout( 10000 );
+    test.setupDatabase( function( err ) {
       if( err ) {
         return done( err );
       }
@@ -112,7 +51,7 @@ describe( '/api/users (new user)', function() {
   });
 
   it( 'GET should exist', function( done ) {
-    agent
+    test.agent
       .get( '/api/users' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
@@ -126,14 +65,19 @@ describe( '/api/users (new user)', function() {
       email: 'eisenhower@restmail.net'
     };
 
-    agent
+    test.agent
       .post( '/api/users' )
       .send( newUser )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
-      .expect( validUserObject )
-      .end( done );
+      .end( function( err, res ) {
+        if( err ) {
+          return done( err );
+        }
+
+        test.validateAgainstModel( 'User', res.body, done );
+      });
   });
 
   it( 'GET should send a welcome email to the new user', function( done ) {
@@ -148,7 +92,7 @@ describe( '/api/users (new user)', function() {
         .expect( 200 )
         .expect( function( res ) {
           res.body.should.be.an( 'array' ).with.length( 1 );
-          res.body[ 0 ].should.be.an( 'object' ).with.property( 'subject' ).and.equal( 'Welcome to Eisenhower.' );
+          res.body[ 0 ].should.be.an( 'object' ).with.property( 'subject' ).and.equal( require( '../../emailTemplates/userCreated' ).subject );
         })
         .end( done );
     }, 1000 );

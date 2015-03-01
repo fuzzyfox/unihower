@@ -10,169 +10,45 @@
 // force testing env
 process.env.NODE_ENV = 'testing';
 
-/*
-  require packages
- */
-var Habitat = require( 'habitat' );
-var request = require( 'request' );
-var supertest = require( 'supertest' );
+var test = require( '../_testSetup' );
 require( 'chai' ).should();
-
-// load environment
-Habitat.load( process.cwd() + '/.env-test' );
-var env = new Habitat();
-// laod package into env
-env.set( 'pkg', require( process.cwd() + '/package' ) );
-
-// get instance of server app + models
-var app = require( process.cwd() + '/server' );
-var db = require( process.cwd() + '/models' )( env );
-
-// configure supertest
-var agent = supertest.agent( app );
-
-/**
- * Determines if `res.body` is a valid topic object, and throws an error if one
- * is encountered by the tests.
- *
- * @param  {http.IncomingMessge} res
- */
-function validTopicObject( res ) {
-  // valid (required) properties and their types for a topic object
-  var keyTypes = {
-    id: 'number',
-    createdAt: 'string',
-    updatedAt: 'string',
-    UserId: 'number'
-  };
-
-  // check that the property exists and is of correct type
-  Object.keys( keyTypes ).forEach( function( key ) {
-    res.body.should.have.property( key ).and.be.a( keyTypes[ key ] );
-  });
-
-  // check name + description are either null OR string
-  if( res.body.name ) {
-    res.body.name.should.be.a( 'string' );
-  }
-  if( res.body.description ) {
-    res.body.description.should.be.a( 'string' );
-  }
-}
-
-/**
- * Setup the database with clean slate, and test data
- *
- * @param  {Function} done Async callback for mocha
- */
-function setupDatabase( done ) {
-  db.ready( function() {
-    db.User.bulkCreate( require( '../data/user' ) ).done( function() {
-      db.Topic.bulkCreate( require( '../data/topic' ) ).done( function() {
-        done();
-      }).catch( function( err ) {
-        done( err );
-      });
-    }).catch( function( err ) {
-      done( err );
-    });
-  });
-}
 
 /*
   describe topic api
  */
 
-var personatestuser = {};
-
 describe( '/api/topics', function() {
   // any pre-test setup
   before( function( done ) {
-    // this bit can take a while
-    this.timeout( 30000 );
-
-    // setup database with test data
-    setupDatabase( function( err ) {
+    this.timeout( 10000 );
+    test.setupDatabase( function( err ) {
       if( err ) {
         return done( err );
       }
 
-      /*
-        get persona test user for auth w/ local api
-       */
+      test.setupPersonaForUserById( 2, function( err ) {
+        if( err ) {
+          return done( err );
+        }
 
-      // make request for test user from remote api (personatestuser.org)
-      // documentation of remote api at <https://github.com/mozilla/personatestuser.org>
-      request
-        .get({
-          url: 'http://personatestuser.org/email_with_assertion/' + encodeURIComponent( 'http://localhost:' + env.get( 'port' ) ),
-          json: true
-        }, function( err, res, body ) {
-          if( err ) {
-            return done( err );
-          }
-
-          personatestuser = body;
-
-          // change the email address of user 2 to match that from persona so we can
-          // log the user into the api (downside of persona auth)
-          db.User.find( 2 ).done( function( err, user ) {
-            if( err ) {
-              return done( err );
-            }
-
-            user.email = body.email;
-            user.save().done( function( err ) {
-              if( err ) {
-                console.log( err );
-                return done( err );
-              }
-
-              // send the assertion we got from the remote api to our
-              // persona verification route
-              agent
-                .post( '/persona/verify' )
-                .send( { assertion: body.assertion } )
-                .set( 'Accept', 'application/json' )
-                .expect( 'Content-Type', /json/ )
-                .expect( 200 )
-                .expect( function( res ) {
-                  if( res.body.status === 'okay' ) {
-                    return; // return void if successful
-                  }
-
-                  throw new Error( 'persona verification failed' );
-                })
-                .end( done );
-            }).catch( function( err ) {
-              done( err );
-            });
-          }).catch( function( err ) {
-            done( err );
-          });
-        });
+        test.loginPersonaUserById( 2, done );
+      });
     });
   });
 
+  // any post-test teardown
   after( function( done ) {
-    // remove persona test user to tidy up remote api session
-    request
-      .get({
-        url: 'http://personatestuser.org/cancel/' + personatestuser.email + '/' + personatestuser.password,
-        json: true
-      }, function( err, res, body ) {
-        // logout to remove our local api session
-        agent
-          .post( '/persona/logout' )
-          .set( 'Accept', 'application/json' )
-          .expect( 'Content-Type', /json/ )
-          .expect( 200 )
-          .end( done );
-      });
+    test.logoutPersonaUser( function( err ) {
+        if( err ) {
+          return done( err );
+        }
+
+        test.destroyPersonaUserById( 2, done );
+    });
   });
 
   it( 'GET should exist', function( done ) {
-    agent
+    test.agent
       .get( '/api/topics' )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
@@ -186,20 +62,24 @@ describe( '/api/topics', function() {
       description: 'A topic created simply to test topic creation.'
     };
 
-    agent
+    test.agent
       .post( '/api/topics' )
       .send( newTopic )
       .set( 'Accept', 'application/json' )
       .expect( 'Content-Type', /json/ )
       .expect( 200 )
-      .expect( validTopicObject )
-      .end( done );
+      .end( function( err, res ) {
+        if( err ) {
+          return done( err );
+        }
+        test.validateAgainstModel( 'Topic', res.body, done );
+      });
   });
 
   describe( '/api/topics/1', function() {
 
     it( 'GET should exist', function( done ) {
-      agent
+      test.agent
         .get( '/api/topics/1' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
@@ -208,13 +88,17 @@ describe( '/api/topics', function() {
     });
 
     it( 'GET should return a valid topic object', function( done ) {
-      agent
+      test.agent
         .get( '/api/topics/1' )
         .set( 'Accept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
-        .expect( validTopicObject )
-        .end( done );
+        .end( function( err, res ) {
+          if( err ) {
+            return done( err );
+          }
+          test.validateAgainstModel( 'Topic', res.body, done );
+        });
     });
 
     it( 'PUT should update a topic', function( done ) {
@@ -222,17 +106,21 @@ describe( '/api/topics', function() {
         name: 'Meta Topic Is Meta'
       };
 
-      agent
+      test.agent
         .put( '/api/topics/1' )
         .send( newTopic )
         .set( 'Acept', 'application/json' )
         .expect( 200 )
-        .expect( validTopicObject )
-        .end( done );
+        .end( function( err, res ) {
+          if( err ) {
+            return done( err );
+          }
+          test.validateAgainstModel( 'Topic', res.body, done );
+        });
     });
 
     it( 'DELETE should remove a topic', function( done ) {
-      agent
+      test.agent
         .delete( '/api/topics/1' )
         .expect( 204 )
         .end( done );
@@ -241,7 +129,7 @@ describe( '/api/topics', function() {
 
   describe( '/api/users/2/topics', function() {
     it( 'GET should exist', function( done ) {
-      agent
+      test.agent
         .get( '/api/users/2/topics' )
         .set( 'Acept', 'application/json' )
         .expect( 'Content-Type', /json/ )
@@ -250,18 +138,36 @@ describe( '/api/topics', function() {
     });
 
     it( 'GET should return an array of valid topic objects beloning to UserId 2', function( done ) {
-      agent
+      test.agent
         .get( '/api/users/2/topics' )
         .set( 'Acept', 'application/json' )
         .expect( 'Content-Type', /json/ )
         .expect( 200 )
-        .expect( function( res ) {
+        .end( function( err, res ) {
+          if( err ) {
+            return done( err );
+          }
+
+          var tested = 0;
+          var errs = [];
           res.body.forEach( function( obj ) {
             obj.UserId.should.equal( 2 );
-            validTopicObject( { body: obj } );
+            test.validateAgainstModel( 'Topic', obj, function( err ) {
+              tested++;
+
+              if( err ) {
+                errs.push( err );
+              }
+
+              if( tested === res.body.length && ! errs.length ) {
+                done();
+              }
+              else if( tested === res.body.length ) {
+                done( errs );
+              }
+            });
           });
-        })
-        .end( done );
+        });
     });
   });
 });
