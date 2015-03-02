@@ -2,6 +2,233 @@
 
 {% block main %}
 <main class="container">
+<<<<<<< HEAD
 	
 </main>
 {% endblock %}
+=======
+	<h1>Help pages</h1>
+<div class="container bs-docs-container">
+	<div class="row">
+
+	    <div class="col-xs-9">
+        	<section id="topics" class="group">
+            	<h3>Topics</h3>
+            	<div id="topics-create" class="subgroup">
+                	<h4>Creating topics</h4>
+                	<div class="panel panel-info">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><i class="fa fa-info-circle"></i> Creating the topic</h3>
+					  </div>
+					  <div class="panel-body">
+					    First navigate to the <a href="/topics">topic</a> page and click on <a href="/topics/create" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Create a topic</a></p>
+					    <p>Once you have done that, you need to complete the form shown. Enter the name of your topic and then optionally enter a description.</p>
+					    <pre>Note: You can enter <a href="http://daringfireball.net/projects/markdown/basics">markdown</a> to format your description</pre>
+					    <p>To finish, press <button type="#" class="btn btn-success btn-xs">Create</button></p>
+					  </div>
+					</div>
+					<div class="panel panel-warning">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h3>
+					  </div>
+					  <div class="panel-body">
+					    <p>Make sure you have included a name for your topic. This field is mandatory. </p>
+					  </div>
+					</div>
+					<div class="panel panel-success">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><i class="fa fa-check-circle"></i> Double checking</h3>
+					  </div>
+					  <div class="panel-body">
+					    <p>You should be taken to a new page that shows the name of your topic alongside an Eisenhower decision matrix. You should also have the option to edit or delete the topic</p>
+					    <p>You can also check the main <a href="/topics">topic</a> page to see if your topic is listed</p>
+					  </div>
+					</div>
+            	</div>
+            	<div id="topics-modify" class="subgroup">
+                	<h4>Modify topics</h4>
+                	<div class="panel panel-info">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><i class="fa fa-info-circle"></i> Modifying the topic</h3>
+					  </div>
+					  <div class="panel-body">
+					    First navigate to the <a href="/topics">topic</a> page and click on the topic you wish to change.
+					    <p>Once you have done that, click <a href="#" class="btn btn-xs btn-primary">
+            			<i class="fa fa-pencil"></i> Edit Topic</a></p>
+            			<p>You can now make the changes to the name or description of the topic.</p>
+					    <pre>Remember: You can enter <a href="http://daringfireball.net/projects/markdown/basics">markdown</a> to format your description</pre>
+					    <p>To finish, press <button type="#" class="btn btn-success btn-xs">Update</button></p>
+					  </div>
+					  <div class="panel panel-warning">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h3>
+					  </div>
+					  <div class="panel-body">
+					    <p>Make sure you have navigated to the correct <a href="/topics">topic</a> and clicked <a href="#" class="btn btn-xs btn-primary"><i class="fa fa-pencil"></i> Edit Topic</a></p></p>
+					  </div>
+					</div>
+					<div class="panel panel-success">
+					  <div class="panel-heading">
+					    <h3 class="panel-title"><i class="fa fa-check-circle"></i> Double checking</h3>
+					  </div>
+					  <div class="panel-body">
+					    <p>You should be taken to a new page that shows the modified name or description of your topic. All your existing tasks will still be displayed on the matrix. You should also have the option to edit or delete the topic</p>
+					    <p>You can also check the main <a href="/topics">topic</a> page to see if your modified topic is listed</p>
+					  </div>
+					</div>
+            	</div>
+	            <div id="topics-delete" class="subgroup">
+	                <h4>Delete topics</h4>
+	            </div>
+       		</section>
+        	<section id="tasks" class="group">
+	            <h3>Tasks</h3>
+		        <div id="tasks-create" class="subgroup">
+		            <h4>Create tasks</h4>
+		        </div>
+		        <div id="tasks-modify" class="subgroup">
+		            <h4>Modify tasks</h4>
+		        </div>
+		        <div id="tasks-delete" class="subgroup">
+		            <h4>Delete tasks</h4>
+		        </div>
+        	</section>
+        	<section id="account" class="group">
+	            <h3>Account</h3>
+	            <div id="account-create" class="subgroup">
+	                <h4>Create account</h4>
+	            </div>
+	            <div id="account-modify" class="subgroup">
+	                <h4>Modify account</h4>
+	            </div>
+	           	<div id="account-delete" class="subgroup">
+	                <h4>Delete account</h4>
+	            </div>
+        	</section>    
+    	</div>
+    <!--Nav Bar -->
+	    <nav class="col-xs-3 bs-docs-sidebar">
+<!-- 	    <ul class="nav bs-docs-sidenav"> -->
+	        <ul id="sidebar" class="nav nav-stacked fixed">
+	            <li>
+	                <a href="#topics">Topics</a>
+	                <ul class="nav nav-stacked">
+	                    <li><a href="#topics-create">Create</a></li>
+	                    <li><a href="#topics-modify">Modify</a></li>
+	                    <li><a href="#topics-delete">Delete</a></li>
+	                </ul>
+	            </li>
+	            <li>
+	                <a href="#tasks">Tasks</a>
+	                <ul class="nav nav-stacked">
+	                    <li><a href="#tasks-create">Create</a></li>
+	                    <li><a href="#tasks-modify">Modify</a></li>
+	                    <li><a href="#tasks-delete">Delete</a></li>
+	                </ul>
+	            </li>
+	            <li>
+	                <a href="#account">Account</a>
+	                <ul class="nav nav-stacked">
+	                	<li><a href="#account-create">Create</a></li>
+	                    <li><a href="#account-modify">Modify</a></li>
+	                    <li><a href="#account-delete">Delete</a></li>
+	                </ul>
+	            </li>
+	           	<a class="back-to-top" href="#top">Back to top</a>
+	        </ul>
+	    </nav>
+	</div>
+</div>
+
+
+<nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
+            <ul class="nav bs-docs-sidenav">
+
+                <li>
+  <a href="#download">Download</a>
+</li>
+<li class="active">
+  <a href="#whats-included">What's included</a>
+  <ul class="nav">
+    <li><a href="#whats-included-precompiled">Precompiled</a></li>
+    <li><a href="#whats-included-source">Source code</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#grunt">Compiling CSS and JavaScript</a>
+  <ul class="nav">
+    <li><a href="#grunt-installing">Installing Grunt</a></li>
+    <li><a href="#grunt-commands">Available Grunt commands</a></li>
+    <li><a href="#grunt-troubleshooting">Troubleshooting</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#template">Basic template</a>
+</li>
+<li>
+  <a href="#examples">Examples</a>
+  <ul class="nav">
+    <li><a href="#examples-framework">Using the framework</a></li>
+    <li><a href="#examples-navbars">Navbars in action</a></li>
+    <li><a href="#examples-custom">Custom components</a></li>
+    <li><a href="#examples-experiments">Experiments</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#tools">Tools</a>
+  <ul class="nav">
+    <li><a href="#tools-bootlint">Bootlint</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#community">Community</a>
+</li>
+<li>
+  <a href="#disable-responsive">Disabling responsiveness</a>
+</li>
+<li>
+  <a href="#migration">Migrating from 2.x to 3.0</a>
+</li>
+<li>
+  <a href="#support">Browser and device support</a>
+  <ul class="nav">
+    <li><a href="#support-browsers">Supported browsers</a></li>
+    <li><a href="#support-ie8-ie9">Internet Explorer 8-9</a></li>
+    <li><a href="#support-ie8-respondjs">IE8 and Respond.js</a></li>
+    <li><a href="#support-ie8-box-sizing">IE8 and box-sizing</a></li>
+    <li><a href="#support-ie8-font-face">IE8 and @font-face</a></li>
+    <li><a href="#support-ie-compatibility-modes">IE Compatibility modes</a></li>
+    <li><a href="#support-ie10-width">IE10 and Windows (Phone) 8</a></li>
+    <li><a href="#support-safari-percentages">Safari percent rounding</a></li>
+    <li><a href="#support-fixed-position-keyboards">Modals, navbars, and virtual keyboards</a></li>
+    <li><a href="#support-browser-zooming">Browser zooming</a></li>
+    <li><a href="#support-printing">Printing</a></li>
+    <li><a href="#support-android-stock-browser">Android stock browser</a></li>
+    <li><a href="#support-validators">Validators</a></li>
+  </ul>
+</li>
+<li>
+  <a href="#third-parties">Third party support</a>
+</li>
+<li>
+  <a href="#accessibility">Accessibility</a>
+</li>
+<li>
+  <a href="#license-faqs">License FAQs</a>
+</li>
+<li>
+  <a href="#translations">Translations</a>
+</li>
+
+
+            </ul>
+            <a class="back-to-top" href="#top">
+              Back to top
+            </a>
+
+          </nav>
+
+
+</main>
+{% endblock %}
+>>>>>>> origin/help_pages

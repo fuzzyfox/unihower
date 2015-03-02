@@ -205,9 +205,6 @@ app.get( '/healthcheck', routes.healthcheck );
 // public web routes (ex. API)
 app.get( '/', routes.public.index );
 app.get( '/help', routes.public.help );
-app.get( '/help/topics', routes.help.topics);
-app.get( '/help/tasks', routes.help.tasks);
-app.get( '/help/topics', routes.help.account);
 
 app.get( '/about', routes.public.about );
 app.get( '/legal', routes.public.legal );
