@@ -204,10 +204,11 @@ app.get( '/healthcheck', routes.healthcheck );
 
 // public web routes (ex. API)
 app.get( '/', routes.public.index );
-app.get( '/help', routes.public.help );
-
 app.get( '/about', routes.public.about );
 app.get( '/legal', routes.public.legal );
+
+// user support
+app.get( '/help/:page?', routes.help );
 
 // user management
 app.get( '/users', routes.auth.enforceAdmin, routes.users.users );
