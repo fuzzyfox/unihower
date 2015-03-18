@@ -2,50 +2,56 @@
 
 {% block main %}
 <main class="container">
-    <div class="container">
-      <h1>Eisenhower Help</h1>
-      <p class="lead">We've provided explanations of the main features of Eisenhower on these handy pages.</p>
+  <h1>Eisenhower Help</h1>
+  <p class="lead">We've provided explanations of the main features of Eisenhower on these handy pages.</p>
 
-      <p>Each page is colour and icon coded to help you navigate more easily and is seperated into three parts:</p>
-      <!-- <ul> -->
-      <div class="row">
-        <div class="col-md-4">
-        <article class="panel panel-info">
-					<header class="panel-heading">
-						<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
-					</header>
-        </article>
-      </div>
-      <div class="col-md-4">
-        <article class="panel panel-warning">
-					<header class="panel-heading">
-						<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
-					</header>
-        </article>
-      </div>
-        <div class="col-md-4">
-        <article class="panel panel-success">
-					<header class="panel-heading">
-						<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
-					</header>
-        </article>
-      </div>
+  <p>Each page is colour and icon coded to help you navigate more easily and is seperated into three parts:</p>
+  <!-- <ul> -->
+  <div class="row">
+    <div class="col-md-4">
+      <article class="panel panel-info">
+        <header class="panel-heading">
+          <h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+        </header>
+      </article>
     </div>
-    <p>We think our help pages are pretty comprehensive, but if you cannot find the answer or get stuck elsewhere, just <a href="MAILTO:community@notsocreative.org.uk">email us.</a></p>
-    <p>If you think you've found some unusual behaviour, you can also <a href="https://github.com/not-so-creative/eisenhower/issues/new">let us know about it on GitHub.</a></p>
+    <div class="col-md-4">
+      <article class="panel panel-warning">
+        <header class="panel-heading">
+          <h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+        </header>
+      </article>
     </div>
-    <aside class="col-md-4">
-      <nav class="hidden-print">
-        <ul class="nav nav-pills nav-stacked">
-          <li><h5><a href="/help/topics">Topics</h5></a></li>
-          <li><a href="/help/topics#create">Create topics</a></li>
-          <li><a href="/help/topics#modify">Modify topics</a></li>
-          <li><a href="/help/topics#delete">Delete topics</a></li>
-        </ul>
-      </nav>
-    </aside>
-    <aside class="col-md-4">
-      <nav class="hidden-print">
+    <div class="col-md-4">
+      <article class="panel panel-success">
+        <header class="panel-heading">
+          <h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+        </header>
+      </article>
+    </div>
+  </div>
+  <p>We think our help pages are pretty comprehensive, but if you cannot find the answer or get stuck elsewhere, just <a href="MAILTO:community@notsocreative.org.uk">email us.</a></p>
+  <p>If you think you've found some unusual behaviour, you can also <a href="https://github.com/not-so-creative/eisenhower/issues/new">let us know about it on GitHub.</a></p>
+
+  <h3>Help me with...</h3>
+
+  <div class="row">
+    <div class="col-md-4">
+
+      <aside>
+        <nav>
+          <ul class="nav nav-pills nav-stacked">
+            <li><h5><a href="/help/topics">Topics</h5></a></li>
+            <li><a href="/help/topics#create">Create topics</a></li>
+            <li><a href="/help/topics#modify">Modify topics</a></li>
+            <li><a href="/help/topics#delete">Delete topics</a></li>
+          </ul>
+        </nav>
+      </aside>
+    </div>
+    <div class="col-md-4">
+      <aside">
+      <nav>
         <ul class="nav nav-pills nav-stacked">
           <li><h5><a href="/help/tasks">Tasks</h5></a></li>
           <li><a href="/help/tasks#create">Create tasks</a></li>
@@ -54,8 +60,10 @@
         </ul>
       </nav>
     </aside>
-    <aside class="col-md-4">
-      <nav class="hidden-print">
+  </div>
+  <div class="col-md-4">
+    <aside>
+      <nav>
         <ul class="nav nav-pills nav-stacked">
           <li><h5><a href="/help/account">Your account</a></h5></li>
           <li><a href="/help/account#create">Create your account</a></li>
@@ -64,6 +72,9 @@
         </ul>
       </nav>
     </aside>
+  </div>
+
+</div>
 
 </main>
 {% endblock %}
