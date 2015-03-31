@@ -1,0 +1,170 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+
+
+	<h1>Eisenhower Help</h1>
+
+	<div class="row">
+		<div class="col-md-9">
+			<section>
+				<h2 id="task">Tasks</h2>
+				<section>
+					<h3 id="create">Create tasks</h3>
+					<article class="panel panel-info">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+						</header>
+						<div class="panel-body">
+							<p>First navigate to the <a href="/tasks/create"><i class="fa fa-plus"></i> CREATE TASKS</a> link at the top right of the page</p>
+							<p>Alternatively, navigate to one of your <a href="/topics">topics</a> and then click anywhere on the graph to create a new topic. To follow this method, you need to have created a topic first.</p>
+							<p>Once you have done that, you need to complete the form shown. Click on the graph shown to change the urgency and importance of your task or you can drag and drop. Then enter the name of your task and then optionally enter a due date and a topic for the task.</p>
+							<blockquote>Did you know: The due date field allows for natural input like "tomorrow" or "next monday"</blockquote>
+							<p>To finish, press <button class="btn btn-xs btn-success">Create</button>.</p>
+						</div>
+					</article>
+				</section>
+				<section>
+					<h3></h3>
+					<article class="panel panel-warning">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+						</header>
+						<div class="panel-body">
+							<p>Make sure you include a name for your task, that's the only mandatory field.</p>
+							<p>If you're due date is underlined in red, that means we can't understand your input, try a different term or check your spelling.</p>
+						</div>
+					</article>
+				</section>
+				<section>
+					<h3></h3>
+					<article class="panel panel-success">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+						</header>
+						<div class="panel-body">
+							<p>You can go to your global <a href="/tasks">task list</a> or click on the <a href="/topics">topic</a> you assigned the task to and your task will be displayed.</p>
+						</div>
+					</article>
+				</section>
+			</section>
+
+
+		<section>
+			<h2 id="modify">Tasks</h2>
+			<section>
+				<h3 id="modify">Modify tasks</h3>
+				<article class="panel panel-info">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+					</header>
+					<div class="panel-body">
+						<p>First, navigate to either the <a href="/tasks">task list</a> or <a href="/topics">topic</a> that contains the task you wish to modify. Click on the task you wish to modify.</p>
+						<p>Click <a href="#" class="btn btn-xs btn-primary">
+          		<i class="fa fa-pencil"></i> Edit Task</a> then change the fields you wish to change. From this view, you can also change the status of a task to complete.</p>
+						<p>To finish, press <button class="btn btn-xs btn-success">Update</button></p>
+						<blockquote>
+						<p>Did you know: To complete a task, just click <a href="#" class="btn btn-xs btn-success" id="taskCompleteButton">
+          <i class="fa fa-check"></i> Mark Complete
+        </a> instead of editing the task.</p></blockquote>
+					</div>
+				</article>
+			</section>
+			<section>
+				<h3></h3>
+				<article class="panel panel-warning">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+					</header>
+					<div class="panel-body">
+						<p>Make sure you have navigated to the correct task and clicked <a href="#" class="btn btn-xs btn-primary">
+            <i class="fa fa-pencil"></i> Edit Task</a></p>
+						<p>Also make sure you don't leave the name field blank.</p>
+					</div>
+				</article>
+			</section>
+			<section>
+				<h3></h3>
+				<article class="panel panel-success">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+					</header>
+					<div class="panel-body">
+						<p>You can check in the <a href="/tasks">tasks list</a> to make sure the task has been updated</p>
+						<p>If you changed the status of the task, the pictogram should change colour and icon.</p>
+						<blockquote><p>Did you know: A green circle with a tick is a task marked as complete. An orange circle with a cross is in progress.</p></blockquote>
+					</div>
+				</article>
+			</section>
+		</section>
+
+    <section>
+      <h2>Tasks</h2>
+      <section>
+        <h3 id="delete"><a href="#" class="btn btn-sm btn-danger">Danger</a> Delete tasks</h3>
+        <article class="panel panel-info">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+          </header>
+          <div class="panel-body">
+						<blockquote><p>Note: This action is irreversible</p></blockquote>
+						<p>First navigate to the <a href="/tasks">tasks list</a>. Alternatively, navigate to the <a href="/topics">topic</a> containing the task you want to delete.</p>
+						<p>Click on the task you wish to delete.</p>
+            <p>Double check you are about to delete the correct task, click <a href="#delete" class="btn btn-xs btn-danger" id="topicDeleteButton"><i class="fa fa-trash"></i> Delete Task</a> and accept the confirmation message.</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h3></h3>
+        <article class="panel panel-warning">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+          </header>
+          <div class="panel-body">
+            <p>Make sure you navigate to the correct task.</p>
+            <p>If you have deleted a task by mistake, unfortunately it cannot be recovered.</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h3></h3>
+        <article class="panel panel-success">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+          </header>
+          <div class="panel-body">
+						<p>You will automatically be taken back to your <a href="/topics">topic</a> page and the task should no longer appear</p>
+      </section>
+    </section>
+	</div>
+
+  	<aside class="col-md-3">
+			<nav class="hidden-print hidden-xs hidden-sm scrollspy">
+  			<ul data-spy="affix" class="nav nav-pills nav-stacked">
+  				<li><a href="/help/topics">Topics</a>
+  				<li><a href="#task">Tasks</a>
+          <ul class="nav nav-stacked nav-pills">
+            <li><a href="#create">- Create tasks</a></li>
+            <li><a href="#modify">- Modify tasks</a></li>
+            <li><a href="#delete">- Delete tasks</a></li>
+          </ul>
+        </li>
+  				<li><a href="/help/account">Account</a></li>
+          <a class="back-to-top" href="#top">
+            Back to top
+          </a>
+  			</ul>
+			</nav>
+  	</aside>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+	$(function(){
+		$( 'body' ).scrollspy({ target: '.scrollspy' });
+	});
+</script>
+{% endblock %}

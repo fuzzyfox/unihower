@@ -6,7 +6,7 @@
 A tool for the prioritisation of tasks based on Eisenhower Desicion Matricies.
 
 Created as a part of the [CO600 Module](https://www.kent.ac.uk/courses/modulecatalogue/modules/CO600)
-submission by [William Duyck](http://wduyck.me) and Eliot Brown, at the [University of Kent](https://www.kent.ac.uk/).
+submission by [William Duyck](http://wduyck.me) and [Eliot Brown](http://eliotbrown.co.uk), at the [University of Kent](https://www.kent.ac.uk/).
 
 ## Abstract
 Eisenhower decision matrices split tasks by urgency and importance. This is a
