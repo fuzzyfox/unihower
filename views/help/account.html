@@ -1,0 +1,169 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+
+
+	<h1>Eisenhower Help</h1>
+
+	<div class="row">
+		<div class="col-md-9">
+			<section>
+				<h2 id="account">Your account</h2>
+				<section>
+					<h3 id="create">Create your account</h3>
+					<article class="panel panel-info">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+						</header>
+						<div class="panel-body">
+							<p>Thanks for trying out Eisenhower - we think you'll really love it!</p>
+							<p>To get started click, from any page click <a href="#" "><i class="fa fa-lock fa-fw"></i> Login with Persona</a></p>
+							<p>Enter the email address you would like to sign-up with and press next. If you already have a Persona account enter your password and you're done!</p>
+							<p>If you have never used Persona before, enter an email address, create a password and click the link in the confirmation email.</p>
+							<blockquote>Did you know: You can sign into other services with <a href="https://www.mozilla.org/en-US/persona/">Persona</a>.</blockquote>
+							<p>You'll then be taken direct to your <a href="/users/create">new users page</a>, where you can optionally enter your name. From there, agree to the terms and conditions then click <button class="btn btn-xs btn-success">Register</button>.</p>
+						</div>
+					</article>
+				</section>
+				<section>
+					<h3></h3>
+					<article class="panel panel-warning">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+						</header>
+						<div class="panel-body">
+							<p>Make sure you enter the correct email address when you login the first time. If you don't you can just go back and start again!</p>
+							<p>If Persona won't let you login, double check you have clicked the link in the email.</p>
+							<p>Forgotten your password? Follow the instructions on the Login screen.</p>
+						</div>
+					</article>
+				</section>
+				<section>
+					<h3></h3>
+					<article class="panel panel-success">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+						</header>
+						<div class="panel-body">
+							<p>When you've got an account, your name will show in the top-right corner of the screen, if you didn't set one, then your email address will appear.</p>
+						</div>
+					</article>
+				</section>
+			</section>
+
+
+		<section>
+			<h2 id="modify">Your account</h2>
+			<section>
+				<h3 id="modify">Modify your account</h3>
+				<article class="panel panel-info">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+					</header>
+					<div class="panel-body">
+						<p>Before we can let you change anything, make sure you login.</p>
+						<p>Click on your name or email address in the top right corner and click settings.
+						<p>From here you can change your name and email address, you can also opt out of emails.</p>
+						<p>When you're done, just click the <button class="btn btn-xs btn-success">Update</button> button.</p>
+					</div>
+				</article>
+			</section>
+			<section>
+				<h3></h3>
+				<article class="panel panel-warning">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+					</header>
+					<div class="panel-body">
+						<p>If you accidentally clicked my account, then just press <a href="#" class="btn btn-xs btn-primary">
+        <i class="fa fa-cogs"></i> Settings
+      </a></p>
+						<p>If you changed something by mistake, just refollow the steps above to change it back.</p>
+						<blockquote>
+						<p>Note: You cannot change your email address. <a href="MAILTO:community@notsocreative.org.uk">Contact us</a> for support.</p></blockquote>
+					</div>
+				</article>
+			</section>
+			<section>
+				<h3></h3>
+				<article class="panel panel-success">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+					</header>
+					<div class="panel-body">
+						<p>After you've changed your settings you will be directed to your main user page.</p>
+						<p>Here, it will list your name (if set), email address, last login and account creation date.</p>
+					</div>
+				</article>
+			</section>
+		</section>
+
+    <section>
+      <h2>Your account</h2>
+      <section>
+        <h3 id="delete"><a href="#" class="btn btn-sm btn-danger">Danger</a> Delete your account</h3>
+        <article class="panel panel-info">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+          </header>
+          <div class="panel-body">
+						<blockquote><p>Note: This action is irreversible and will also delete all your content.</p></blockquote>
+						<p>We are really sorry you're leaving us. If you would like to provide feedback to help us improve - or tell us why you left, please <a href="MAILTO:community@notsocreative.org.uk">email us</a>.
+						<p>First click on your name or email address in the top right corner, chose "My Account" from the drop down menu.</p>
+            <p>Click <a href="#delete" class="btn btn-xs btn-danger" id="topicDeleteButton"><i class="fa fa-trash"></i> Delete Account</a> and accept the confirmation message.</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h3></h3>
+        <article class="panel panel-warning">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+          </header>
+          <div class="panel-body">
+            <p>If you have deleted your account by mistake, unfortunately it cannot be recovered.</p>
+						<p>If you would like to sign up again, take a look at the <a href="#create">creating an account</a> help.</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h3></h3>
+        <article class="panel panel-success">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+          </header>
+          <div class="panel-body">
+						<p>You will automatically be taken to the <a href="/users/create">new users page</a>. From here, just close your browser.</p>
+      </section>
+    </section>
+	</div>
+
+  	<aside class="col-md-3">
+			<nav class="hidden-print hidden-xs hidden-sm scrollspy">
+  			<ul data-spy="affix" class="nav nav-pills nav-stacked">
+  				<li><a href="/help/topics">Topics</a>
+  				<li><a href="/help/tasks">Tasks</a></li>
+  				<li><a href="#account">Account</a>
+						<ul class="nav nav-stacked nav-pills">
+							<li><a href="#create">- Create your account</a></li>
+							<li><a href="#modify">- Modify your account</a></li>
+							<li><a href="#delete">- Delete your account</a></li>
+						</ul></li>
+          <a class="back-to-top" href="#top">
+            Back to top
+          </a>
+  			</ul>
+			</nav>
+  	</aside>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+	$(function(){
+		$( 'body' ).scrollspy({ target: '.scrollspy' });
+	});
+</script>
+{% endblock %}

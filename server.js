@@ -207,6 +207,9 @@ app.get( '/', routes.public.index );
 app.get( '/about', routes.public.about );
 app.get( '/legal', routes.public.legal );
 
+// user support
+app.get( '/help/:page?', routes.help );
+
 // user management
 app.get( '/users', routes.auth.enforceAdmin, routes.users.users );
 app.get( '/users/create', routes.users.create );

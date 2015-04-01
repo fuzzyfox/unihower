@@ -1,0 +1,170 @@
+{% extends '_default.html' %}
+
+{% block main %}
+<main class="container">
+
+
+	<h1>Eisenhower Help</h1>
+
+	<div class="row">
+		<div class="col-md-9">
+			<section>
+				<h2 id="topic">Topics</h2>
+				<section>
+					<h3 id="create">Create topics</h3>
+					<article class="panel panel-info">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+						</header>
+						<div class="panel-body">
+							<p>Navigate to the <a href="/topics">topic</a> page and click on <a href="/topics/create" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> Create a topic</a></p>
+							<p>Once you have done that, you need to complete the form shown. Enter the name of your topic and then optionally enter a description.</p>
+							<blockquote>
+  							<p>Did you know: You can enter markdown to format your description</p>
+							</blockquote>
+							<p>To finish, press <button class="btn btn-xs btn-success">Create</button>.</p>
+						</div>
+					</article>
+				</section>
+				<section>
+					<h3></h3>
+					<article class="panel panel-warning">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+						</header>
+						<div class="panel-body">
+							<p>Make sure you have included a name for your topic. This field is mandatory.</p>
+						</div>
+					</article>
+				</section>
+				<section>
+					<h3></h3>
+					<article class="panel panel-success">
+						<header class="panel-heading">
+							<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+						</header>
+						<div class="panel-body">
+							<p>You should be taken to a new page that shows the name of your topic alongside an Eisenhower decision matrix. You should also have the option to edit or delete the topic. </p>
+
+							<p>You can also check the main <a href="/topics">topic</a> page to see if your topic is listed.</p>
+						</div>
+					</article>
+				</section>
+			</section>
+
+
+		<section>
+			<h2>Topics</h2>
+			<section>
+				<h3 id="modify">Modify topics</h3>
+				<article class="panel panel-info">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+					</header>
+					<div class="panel-body">
+						<p>First navigate to the <a href="/topics">topic</a> page and click on <a href="/topics" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View Topic</a></p>
+						<p>Once you have done that, click <a href="#" class="btn btn-xs btn-primary">
+            <i class="fa fa-pencil"></i> Edit Topic</a></p>
+						<p>You can now make the changes to the name or description of the topic.</p>
+						<blockquote><p>Remember: You can enter markdown to format your description</p></blockquote>
+						<p>To finish, press <button class="btn btn-xs btn-success">Update</button></p>
+					</div>
+				</article>
+			</section>
+			<section>
+				<h3></h3>
+				<article class="panel panel-warning">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+					</header>
+					<div class="panel-body">
+						<p>Make sure you have navigated to the correct topic and clicked <a href="#" class="btn btn-xs btn-primary">
+            <i class="fa fa-pencil"></i> Edit Topic</a></p>
+						<p>Also make sure you don't leave the name field blank.</p>
+					</div>
+				</article>
+			</section>
+			<section>
+				<h3></h3>
+				<article class="panel panel-success">
+					<header class="panel-heading">
+						<h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+					</header>
+					<div class="panel-body">
+						<p>You should be taken to a new page that shows the modified name or description of your topic. All your existing tasks will still be displayed on the matrix. You should also have the option to edit or delete the topic.</p>
+						<p>You can also check the main <a href="/topics">topic</a> page to see if your modified topic is listed.</p>
+					</div>
+				</article>
+			</section>
+		</section>
+
+    <section>
+      <h2>Topics</h2>
+      <section>
+        <h3 id="delete"><a href="#" class="btn btn-sm btn-danger">Danger</a> Delete topics</h3>
+        <article class="panel panel-info">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-info-circle"></i> How to</h4>
+          </header>
+          <div class="panel-body">
+						<blockquote><p>Note: This action is irreversible</p></blockquote>
+            <p>First navigate to the <a href="/topics">topic</a> page and click on <a href="/topics" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i> View Topic</a></p></p>
+            <p>Double check you are about to delete the correct topic, click <a href="#delete" class="btn btn-xs btn-danger" id="topicDeleteButton"><i class="fa fa-trash"></i> Delete Topic</a> and accept the confirmation message.</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h3></h3>
+        <article class="panel panel-warning">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-exclamation-circle"></i> Troubleshooting</h4>
+          </header>
+          <div class="panel-body">
+            <p>Make sure you navigate to the correct topic.</p>
+            <p>If you have deleted a topic by mistake, unfortunately it cannot be recovered.</p>
+          </div>
+        </article>
+      </section>
+      <section>
+        <h3></h3>
+        <article class="panel panel-success">
+          <header class="panel-heading">
+            <h4 class="panel-title"><i class="fa fa-check-circle"></i> Checking it works</h4>
+          </header>
+          <div class="panel-body">
+            <p>You will automatically be taken back to your <a href="/topics">topic</a> page and the topic should no longer appear.</p>
+          </div>
+        </article>
+      </section>
+    </section>
+	</div>
+
+  	<aside class="col-md-3">
+			<nav class="hidden-print hidden-xs hidden-sm scrollspy">
+  			<ul data-spy="affix" class="nav nav-pills nav-stacked">
+  				<li><a href="#topic">Topics</a>
+  					<ul class="nav nav-stacked nav-pills">
+  						<li><a href="#create">- Create topics</a></li>
+  						<li><a href="#modify">- Modify topics</a></li>
+  						<li><a href="#delete">- Delete topics</a></li>
+  					</ul>
+  				</li>
+  				<li><a href="/help/tasks">Tasks</a></li>
+  				<li><a href="/help/account">Account</a></li>
+          <a class="back-to-top" href="#top">
+            Back to top
+          </a>
+  			</ul>
+			</nav>
+  	</aside>
+  </div>
+</main>
+{% endblock %}
+
+{% block custom_scripts %}
+<script>
+	$(function(){
+		$( 'body' ).scrollspy({ target: '.scrollspy' });
+	});
+</script>
+{% endblock %}
