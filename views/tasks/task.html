@@ -26,7 +26,7 @@
     <div class="col-md-8">
       <ul class="list-inline">
         <li><strong>State:</strong> <span class="label label-state-{{ state }}">{{ state }}</span></li>
-        <li><strong>Created:</strong> {{ creeatedAt | calendar }}</li>
+        <li><strong>Created:</strong> {{ createdAt | calendar }}</li>
         <li><strong>Last Updated:</strong> {{ updatedAt | calendar }}</li>
         {% if dueDate %}<li><strong>Due:</strong> {{ dueDate | relativeMoment }}</li>{% endif %}
       </ul>
